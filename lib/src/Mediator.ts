@@ -27,7 +27,7 @@ export default class MediatorTemplate extends Mediator<iEventsMinimal & {
 
     // constructor
 
-    protected _initWorkSpace (container: ContainerPattern): Promise<void> {
+    protected _initWorkSpace (): Promise<void> {
 
         // <init work space>
 
