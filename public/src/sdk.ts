@@ -1,4 +1,4 @@
-"use strict";
+
 
 // deps
 
@@ -25,6 +25,7 @@ export class SDK extends EventEmitter<{
         const socket = new WebSocket("ws://" + window.location.host);
 
         socket.addEventListener("error", (err: Event): void => {
+            // eslint-disable-next-line no-console -- template: surface socket errors during development
             console.error("socket error", err);
         });
 
@@ -36,14 +37,15 @@ export class SDK extends EventEmitter<{
             this.emit("disconnected", data.code, data.reason);
         });
 
-        socket.addEventListener("error", (data: Event): void => {
-            this.emit("error", new Error(String(data)));
+        socket.addEventListener("error", (evt: Event): void => {
+            const message = evt instanceof ErrorEvent ? evt.message : "Socket error";
+            this.emit("error", new Error(message));
         });
 
-        socket.addEventListener("message", (message: MessageEvent): void => {
+        socket.addEventListener("message", (): void => {
 
             /*
-            const parsedMessage: <types> = JSON.parse(message.data);
+            const parsedMessage: <types> = JSON.parse(_event.data);
 
             if (<plugin name> === parsedMessage.plugin) {
 
@@ -64,9 +66,7 @@ let _sdk: SDK | null = null;
 
 export default function getSDK (): SDK {
 
-    if (null === _sdk) {
-        _sdk = new SDK();
-    }
+    _sdk ??= new SDK();
 
     return _sdk;
 

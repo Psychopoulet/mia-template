@@ -1,120 +1,120 @@
-"use strict";
+
 
 // deps
 
-	// externals
+    // externals
     import React from "react";
     import { Alert } from "react-bootstrap-fontawesome";
 
-	// locals
+    // locals
     import getSDK from "./sdk";
 
 // types & interfaces
 
-	// externals
+    // externals
     import type { iPropsNode } from "react-bootstrap-fontawesome";
 
-	// locals
+    // locals
     import type { SDK } from "./sdk";
 
-	interface iState {
-		"connected": boolean;
-		"error": Error | null;
-	}
+    interface iState {
+        "connected": boolean;
+        "error": Error | null;
+    }
 
 // component
 
 export default class App extends React.Component<iPropsNode, iState> {
 
-	// name
+    // name
 
-		public static displayName: string = "App";
+        public static displayName: string = "App";
 
-	// private
+    // private
 
-		private _sdk: SDK = getSDK();
+        private readonly _sdk: SDK = getSDK();
 
-	// constructor
+    // constructor
 
-	public constructor (props: iPropsNode) {
+    public constructor (props: iPropsNode) {
 
-		super(props);
+        super(props);
 
-		this.state = {
-			"connected": false,
-			"error": null
-		};
+        this.state = {
+            "connected": false,
+            "error": null
+        };
 
-	}
+    }
 
-	public componentDidMount (): void {
+    public componentDidMount (): void {
 
         this._sdk
-			.on("connected", this._onConnected.bind(this))
+            .on("connected", this._onConnected.bind(this))
             .on("disconnected", this._onDisconnected.bind(this))
-			.on("error", this._onError.bind(this));
+            .on("error", this._onError.bind(this));
 
-	}
+    }
 
-    public componentWillUnmount(): void {
+    public componentWillUnmount (): void {
 
         this._sdk
             .off("connected", this._onConnected.bind(this))
             .off("disconnected", this._onDisconnected.bind(this))
-			.off("error", this._onError.bind(this));
+            .off("error", this._onError.bind(this));
 
     }
 
     // handlers
 
-	private _onConnected (): void {
+    private _onConnected (): void {
 
-		this.setState({
-			"connected": true
-		});
+        this.setState({
+            "connected": true
+        });
 
-	}
+    }
 
-	private _onDisconnected (): void {
+    private _onDisconnected (): void {
 
-		this.setState({
-			"connected": false
-		});
+        this.setState({
+            "connected": false
+        });
 
-	}
+    }
 
-	private _onError (err: Error | null): void {
+    private _onError (err: Error | null): void {
 
-		this.setState({
-			"error": err
-		});
+        this.setState({
+            "error": err
+        });
 
-	}
+    }
 
-	// render
+    // render
 
-	public render (): React.JSX.Element {
+    public render (): React.JSX.Element {
 
-		if (!this.state.connected) {
+        if (!this.state.connected) {
 
-			return <div className="container">
-				<Alert variant="warning">Not connected yet...</Alert>
-			</div>;
+            return <div className="container">
+                <Alert variant="warning">Not connected yet...</Alert>
+            </div>;
 
-		}
-		else if (this.state.error) {
+        }
+        else if (this.state.error) {
 
-			return <div className="container">
-				<Alert variant="danger">{ this.state.error.message || "An error occurred" }</Alert>
-			</div>;
+            return <div className="container">
+                <Alert variant="danger">{ this.state.error.message || "An error occurred" }</Alert>
+            </div>;
 
-		}
-		else {
+        }
+        else {
 
-			return <span>Hello World !</span>;
+            return <span>Hello World !</span>;
 
-		}
+        }
 
-	}
+    }
 
-};
+}
