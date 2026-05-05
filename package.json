@@ -1,7 +1,7 @@
 {
 
   "name": "mia-template",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This is a template for MIA plugin creation.",
 
   "type": "commonjs",
@@ -48,6 +48,7 @@
 
   "files": [
     "lib/cjs",
+    "lib/data",
     "public/dist",
     "public/pictures",
     "public/index.html"
@@ -70,9 +71,8 @@
     "eslint-plugin-personnallinter": "git+ssh://git@github.com/Psychopoulet/eslint-plugin-personnallinter",
     "husky": "9.1.7",
     "mocha": "11.7.5",
-    "node-confmanager": "1.14.0",
     "node-containerpattern": "1.11.0",
-    "node-pluginsmanager-plugin": "7.1.0",
+    "nyc": "18.0.0",
     "openapi-typescript": "7.13.0",
     "react": "19.2.5",
     "react-bootstrap-fontawesome": "git+ssh://git@github.com/Psychopoulet/react-bootstrap-fontawesome",
