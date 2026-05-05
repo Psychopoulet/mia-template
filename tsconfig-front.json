@@ -4,6 +4,8 @@
         "target": "es2022",
         "module": "es6",
 
+        "lib": [ "es2022", "dom" ],
+
         "outDir": "./public/dist/",
         "sourceMap": true,
 
@@ -23,6 +25,10 @@
         "jsx": "react"
 
     },
+    "include": [
+        "./public/src/**/*.ts",
+        "./public/src/**/*.tsx"
+    ],
     "exclude": [
         "node_modules"
     ],
