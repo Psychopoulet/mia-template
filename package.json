@@ -30,8 +30,8 @@
     "clean-front": "npx rimraf ./public/cjs",
     "clean": "npm run clean-back && npm run clean-front",
 
-    "transpile-openapi-back": "npx openapi-typescript ./lib/data/descriptor.json -o ./lib/src/Descriptor.ts",
-    "transpile-openapi-front": "npx openapi-typescript ./lib/data/descriptor.json -o ./public/src/Descriptor.ts",
+    "transpile-openapi-back": "npx openapi-typescript ./lib/data/Descriptor.json -o ./lib/src/Descriptor.ts",
+    "transpile-openapi-front": "npx openapi-typescript ./lib/data/Descriptor.json -o ./public/src/Descriptor.ts",
 
     "build-back": "npm run clean-back && npm run transpile-openapi-back && npx tsc --project ./tsconfig.json",
     "build-front": "npm run clean-front && npm run transpile-openapi-front && npx webpack --config ./webpack.config.js",
