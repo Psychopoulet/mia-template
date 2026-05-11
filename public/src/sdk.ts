@@ -8,7 +8,7 @@
 // types & interfaces
 
     // locals
-    // import type { components, operations, paths } from "./descriptor";
+    // import type { components, operations, paths } from "./Descriptor";
 
 // component
 
@@ -18,16 +18,17 @@ export class SDK extends EventEmitter<{
     "error": [ Error ];
 }> {
 
+    // static
+
+        public static readonly BASE_URL: string = window.location.protocol + "//" + window.location.host;
+
+    // constructor
+
     public constructor () {
 
         super();
 
         const socket = new WebSocket("ws://" + window.location.host);
-
-        socket.addEventListener("error", (err: Event): void => {
-            // eslint-disable-next-line no-console -- template: surface socket errors during development
-            console.error("socket error", err);
-        });
 
         socket.addEventListener("open", (): void => {
             this.emit("connected");
@@ -59,6 +60,8 @@ export class SDK extends EventEmitter<{
         });
 
     }
+
+    // api methods
 
 }
 
