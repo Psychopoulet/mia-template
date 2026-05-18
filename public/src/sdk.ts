@@ -1,11 +1,12 @@
-
-
 // deps
 
     // natives
     import { EventEmitter } from "events";
 
 // types & interfaces
+
+    // natives
+    type Timeout = ReturnType<typeof setTimeout>;
 
     // locals
     // import type { components, operations, paths } from "./Descriptor";
@@ -18,9 +19,10 @@ export class SDK extends EventEmitter<{
     "error": [ Error ];
 }> {
 
-    // static
+    // protected
 
-        public static readonly BASE_URL: string = window.location.protocol + "//" + window.location.host;
+        protected _socket: WebSocket | null;
+        protected _reconnectTimeout: Timeout | null;
 
     // constructor
 
@@ -28,28 +30,61 @@ export class SDK extends EventEmitter<{
 
         super();
 
-        const socket = new WebSocket(
+        this._socket = null;
+        this._reconnectTimeout = null;
+
+    }
+
+    // public methods
+
+    public connect (): void {
+
+        if (WebSocket.OPEN === this._socket?.readyState) {
+            return;
+        }
+
+        if (this._reconnectTimeout) {
+            return;
+        }
+
+        this._socket = new WebSocket(
             ("https:" === window.location.protocol ? "wss:" : "ws:")
             + "//" + window.location.host
         );
 
-        socket.addEventListener("open", (): void => {
+        this._socket.onopen = (): void => {
             this.emit("connected");
-        });
+        };
 
-        socket.addEventListener("close", (data: CloseEvent): void => {
-            this.emit("disconnected", data.code, data.reason);
-        });
+        this._socket.onclose = (event: CloseEvent): void => {
 
-        socket.addEventListener("error", (evt: Event): void => {
-            const message = evt instanceof ErrorEvent ? evt.message : "Socket error";
-            this.emit("error", new Error(message));
-        });
+            this.emit("disconnected", event.code, event.reason);
 
-        socket.addEventListener("message", (): void => {
+            // normal closure
+            if (1000 === event.code) {
+                return;
+            }
+
+            this._reconnectTimeout = setTimeout((): void => {
+                this._reconnectTimeout = null;
+                return this.connect();
+            }, 1000);
+
+        };
+
+        this._socket.onerror = (evt: Event): void => {
+
+            // avoid catching error on reconnection
+            if (evt instanceof ErrorEvent) {
+                this.emit("error", new Error(evt.message));
+            }
+
+        };
+
+        this._socket.onmessage = (): void => {
 
             /*
-            const parsedMessage: <types> = JSON.parse(_event.data);
+            const parsedMessage: <types> = JSON.parse(event.data);
 
             if (<plugin name> === parsedMessage.plugin) {
 
@@ -60,7 +95,27 @@ export class SDK extends EventEmitter<{
             }
             */
 
-        });
+        };
+
+    }
+
+    public disconnect (): void {
+
+        if (this._reconnectTimeout) {
+            clearTimeout(this._reconnectTimeout);
+            this._reconnectTimeout = null;
+        }
+
+        if (this._socket
+            && (
+                WebSocket.CONNECTING === this._socket.readyState
+                || WebSocket.OPEN === this._socket.readyState
+            )
+        ) {
+            this._socket.close(1000, "Normal closure");
+        }
+
+        this._socket = null;
 
     }
 
