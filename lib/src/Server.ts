@@ -3,22 +3,9 @@
     // externals
     import { Server } from "node-pluginsmanager-plugin";
 
-// types & interfaces
-
-    // externals
-    import type { iMediatorUserOptions } from "node-pluginsmanager-plugin";
-
 // module
 
 export default class ServerTemplate extends Server {
-
-    public constructor (opts: iMediatorUserOptions) {
-
-        super(opts);
-
-        // <binds>
-
-    }
 
     public _initWorkSpace (): Promise<void> {
 
