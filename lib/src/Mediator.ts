@@ -23,6 +23,7 @@
 export default class MediatorTemplate extends Mediator<iEventsMinimal & {
         "initialized": [ ContainerPattern ];
         "released": [ ContainerPattern ];
+        "error": [ Error ];
     }> {
 
     // constructor
