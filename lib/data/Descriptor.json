@@ -215,7 +215,7 @@
 					},
 					"command": {
 						"type": "string",
-						"enum": [ "released" ]
+						"enum": [ "error" ]
 					},
 					"data": {
 						"$ref": "#/components/schemas/Error"

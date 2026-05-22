@@ -9,14 +9,18 @@
     type Timeout = ReturnType<typeof setTimeout>;
 
     // locals
-    // import type { components, operations, paths } from "./Descriptor";
+    import type { components } from "./Descriptor";
+
+    type tEvents = components["schemas"]["EventPluginInitialized"] | components["schemas"]["EventPluginReleased"] | components["schemas"]["EventPluginError"];
 
 // component
 
 export class SDK extends EventEmitter<{
     "connected": [];
     "disconnected": [ number, string ];
-    "error": [ Error ];
+    "initialized": [];
+    "released": [];
+    "error": [ components["schemas"]["EventPluginError"]["data"] ];
 }> {
 
     // protected
@@ -76,24 +80,41 @@ export class SDK extends EventEmitter<{
 
             // avoid catching error on reconnection
             if (evt instanceof ErrorEvent) {
-                this.emit("error", new Error(evt.message));
+
+                this.emit("error", {
+                    "code": "unknown",
+                    "message": evt.message
+                });
+
             }
 
         };
 
-        this._socket.onmessage = (): void => {
+        this._socket.onmessage = (event: MessageEvent<string>): void => {
 
-            /*
-            const parsedMessage: <types> = JSON.parse(event.data);
+            const parsedMessage: tEvents = JSON.parse(event.data) as tEvents;
 
-            if (<plugin name> === parsedMessage.plugin) {
+            if ("{{plugin.name}}" === parsedMessage.plugin) {
 
                 switch (parsedMessage.command) {
-                    <cases>
+
+                    case "initialized":
+                        this.emit("initialized");
+                    break;
+                    case "released":
+                        this.emit("released");
+                    break;
+                    case "error":
+                        this.emit("error", parsedMessage.data);
+                    break;
+
+                    default:
+                        // nothing to do here
+                    break;
+
                 }
 
             }
-            */
 
         };
 
