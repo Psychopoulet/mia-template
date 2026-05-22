@@ -10,7 +10,6 @@
 
     // locals
     import type { components } from "./Descriptor";
-
     type tEvents = components["schemas"]["EventPluginInitialized"] | components["schemas"]["EventPluginReleased"] | components["schemas"]["EventPluginError"];
 
 // component
@@ -94,7 +93,8 @@ export class SDK extends EventEmitter<{
 
             const parsedMessage: tEvents = JSON.parse(event.data) as tEvents;
 
-            if ("{{plugin.name}}" === parsedMessage.plugin) {
+            // must disable the rule because the plugin name can be sended by another plugin
+            if ("{{plugin.name}}" === parsedMessage.plugin) { // eslint-disable-line @typescript-eslint/no-unnecessary-condition
 
                 switch (parsedMessage.command) {
 
