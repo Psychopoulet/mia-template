@@ -10,7 +10,7 @@
 
     // locals
     import type { components } from "./Descriptor";
-    type tEvents = components["schemas"]["EventPluginInitialized"] | components["schemas"]["EventPluginReleased"] | components["schemas"]["EventPluginError"];
+    type tEvents = components["schemas"]["PushEventPluginInitialized"] | components["schemas"]["PushEventPluginReleased"] | components["schemas"]["PushEventPluginError"];
 
 // component
 
@@ -19,7 +19,7 @@ export class SDK extends EventEmitter<{
     "disconnected": [ number, string ];
     "initialized": [];
     "released": [];
-    "error": [ components["schemas"]["EventPluginError"]["data"] ];
+    "error": [ components["schemas"]["PushEventPluginError"]["data"] ];
 }> {
 
     // protected

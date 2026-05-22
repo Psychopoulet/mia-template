@@ -18,7 +18,7 @@
 
     interface iState {
         "connected": boolean;
-        "error": components["schemas"]["EventPluginError"]["data"] | null;
+        "error": components["schemas"]["PushEventPluginError"]["data"] | null;
     }
 
 // component
@@ -88,7 +88,7 @@ export default class App extends React.Component<iPropsNode, iState> {
 
     };
 
-    private readonly _onError = (data: components["schemas"]["EventPluginError"]["data"]): void => {
+    private readonly _onError = (data: components["schemas"]["PushEventPluginError"]["data"]): void => {
 
         this.setState({
             "error": data

@@ -172,7 +172,7 @@
 				},
 				"required": [ "code", "message" ]
 			},
-			"EventPluginInitialized": {
+			"PushEventPluginInitialized": {
 				"type": "object",
 				"properties": {
 					"id": {
@@ -188,7 +188,7 @@
 				},
 				"required": [ "id", "plugin", "command" ]
 			},
-			"EventPluginReleased": {
+			"PushEventPluginReleased": {
 				"type": "object",
 				"properties": {
 					"id": {
@@ -204,7 +204,7 @@
 				},
 				"required": [ "id", "plugin", "command" ]
 			},
-			"EventPluginError": {
+			"PushEventPluginError": {
 				"type": "object",
 				"properties": {
 					"id": {
