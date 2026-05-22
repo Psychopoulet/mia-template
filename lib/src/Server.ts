@@ -5,24 +5,21 @@
 
 // types & interfaces
 
-    // externals
-    import type { iMediatorUserOptions } from "node-pluginsmanager-plugin";
+    // locals
+    import type MediatorTemplate from "./Mediator";
+    import type { components } from "./Descriptor";
 
 // module
 
 export default class ServerTemplate extends Server {
 
-    public constructor (opts: iMediatorUserOptions) {
-
-        super(opts);
-
-        // <binds>
-
-    }
-
     public _initWorkSpace (): Promise<void> {
 
-        // (this._Mediator as MediatorTemplate).on(<event>, this._on<method>);
+        (this._Mediator as MediatorTemplate)
+
+            .on("initialized", this._onPluginInitialized)
+            .on("released", this._onPluginReleased)
+            .on("error", this._onPluginError);
 
         return Promise.resolve();
 
@@ -30,12 +27,34 @@ export default class ServerTemplate extends Server {
 
     public _releaseWorkSpace (): Promise<void> {
 
-        // (this._Mediator as MediatorTemplate).off(<event>, this._on<method>);
+        (this._Mediator as MediatorTemplate)
+
+            .off("initialized", this._onPluginInitialized)
+            .off("released", this._onPluginReleased)
+            .off("error", this._onPluginError);
 
         return Promise.resolve();
 
     }
 
     // <events>
+
+    private readonly _onPluginInitialized = (): void => {
+
+        this.push("initialized");
+
+    };
+
+    private readonly _onPluginReleased = (): void => {
+
+        this.push("released");
+
+    };
+
+    private readonly _onPluginError = (data: components["schemas"]["EventPluginError"]["data"]): void => {
+
+        this.push("error", data);
+
+    };
 
 }

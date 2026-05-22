@@ -14,10 +14,11 @@
 
     // locals
     import type { SDK } from "./sdk";
+    import type { components } from "./Descriptor";
 
     interface iState {
         "connected": boolean;
-        "error": Error | null;
+        "error": components["schemas"]["EventPluginError"]["data"] | null;
     }
 
 // component
@@ -87,10 +88,10 @@ export default class App extends React.Component<iPropsNode, iState> {
 
     };
 
-    private readonly _onError = (err: Error | null): void => {
+    private readonly _onError = (data: components["schemas"]["EventPluginError"]["data"]): void => {
 
         this.setState({
-            "error": err
+            "error": data
         });
 
     };
