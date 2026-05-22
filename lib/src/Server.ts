@@ -7,6 +7,7 @@
 
     // locals
     import type MediatorTemplate from "./Mediator";
+    import type { components } from "./Descriptor";
 
 // module
 
@@ -16,9 +17,9 @@ export default class ServerTemplate extends Server {
 
         (this._Mediator as MediatorTemplate)
 
-            .on("initialized", this._onInitialized)
-            .on("released", this._onReleased)
-            .on("error", this._onError);
+            .on("initialized", this._onPluginInitialized)
+            .on("released", this._onPluginReleased)
+            .on("error", this._onPluginError);
 
         return Promise.resolve();
 
@@ -28,9 +29,9 @@ export default class ServerTemplate extends Server {
 
         (this._Mediator as MediatorTemplate)
 
-            .removeListener("initialized", this._onInitialized)
-            .removeListener("released", this._onReleased)
-            .removeListener("error", this._onError);
+            .off("initialized", this._onPluginInitialized)
+            .off("released", this._onPluginReleased)
+            .off("error", this._onPluginError);
 
         return Promise.resolve();
 
@@ -38,21 +39,21 @@ export default class ServerTemplate extends Server {
 
     // <events>
 
-    private readonly _onInitialized = (): void => {
+    private readonly _onPluginInitialized = (): void => {
 
         this.push("initialized");
 
     };
 
-    private readonly _onReleased = (): void => {
+    private readonly _onPluginReleased = (): void => {
 
         this.push("released");
 
     };
 
-    private readonly _onError = (err: Error): void => {
+    private readonly _onPluginError = (data: components["schemas"]["EventPluginError"]["data"]): void => {
 
-        this.push("error", err);
+        this.push("error", data);
 
     };
 

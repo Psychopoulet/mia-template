@@ -16,14 +16,14 @@
     import type { iEventsMinimal } from "node-pluginsmanager-plugin";
 
     // locals
-    import type { operations } from "./Descriptor";
+    import type { operations, components } from "./Descriptor";
 
 // module
 
 export default class MediatorTemplate extends Mediator<iEventsMinimal & {
         "initialized": [ ContainerPattern ];
         "released": [ ContainerPattern ];
-        "error": [ Error ];
+        "error": [ components["schemas"]["EventPluginError"]["data"] ];
     }> {
 
     // constructor
