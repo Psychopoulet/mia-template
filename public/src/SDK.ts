@@ -16,7 +16,7 @@
         [K in keyof T]: T[K] extends never ? never : K
     }[keyof T];
 
-    export type HttpMethodsOf<P extends keyof paths> = Exclude<
+    type HttpMethodsOf<P extends keyof paths> = Exclude<
         NonNeverKeys<paths[P]>,
         "parameters"
     >;
