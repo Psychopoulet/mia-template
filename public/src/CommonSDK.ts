@@ -12,6 +12,15 @@
     import type { components, paths, operations } from "./Descriptor";
     type tEvents = components["schemas"]["PushEventPluginInitialized"] | components["schemas"]["PushEventPluginReleased"] | components["schemas"]["PushEventPluginError"];
 
+    type NonNeverKeys<T> = {
+        [K in keyof T]: T[K] extends never ? never : K
+    }[keyof T];
+
+    type HttpMethodsOf<P extends keyof paths> = Exclude<
+        NonNeverKeys<paths[P]>,
+        "parameters"
+    >;
+
 // component
 
 export default class CommonSDK extends EventEmitter<{
@@ -149,7 +158,7 @@ export default class CommonSDK extends EventEmitter<{
     public getPluginDescriptor (): Promise<operations["getPluginDescriptor"]["responses"]["200"]["content"]["application/json"]> {
 
         const url: keyof paths = "/mia-template/api/descriptor";
-        const method: "GET" = "GET";
+        const method: HttpMethodsOf<typeof url> = "get";
 
         return fetch(url, {
             "method": method,
@@ -179,7 +188,7 @@ export default class CommonSDK extends EventEmitter<{
     public getPluginStatus (): Promise<operations["getPluginStatus"]["responses"]["200"]["content"]["application/json"]> {
 
         const url: keyof paths = "/mia-template/api/status";
-        const method: "GET" = "GET";
+        const method: HttpMethodsOf<typeof url> = "get";
 
         return fetch(url, {
             "method": method,
