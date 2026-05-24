@@ -167,7 +167,8 @@
 	"components": {
 		"schemas": {
 			"PluginName": {
-				"type": "string"
+				"type": "string",
+				"enum": [ "mia-template" ]
 			},
 			"Error": {
 				"type": "object",
