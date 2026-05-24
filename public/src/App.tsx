@@ -5,7 +5,7 @@
     import { Alert, Modal, ModalBody } from "react-bootstrap-fontawesome";
 
     // locals
-    import getSDK from "./sdk";
+    import getSDK from "./SDK";
 
 // types & interfaces
 
@@ -13,12 +13,12 @@
     import type { iPropsNode } from "react-bootstrap-fontawesome";
 
     // locals
-    import type { SDK } from "./sdk";
-    import type { components } from "./Descriptor";
+    import type { SDK } from "./SDK";
+    import type { components, operations } from "./Descriptor";
 
     interface iState {
-        "connected": boolean;
-        "error": components["schemas"]["EventPluginError"]["data"] | null;
+        "status": "CONNECTED" | "DISCONNECTED" | operations["getPluginStatus"]["responses"]["200"]["content"]["application/json"];
+        "error": components["schemas"]["PushEventPluginError"]["data"] | null;
     }
 
 // component
@@ -42,7 +42,7 @@ export default class App extends React.Component<iPropsNode, iState> {
         // state
 
         this.state = {
-            "connected": false,
+            "status": "DISCONNECTED",
             "error": null
         };
 
@@ -75,7 +75,24 @@ export default class App extends React.Component<iPropsNode, iState> {
     private readonly _onConnected = (): void => {
 
         this.setState({
-            "connected": true
+            "status": "CONNECTED"
+        });
+
+        this._sdk.getPluginStatus().then((status): void => {
+
+            this.setState({
+                "status": status
+            });
+
+        }).catch((err: Error): void => {
+
+            this.setState({
+                "error": {
+                    "code": "UNKNOWN_ERROR",
+                    "message": err.message
+                }
+            });
+
         });
 
     };
@@ -83,12 +100,12 @@ export default class App extends React.Component<iPropsNode, iState> {
     private readonly _onDisconnected = (): void => {
 
         this.setState({
-            "connected": false
+            "status": "DISCONNECTED"
         });
 
     };
 
-    private readonly _onError = (data: components["schemas"]["EventPluginError"]["data"]): void => {
+    private readonly _onError = (data: components["schemas"]["PushEventPluginError"]["data"]): void => {
 
         this.setState({
             "error": data
@@ -98,7 +115,10 @@ export default class App extends React.Component<iPropsNode, iState> {
 
     // interface handlers
 
-    private readonly _handleCloseError = (): void => {
+    private readonly _handleCloseError = (e: React.MouseEvent<HTMLButtonElement>): void => {
+
+        e.preventDefault();
+        e.stopPropagation();
 
         this.setState({
             "error": null
@@ -110,10 +130,31 @@ export default class App extends React.Component<iPropsNode, iState> {
 
     public render (): React.JSX.Element {
 
-        if (!this.state.connected) {
+        if ("DISCONNECTED" === this.state.status) {
 
             return <div className="container">
-                <Alert variant="warning">Not connected yet...</Alert>
+                <Alert variant="danger">Not connected yet...</Alert>
+            </div>;
+
+        }
+        else if ("CONNECTED" === this.state.status) {
+
+            return <div className="container">
+                <Alert variant="info">Checking status...</Alert>
+            </div>;
+
+        }
+        else if ("RELEASED" === this.state.status) {
+
+            return <div className="container">
+                <Alert variant="warning">Not enabled...</Alert>
+            </div>;
+
+        }
+        else if ("ENABLED" === this.state.status) {
+
+            return <div className="container">
+                <Alert variant="info">Not initialized yet...</Alert>
             </div>;
 
         }

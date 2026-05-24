@@ -51,7 +51,7 @@ export default class ServerTemplate extends Server {
 
     };
 
-    private readonly _onPluginError = (data: components["schemas"]["EventPluginError"]["data"]): void => {
+    private readonly _onPluginError = (data: components["schemas"]["PushEventPluginError"]["data"]): void => {
 
         this.push("error", data);
 

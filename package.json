@@ -1,7 +1,7 @@
 {
 
   "name": "mia-template",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "This is a template for MIA plugin creation.",
 
   "type": "commonjs",
