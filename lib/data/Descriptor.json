@@ -2,7 +2,8 @@
 	"openapi": "3.0.2",
 	"info": {
 		"title": "mia-template",
-		"version": "1.4.0"
+		"version": "1.4.2",
+		"description": "This is a template for MIA plugin creation."
 	},
 	"paths": {
 		"/mia-template/api/descriptor": {
