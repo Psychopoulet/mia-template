@@ -2,7 +2,7 @@
 	"openapi": "3.0.2",
 	"info": {
 		"title": "mia-template",
-		"version": "1.0.8"
+		"version": "1.4.0"
 	},
 	"paths": {
 		"/mia-template/api/descriptor": {
