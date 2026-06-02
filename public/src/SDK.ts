@@ -44,6 +44,44 @@ export class SDK extends EventEmitter<{
 
     }
 
+    // protected methods
+
+    protected _parseResponse (res: Response): Promise<unknown> {
+
+        if (res.ok) {
+
+            return new Promise((resolve: (content: unknown) => void, reject: (error: Error) => void): void => {
+
+                res.text().then((content: string): void => {
+
+                    try {
+                        return resolve(JSON.parse(content));
+                    }
+                    catch (e: unknown) { // eslint-disable-line @typescript-eslint/no-unused-vars
+                        return resolve(content);
+                    }
+
+                }).catch((err: Error): void => {
+                    console.warn(err);
+                    return reject(new Error("Impossible to parse response"));
+                });
+
+            });
+
+        }
+
+        return new Promise((resolve: unknown, reject: (error: Error) => void): void => {
+
+            res.json().then((content: components["schemas"]["Error"]): void => {
+                return reject(new Error(content.message));
+            }).catch((): void => {
+                return reject(new Error("Problem with request getPluginStatus has status '" + res.status + "' (" + res.statusText + ")"));
+            });
+
+        });
+
+    }
+
     // public methods
 
     public connect (): void {
@@ -160,19 +198,7 @@ export class SDK extends EventEmitter<{
             }
         }).then((res: Response): Promise<operations["getPluginDescriptor"]["responses"]["200"]["content"]["application/json"]> => {
 
-            if (res.ok) {
-                return res.json();
-            }
-
-            return new Promise((resolve: unknown, reject: (error: Error) => void): void => {
-
-                res.json().then((content: operations["getPluginDescriptor"]["responses"]["default"]["content"]["application/json"]): void => {
-                    return reject(new Error(content.message));
-                }).catch((): void => {
-                    return reject(new Error("Problem with request getPluginDescriptor has status '" + res.status + "' (" + res.statusText + ")"));
-                });
-
-            });
+            return this._parseResponse(res) as Promise<operations["getPluginDescriptor"]["responses"]["200"]["content"]["application/json"]>;
 
         });
 
@@ -190,22 +216,11 @@ export class SDK extends EventEmitter<{
             }
         }).then((res: Response): Promise<operations["getPluginStatus"]["responses"]["200"]["content"]["application/json"]> => {
 
-            if (res.ok) {
-                return res.json();
-            }
-            else if (404 === res.status) {
+            if (404 === res.status) {
                 return Promise.resolve("RELEASED");
             }
 
-            return new Promise((resolve: unknown, reject: (error: Error) => void): void => {
-
-                res.json().then((content: operations["getPluginStatus"]["responses"]["default"]["content"]["application/json"]): void => {
-                    return reject(new Error(content.message));
-                }).catch((): void => {
-                    return reject(new Error("Problem with request getPluginStatus has status '" + res.status + "' (" + res.statusText + ")"));
-                });
-
-            });
+            return this._parseResponse(res) as Promise<operations["getPluginStatus"]["responses"]["200"]["content"]["application/json"]>;
 
         });
 
