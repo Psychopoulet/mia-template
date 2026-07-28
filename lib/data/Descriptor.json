@@ -11,6 +11,9 @@
 				"description": "",
 				"summary": "Plugin's descriptor",
 				"operationId": "getPluginDescriptor",
+				"security": [
+					{ "bearerAuth": [] }
+				],
 				"responses": {
 					"200": {
 						"description": "Plugin's descriptor",
@@ -40,6 +43,9 @@
 				"description": "",
 				"summary": "Plugin's status",
 				"operationId": "getPluginStatus",
+				"security": [
+					{ "bearerAuth": [] }
+				],
 				"responses": {
 					"200": {
 						"description": "Plugin's status",
@@ -167,6 +173,13 @@
 
 	},
 	"components": {
+		"securitySchemes": {
+			"bearerAuth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		},
 		"schemas": {
 			"PluginName": {
 				"type": "string",
