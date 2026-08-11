@@ -8,6 +8,10 @@
   "typings": "./lib/cjs/main.d.cts",
   "main": "./lib/cjs/main.cjs",
 
+  "bin": {
+    "create-mia-plugin": "./bin/copy-plugin.js"
+  },
+
   "exports": {
     ".": {
       "require": {
@@ -47,6 +51,7 @@
   },
 
   "files": [
+    "bin",
     "lib/cjs",
     "lib/data",
     "public/dist",

@@ -1,3 +1,3 @@
-import OrchestratorTemplate from "./Orchestrator";
+import Orchestrator from "./Orchestrator";
 
-export = OrchestratorTemplate;
+export = Orchestrator;
