@@ -116,6 +116,24 @@
 
     }
 
+    function _formatDescription (description) {
+
+        let value = String(description).trim();
+
+        if (!value) {
+            return value;
+        }
+
+        value = value.charAt(0).toUpperCase() + value.slice(1);
+
+        if (!value.endsWith(".")) {
+            value += ".";
+        }
+
+        return value;
+
+    }
+
     function _toPascalCaseSuffix (pluginName) {
 
         // "mia-my-plugin" -> "MyPlugin"
@@ -353,6 +371,7 @@
         }
 
         options.name = options.name.toLowerCase();
+        options.description = _formatDescription(options.description);
 
         if (!_isValidName(options.name)) {
 
