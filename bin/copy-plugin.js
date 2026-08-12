@@ -330,85 +330,91 @@
 
 // module
 
-    (async () => {
+(async () => {
 
-        try {
+    try {
 
-            const options = _parseArgs(process.argv.slice(2));
+        const options = _parseArgs(process.argv.slice(2));
 
-            if (options.help) {
+        if (options.help) {
 
-                _printUsage();
+            _printUsage();
 
-                process.exit(0);
-
-            }
-
-            if (!options.name || !options.description) {
-
-                _printUsage();
-
-                throw new Error("Both --name and --description are required");
-
-            }
-
-            options.name = options.name.toLowerCase();
-
-            if (!_isValidName(options.name)) {
-
-                throw new Error(
-                    "Invalid plugin name \"" + options.name + "\". "
-                    + "Use a lowercase name starting with \"mia-\" (e.g. \"mia-my-plugin\")."
-                );
-
-            }
-
-            const templatePackage = await _readJSON(join(TEMPLATE_ROOT, PACKAGE_FILENAME));
-            const oldName = templatePackage.name;
-            const oldDescription = templatePackage.description;
-            const gitignorePatterns = _parseGitignore(await readFile(GITIGNORE_FILE, "utf-8"));
-
-            const destination = options.directory
-                ? resolve(process.cwd(), options.directory)
-                : join(dirname(TEMPLATE_ROOT), options.name);
-
-            if (resolve(destination) === resolve(TEMPLATE_ROOT)) {
-                throw new Error("Destination directory cannot be the template root");
-            }
-
-            if (await _pathExists(destination)) {
-                throw new Error("Destination directory already exists: " + destination);
-            }
-
-            process.stdout.write("Copying template to " + destination + "...\n");
-
-            await cp(TEMPLATE_ROOT, destination, {
-                "recursive": true,
-                "filter": (src) => {
-                    return _shouldCopy(src, gitignorePatterns);
-                }
-            });
-
-            process.stdout.write(
-                "Updating package.json, README.md, Descriptor files and class names...\n"
-            );
-
-            await _updateDestinationFiles(
-                destination,
-                options.name,
-                options.description,
-                oldName,
-                oldDescription
-            );
-
-            process.stdout.write("Plugin \"" + options.name + "\" created at " + destination + "\n");
-
-        }
-        catch (err) {
-
-            process.stderr.write("Error: " + err.message + "\n");
-            process.exit(1);
+            process.exit(0);
 
         }
 
-    })();
+        if (!options.name || !options.description) {
+
+            _printUsage();
+
+            throw new Error("Both --name and --description are required");
+
+        }
+
+        options.name = options.name.toLowerCase();
+
+        if (!_isValidName(options.name)) {
+
+            throw new Error(
+                "Invalid plugin name \"" + options.name + "\". "
+                + "Use a lowercase name starting with \"mia-\" (e.g. \"mia-my-plugin\")."
+            );
+
+        }
+
+        const templatePackage = await _readJSON(join(TEMPLATE_ROOT, PACKAGE_FILENAME));
+        const oldName = templatePackage.name;
+        const oldDescription = templatePackage.description;
+        const gitignorePatterns = _parseGitignore(await readFile(GITIGNORE_FILE, "utf-8"));
+
+        const destination = options.directory
+            ? resolve(process.cwd(), options.directory)
+            : join(dirname(TEMPLATE_ROOT), options.name);
+
+        if (resolve(destination) === resolve(TEMPLATE_ROOT)) {
+            throw new Error("Destination directory cannot be the template root");
+        }
+
+        const destinationExists = await _pathExists(destination);
+
+        process.stdout.write(
+            (destinationExists ? "Updating existing plugin at " : "Copying template to ")
+            + destination + "...\n"
+        );
+
+        await cp(TEMPLATE_ROOT, destination, {
+            "recursive": true,
+            "force": true,
+            "filter": (src) => {
+                return _shouldCopy(src, gitignorePatterns);
+            }
+        });
+
+        process.stdout.write(
+            "Updating package.json, README.md, Descriptor files and class names...\n"
+        );
+
+        await _updateDestinationFiles(
+            destination,
+            options.name,
+            options.description,
+            oldName,
+            oldDescription
+        );
+
+        process.stdout.write(
+            "Plugin \"" + options.name + "\" "
+            + (destinationExists ? "updated" : "created")
+            + " at " + destination + "\n"
+        );
+
+    }
+    catch (err) {
+
+        process.stderr.write("Error: " + err.message + "\n");
+        process.exit(1);
+
+    }
+
+})();
