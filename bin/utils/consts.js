@@ -18,6 +18,7 @@
 
     const POSTFIX_EVENTS_NAME = " - events";
     const POSTFIX_EVENTS_DESCRIPTION = " Events description.";
+    const PLUGIN_INITIAL_VERSION = "1.0.0";
 
     // always excluded even if absent from .gitignore
     const ALWAYS_EXCLUDED = [ ".git", "bin" ];
@@ -36,5 +37,6 @@ module.exports = {
     SERVER_FILENAME,
     POSTFIX_EVENTS_NAME,
     POSTFIX_EVENTS_DESCRIPTION,
+    PLUGIN_INITIAL_VERSION,
     ALWAYS_EXCLUDED
 };

@@ -14,7 +14,8 @@
         ORCHESTRATOR_FILENAME,
         SERVER_FILENAME,
         POSTFIX_EVENTS_NAME,
-        POSTFIX_EVENTS_DESCRIPTION
+        POSTFIX_EVENTS_DESCRIPTION,
+        PLUGIN_INITIAL_VERSION
     } = require("./consts");
     const readJSON = require("./readJSON");
     const writeJSON = require("./writeJSON");
@@ -48,13 +49,15 @@ module.exports = async function updateDestinationFiles (destination, name, descr
 
     packageData.name = name;
     packageData.description = description;
+    packageData.version = PLUGIN_INITIAL_VERSION;
 
     descriptor.info.description = description;
+    descriptor.info.version = PLUGIN_INITIAL_VERSION;
     replacePluginNameInDescriptor(descriptor, oldName, name);
 
     descriptorEvents.info.title = name + POSTFIX_EVENTS_NAME;
     descriptorEvents.info.description = description + POSTFIX_EVENTS_DESCRIPTION;
-    descriptorEvents.info.version = packageData.version;
+    descriptorEvents.info.version = PLUGIN_INITIAL_VERSION;
 
     await writeJSON(packagePath, packageData, 2);
     await writeFile(
