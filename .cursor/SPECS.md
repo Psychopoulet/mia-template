@@ -13,8 +13,8 @@ I) description du projet
 - Je dois avoir un agent de référence qui communiquera avec moi et pilotera des sous-agents spécialisés (dans l'ordre de description), il demandera en entrée un dossier qui contiendra tous les projets et fera une pause entre chaque étape pour échanger avec l'utilisateurs sur ce qui a été fait (résumé court et synthétique, suggestions d'améliorations) pour éventuellement relancer l'agent
 - Je dois avoir plusieurs sous-agents qui auront chacun leur spécialité, décrits dans le chapitre "sous-agents", et qui pourront être appelés indépendament. Ils pourront être rappelés en modifiant les instructions, ce qui amènera à une mise à jour de l'existant et non une réécriture complète.
 - Modes d'exécution de l'orchestrateur :
-    - `create` : routine complète (init → … → review)
-    - `maintain` : skip `mia-init`, partir du plugin existant + `PLAN.md` + périmètre (staged / fichiers cités / consignes)
+    - `create` : routine complète (git → init → … → review)
+    - `maintain` : skip `mia-init` et `mia-git`, partir du plugin existant + `PLAN.md` + périmètre (staged / fichiers cités / consignes)
 - Après `mia-init` (ou dès le début en `maintain`), le cwd de travail est **toujours la racine du plugin**, jamais le template (sauf pour les étapes propres à `mia-init` / `mia-deps` sur le template).
 - Chaque sous-agent doit terminer avec un statut explicite : `pass` | `fail` | `blocked`. L'orchestrateur ne propose la suite que sur `pass` ; sur `fail`/`blocked`, pause obligatoire.
 - Les sous-agents sont invocables explicitement (`@mia-…`). Préférer `disable-model-invocation: true` sur les sous-agents ; l'orchestrateur peut rester découvrable.
@@ -45,6 +45,7 @@ III) conventions communes (à documenter aussi dans reference.md)
     - **interdire** toute autre modification du contenu du plan (objectifs, estimations, descriptions)
 - Statuts agent : `pass` (ok pour enchaîner), `fail` (erreurs à corriger), `blocked` (attente humaine, ex. deps obsolètes)
 - Entrées obligatoires : gate avant tout travail ; manquant → `fail` + message hyper concis avec champ(s) en **gras** (ex. `Missing: **plugin root**.`)
+- Git (`mia-git`) : avant `mia-init` ; vérifier `git` + `gh` / user loggué ; refuser si le répo distant du plugin existe déjà ; créer le répo ; après init, branches `master` puis `develop` (issue de `master`) en local + push ; skip en `maintain`
 
 IV) sous-agents
 
@@ -56,7 +57,20 @@ IV) sous-agents
     - il doit rejouer `npm run check-node-engine` et `npm run check-updates` jusqu'à `pass`, sinon rester `blocked`
     - conclusion avec statut `pass` | `fail` | `blocked`
 
-1)  un agent pour initialiser le nouveau projet.
+1) un agent pour provisionner le dépôt git distant
+    - raison d'être : git / GitHub provisioner
+    - ignoré en mode `maintain`
+    - appelé **avant** `mia-init` (fail-fast + création du remote)
+    - il doit prendre en entrée le nom du plugin et le dossier projets (`PROJET_REP`) ; racine plugin attendue = `PROJET_REP/<nom>`
+    - **avant toute opération** :
+        1) vérifier l'accessibilité de `git` (et de `gh` pour l'utilisateur loggué)
+        2) vérifier que, pour l'utilisateur loggué, le répo avec le nom du plugin n'existe pas déjà ; s'il existe → `fail`
+        3) créer le répo git distant avec le nom du plugin
+    - si la racine plugin n'existe pas encore → `pass` et proposer `mia-init` (pas de tree local inventé)
+    - après `mia-init` (re-appel) : lier le remote au plugin local, créer/pousser `master` puis `develop` issue de `master`
+    - conclusion avec statut `pass` | `fail` | `blocked`
+
+2)  un agent pour initialiser le nouveau projet.
     - raison d'être : script de copie
     - ignoré en mode `maintain`
     - il doit prendre en entrée un dossier qui contiendra tous les projets, un nom de plugin, et une description
@@ -69,8 +83,9 @@ IV) sous-agents
     - il doit exécuter la commande de copie (npx create-mia-plugin --name "<NOUVEAU_NOM>" --description "<NOUVELLE_DESCRIPTION>" --directory "<PROJET_REP>/<NOUVEAU_NOM>")
     - il doit installer les dépendances dans le plugin créé
     - en sortie : chemin absolu de la racine du plugin (cwd de travail pour la suite)
+    - next step sur `pass` : re-appeler `mia-git` pour le link local / branches
 
-2) un agent pour plannifier le dev
+3) un agent pour plannifier le dev
     - raison d'être : product owner
     - il doit prendre en entrée les spécificités du plugin : ce qu'il va faire, ce qui est attendu
     - en `maintain` : lire le `PLAN.md` existant + consignes / périmètre, puis **mettre à jour** (pas réécriture complète sauf demande)
@@ -85,7 +100,7 @@ IV) sous-agents
     - le document final doit être sous format markdown et être sauvegardé à la racine du plugin sous le nom "PLAN.md"
     - il doit inclure une section figée `## Step status` avec checkboxes a→f (seule section modifiable ensuite par les autres agents pour l'avancement)
 
-3) un agent pour mettre à jour le document OpenAPI
+4) un agent pour mettre à jour le document OpenAPI
     - raison d'être : documentaliste technique
     - il doit lire sa partie dans le document "PLAN.md"
     - il doit mettre à jour le document OpenAPI "lib/data/Descriptor.json", autant les routes que les types de données
@@ -99,7 +114,7 @@ IV) sous-agents
     - il doit cocher ses points dans `## Step status` uniquement, sans modifier le reste du plan
     - conclusion avec statut `pass` | `fail` | `blocked`
 
-4) un agent pour mettre à jour le back
+5) un agent pour mettre à jour le back
     - raison d'être : dev sénior Typescript back NodeJS
     - il doit lire sa partie dans le document "PLAN.md"
     - cwd = racine du plugin
@@ -110,7 +125,7 @@ IV) sous-agents
     - en cas d'échec lint/build : statut `fail`, ne pas cocher le step
     - il doit cocher ses points dans `## Step status` uniquement, sans modifier le reste du plan
 
-5) un agent pour mettre à jour le SDK front
+6) un agent pour mettre à jour le SDK front
     - raison d'être : dev sénior Typescript
     - il doit lire sa partie dans le document "PLAN.md" (étape c)
     - cwd = racine du plugin
@@ -121,7 +136,7 @@ IV) sous-agents
     - pause orchestrateur après cet agent avant les composants
     - il doit cocher l'étape c dans `## Step status` uniquement
 
-6) un agent pour créer les composants front
+7) un agent pour créer les composants front
     - raison d'être : dev sénior Typescript front React/Bootstrap/Fontawesome — spécialité UI
     - il doit lire sa partie dans le document "PLAN.md" (étape d)
     - cwd = racine du plugin
@@ -132,7 +147,7 @@ IV) sous-agents
     - en cas d'échec : statut `fail`, ne pas cocher
     - il doit cocher l'étape d dans `## Step status` uniquement
 
-7) un agent pour créer les tests unitaires
+8) un agent pour créer les tests unitaires
     - raison d'être : Quality Analyst sénior
     - il doit lire sa partie dans le document "PLAN.md"
     - cwd = racine du plugin
@@ -144,14 +159,14 @@ IV) sous-agents
     - lint tests recommandé : "npm run lint-tests" avant de conclure `pass`
     - il doit cocher ses points dans `## Step status` uniquement
 
-8) un agent transversal de lint (optionnel mais recommandé avant review, ou fusionné dans back/front/tests)
+9) un agent transversal de lint (optionnel mais recommandé avant review, ou fusionné dans back/front/tests)
     - raison d'être : guardian of lint consistency
     - entrée : racine plugin + périmètre (`back` | `front` | `tests` | `all`)
     - exécute les scripts lint correspondants (`npm run lint-back`, `npm run lint-front`, `npm run lint-tests`, ou `npm run lint`)
     - statut `pass` seulement si tout est vert ; sinon `fail` avec liste des erreurs
     - peut être sauté si chaque agent spé a déjà linté avec succès, mais l'orchestrateur peut le forcer avant `mia-review`
 
-9) un agent pour faire une review
+10) un agent pour faire une review
     - raison d'être : developpeur sénior fullstack
     - il doit soit analyser l'ensemble du projet, ou limiter à un périmètre si le projet a déjà été analysé (si des documents sont en stage par exemple) (demander confirmation dans ce cas)
     - il doit s'assurer de la qualité du code livré, de la sécurité et des points d'amélioration
@@ -163,16 +178,18 @@ V) ordre orchestrateur
 
 Mode `create` :
 
-    1. mia-init
-    2. (si blocked deps) mia-deps → reprise mia-init checks / suite
-    3. mia-plan
-    4. mia-openapi
-    5. mia-back
-    6. mia-front-sdk
-    7. pause → mia-front-ui
-    8. mia-tests
-    9. (optionnel) mia-lint
-    10. mia-review
+    1. mia-git (remote / fail-fast)
+    2. mia-init
+    3. (si blocked deps) mia-deps → reprise mia-init checks / suite
+    4. mia-git (link local + master / develop si encore pending)
+    5. mia-plan
+    6. mia-openapi
+    7. mia-back
+    8. mia-front-sdk
+    9. pause → mia-front-ui
+    10. mia-tests
+    11. (optionnel) mia-lint
+    12. mia-review
     — pause utilisateur entre chaque étape
 
 Mode `maintain` :

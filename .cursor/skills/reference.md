@@ -9,6 +9,13 @@ Workflow overview: [AGENTS.md](../AGENTS.md) · Full spec: [SPECS.md](../SPECS.m
 - Template reference: https://github.com/Psychopoulet/mia-template
 - After init (or from the start in `maintain` mode), **cwd = plugin root**, never the template (except `mia-init` / `mia-deps` when operating on the template).
 
+## Git / GitHub (mia-git)
+
+- Tools: `git` + `gh` (logged-in GitHub user)
+- On create: runs **before** `mia-init` (checks + remote); after the plugin exists, link local and push **`master`**, then **`develop`** from `master`
+- Remote repo name = plugin name; fail if it already exists for the logged-in user (first provision call)
+- Skipped in `maintain` mode
+
 ## npm scripts
 
 Always use `npm run`:

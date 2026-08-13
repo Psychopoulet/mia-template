@@ -3,7 +3,7 @@ name: mia-orchestrator
 description: >-
   Reference MIA agent that drives specialized sub-agents to create or maintain
   home-automation plugins from mia-template. Use for full create/maintain
-  workflows or to coordinate mia-deps, mia-init, mia-plan, mia-openapi, mia-back,
+  workflows or to coordinate mia-deps, mia-git, mia-init, mia-plan, mia-openapi, mia-back,
   mia-front-sdk, mia-front-ui, mia-tests, mia-lint, and mia-review. See root
   AGENTS.md for the workflow overview and SPECS.md for the full spec.
 ---
@@ -38,7 +38,7 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 
 ## Expected output
 
-1. Confirm mode. In `maintain`, confirm plugin root + scope; skip `mia-init`.
+1. Confirm mode. In `maintain`, confirm plugin root + scope; skip `mia-init` and `mia-git`.
 2. Run sub-agents in order (create) or only those needed by the delta (maintain).
 3. After `mia-init` (or immediately in `maintain`): **cwd = plugin root**.
 4. **Mandatory pause** after each sub-agent: short summary, suggestions, wait for validation.
@@ -50,16 +50,18 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 
 ### Create order
 
-1. `mia-init`
-2. If blocked on deps → `mia-deps` → resume checks / continue
-3. `mia-plan`
-4. `mia-openapi`
-5. `mia-back`
-6. `mia-front-sdk`
-7. Pause → `mia-front-ui`
-8. `mia-tests`
-9. Optional `mia-lint`
-10. `mia-review`
+1. `mia-git` (remote first; fail-fast)
+2. `mia-init`
+3. If blocked on deps → `mia-deps` → resume checks / continue
+4. `mia-git` again if local link / `master`+`develop` still pending
+5. `mia-plan`
+6. `mia-openapi`
+7. `mia-back`
+8. `mia-front-sdk`
+9. Pause → `mia-front-ui`
+10. `mia-tests`
+11. Optional `mia-lint`
+12. `mia-review`
 
 ### Maintain order
 

@@ -66,5 +66,5 @@ Do not recreate an existing plugin unless explicitly asked.
 - **[outdated deps / other / none]** — call **mia-deps**: **yes/no**
 
 ## Proposed next step
-On **pass**: **mia-plan**. On **blocked**: **mia-deps**.
+On **pass**: **mia-git** (local link / branches). On **blocked**: **mia-deps**.
 ```
