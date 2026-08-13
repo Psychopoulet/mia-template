@@ -21,7 +21,7 @@
     const PLUGIN_INITIAL_VERSION = "1.0.0";
 
     // always excluded even if absent from .gitignore
-    const ALWAYS_EXCLUDED = [ ".git", "bin" ];
+    const ALWAYS_EXCLUDED = [ ".git", "bin", ".cursor" ];
 
 // module
 

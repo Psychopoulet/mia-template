@@ -47,9 +47,11 @@ module.exports = async function updateDestinationFiles (destination, name, descr
     const oldClassSuffix = toPascalCaseSuffix(oldName);
     const newClassSuffix = toPascalCaseSuffix(name);
 
-    packageData.name = name;
-    packageData.description = description;
-    packageData.version = PLUGIN_INITIAL_VERSION;
+    const packageWithNewName = JSON.parse(
+        JSON.stringify(packageData).replaceAll(oldName, name)
+    );
+    packageWithNewName.description = description;
+    packageWithNewName.version = PLUGIN_INITIAL_VERSION;
 
     descriptor.info.description = description;
     descriptor.info.version = PLUGIN_INITIAL_VERSION;
@@ -59,7 +61,7 @@ module.exports = async function updateDestinationFiles (destination, name, descr
     descriptorEvents.info.description = description + POSTFIX_EVENTS_DESCRIPTION;
     descriptorEvents.info.version = PLUGIN_INITIAL_VERSION;
 
-    await writeJSON(packagePath, packageData, 2);
+    await writeJSON(packagePath, packageWithNewName, 2);
     await writeFile(
         readmePath,
         updateReadme(readme, oldName, oldDescription, name, description),
