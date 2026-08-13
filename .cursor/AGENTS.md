@@ -27,7 +27,7 @@ After init (or from the start in maintain), work always happens in the **plugin 
 
 Full routine, with a **user pause** after each step:
 
-1. `mia-git` — checks + remote repo (fail-fast; before init)
+1. `mia-git` — checks + remote + ensure plugin root dir exists (fail-fast; before init)
 2. `mia-init` — clone/update template, checks, `create-mia-plugin`, install
 3. `mia-deps` — only if version checks are blocked (exit code `1`)
 4. `mia-git` — local link + `master` / `develop` if still pending

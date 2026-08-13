@@ -45,7 +45,7 @@ III) conventions communes (à documenter aussi dans reference.md)
     - **interdire** toute autre modification du contenu du plan (objectifs, estimations, descriptions)
 - Statuts agent : `pass` (ok pour enchaîner), `fail` (erreurs à corriger), `blocked` (attente humaine, ex. deps obsolètes)
 - Entrées obligatoires : gate avant tout travail ; manquant → `fail` + message hyper concis avec champ(s) en **gras** (ex. `Missing: **plugin root**.`)
-- Git (`mia-git`) : avant `mia-init` ; vérifier `git` + `gh` / user loggué ; refuser si le répo distant du plugin existe déjà ; créer le répo ; après init, branches `master` puis `develop` (issue de `master`) en local + push ; skip en `maintain`
+- Git (`mia-git`) : avant `mia-init` ; vérifier `git` + `gh` / user loggué ; refuser si le répo distant du plugin existe déjà ; créer le répo ; créer `PROJET_REP` / racine plugin s'ils n'existent pas (dossiers vides) ; après init, branches `master` puis `develop` (issue de `master`) en local + push ; skip en `maintain`
 
 IV) sous-agents
 
@@ -66,7 +66,8 @@ IV) sous-agents
         1) vérifier l'accessibilité de `git` (et de `gh` pour l'utilisateur loggué)
         2) vérifier que, pour l'utilisateur loggué, le répo avec le nom du plugin n'existe pas déjà ; s'il existe → `fail`
         3) créer le répo git distant avec le nom du plugin
-    - si la racine plugin n'existe pas encore → `pass` et proposer `mia-init` (pas de tree local inventé)
+        4) si `PROJET_REP` ou la racine plugin `PROJET_REP/<nom>` n'existe pas → les créer (dossiers vides uniquement ; pas de tree local inventé)
+    - ensuite → `pass` et proposer `mia-init` (qui utilisera la racine plugin ainsi créée / existante)
     - après `mia-init` (re-appel) : lier le remote au plugin local, créer/pousser `master` puis `develop` issue de `master`
     - conclusion avec statut `pass` | `fail` | `blocked`
 
@@ -74,6 +75,7 @@ IV) sous-agents
     - raison d'être : script de copie
     - ignoré en mode `maintain`
     - il doit prendre en entrée un dossier qui contiendra tous les projets, un nom de plugin, et une description
+    - la racine plugin `PROJET_REP/<nom>` est censée exister déjà (créée vide par `mia-git` si besoin) ; `create-mia-plugin` la remplit
     - il doit s'assurer que le répo "https://github.com/Psychopoulet/mia-template" est bien présent dans un sous-dossier
     - il doit se placer dans le dossier du template
     - il doit vérifier que le répo est à jour (git fetch, git pull)

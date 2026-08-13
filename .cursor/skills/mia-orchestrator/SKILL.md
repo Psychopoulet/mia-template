@@ -50,7 +50,7 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 
 ### Create order
 
-1. `mia-git` (remote first; fail-fast)
+1. `mia-git` (remote + ensure plugin root dir; fail-fast)
 2. `mia-init`
 3. If blocked on deps → `mia-deps` → resume checks / continue
 4. `mia-git` again if local link / `master`+`develop` still pending

@@ -26,6 +26,7 @@ Required:
 
 Context:
 - Template repo must exist (or be clonable) as a subdirectory of `PROJET_REP` (e.g. `PROJET_REP/mia-template`)
+- Plugin root `PROJET_REP/<NOUVEAU_NOM>` is expected to already exist when coming from `mia-git` (empty dir created by git if needed); `create-mia-plugin` fills it
 
 ## Gate (do first)
 
