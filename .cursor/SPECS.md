@@ -45,7 +45,7 @@ III) conventions communes (à documenter aussi dans reference.md)
     - **interdire** toute autre modification du contenu du plan (objectifs, estimations, descriptions)
 - Statuts agent : `pass` (ok pour enchaîner), `fail` (erreurs à corriger), `blocked` (attente humaine, ex. deps obsolètes)
 - Entrées obligatoires : gate avant tout travail ; manquant → `fail` + message hyper concis avec champ(s) en **gras** (ex. `Missing: **plugin root**.`)
-- Git (`mia-git`) : avant `mia-init` ; vérifier `git` + `gh` / user loggué ; refuser si le répo distant du plugin existe déjà ; créer le répo **public** (défaut) ; créer `PROJET_REP` / racine plugin s'ils n'existent pas (dossiers vides) ; après init, branches `master` puis `develop` (issue de `master`) en local + push ; skip en `maintain`
+- Git (`mia-git`) : avant `mia-init` ; vérifier `git` + `gh` / user loggué ; refuser si le répo distant du plugin existe déjà ; créer le répo **public** (défaut) ; créer `PROJET_REP` / racine plugin s'ils n'existent pas ; créer un placeholder **`tmp.txt`** pour le commit initial ; créer/pousser `master` puis `develop` (issue de `master`) en **une seule passe** ; `mia-init` supprime `tmp.txt` ; skip en `maintain`
 
 IV) sous-agents
 
@@ -60,22 +60,23 @@ IV) sous-agents
 1) un agent pour provisionner le dépôt git distant
     - raison d'être : git / GitHub provisioner
     - ignoré en mode `maintain`
-    - appelé **avant** `mia-init` (fail-fast + création du remote)
+    - appelé **avant** `mia-init` (fail-fast + création du remote + branches locales) — **une seule passe**, pas de re-appel après init
     - il doit prendre en entrée le nom du plugin et le dossier projets (`PROJET_REP`) ; racine plugin attendue = `PROJET_REP/<nom>`
     - **avant toute opération** :
         1) vérifier l'accessibilité de `git` (et de `gh` pour l'utilisateur loggué)
         2) vérifier que, pour l'utilisateur loggué, le répo avec le nom du plugin n'existe pas déjà ; s'il existe → `fail`
         3) créer le répo git distant avec le nom du plugin
-        4) si `PROJET_REP` ou la racine plugin `PROJET_REP/<nom>` n'existe pas → les créer (dossiers vides uniquement ; pas de tree local inventé)
+        4) si `PROJET_REP` ou la racine plugin `PROJET_REP/<nom>` n'existe pas → les créer
+        5) créer un fichier vide **`tmp.txt`** dans la racine plugin (placeholder pour le commit initial ; `mia-init` le supprimera)
+        6) initialiser git local si besoin, committer `tmp.txt`, lier `origin`, créer/pousser `master` puis `develop` issue de `master` ; laisser le working tree sur `develop`
     - ensuite → `pass` et proposer `mia-init` (qui utilisera la racine plugin ainsi créée / existante)
-    - après `mia-init` (re-appel) : lier le remote au plugin local, créer/pousser `master` puis `develop` issue de `master`
     - conclusion avec statut `pass` | `fail` | `blocked`
 
 2)  un agent pour initialiser le nouveau projet.
     - raison d'être : script de copie
     - ignoré en mode `maintain`
     - il doit prendre en entrée un dossier qui contiendra tous les projets, un nom de plugin, et une description
-    - la racine plugin `PROJET_REP/<nom>` est censée exister déjà (créée vide par `mia-git` si besoin) ; `create-mia-plugin` la remplit
+    - la racine plugin `PROJET_REP/<nom>` est censée exister déjà (créée par `mia-git` avec `.git` + `tmp.txt` si besoin) ; supprimer **`tmp.txt`** s'il est présent, puis `create-mia-plugin` la remplit (conserver `.git` / branches)
     - il doit s'assurer que le répo "https://github.com/Psychopoulet/mia-template" est bien présent dans un sous-dossier
     - il doit se placer dans le dossier du template
     - il doit vérifier que le répo est à jour (git fetch, git pull)
@@ -85,7 +86,7 @@ IV) sous-agents
     - il doit exécuter la commande de copie (npx create-mia-plugin --name "<NOUVEAU_NOM>" --description "<NOUVELLE_DESCRIPTION>" --directory "<PROJET_REP>/<NOUVEAU_NOM>")
     - il doit installer les dépendances dans le plugin créé
     - en sortie : chemin absolu de la racine du plugin (cwd de travail pour la suite)
-    - next step sur `pass` : re-appeler `mia-git` pour le link local / branches
+    - next step sur `pass` : `mia-plan`
 
 3) un agent pour plannifier le dev
     - raison d'être : product owner
@@ -180,18 +181,17 @@ V) ordre orchestrateur
 
 Mode `create` :
 
-    1. mia-git (remote / fail-fast)
-    2. mia-init
+    1. mia-git (remote + tmp.txt + master / develop ; fail-fast)
+    2. mia-init (supprime tmp.txt, scaffold)
     3. (si blocked deps) mia-deps → reprise mia-init checks / suite
-    4. mia-git (link local + master / develop si encore pending)
-    5. mia-plan
-    6. mia-openapi
-    7. mia-back
-    8. mia-front-sdk
-    9. pause → mia-front-ui
-    10. mia-tests
-    11. (optionnel) mia-lint
-    12. mia-review
+    4. mia-plan
+    5. mia-openapi
+    6. mia-back
+    7. mia-front-sdk
+    8. pause → mia-front-ui
+    9. mia-tests
+    10. (optionnel) mia-lint
+    11. mia-review
     — pause utilisateur entre chaque étape
 
 Mode `maintain` :

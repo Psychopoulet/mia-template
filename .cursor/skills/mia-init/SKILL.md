@@ -26,7 +26,7 @@ Required:
 
 Context:
 - Template repo must exist (or be clonable) as a subdirectory of `PROJET_REP` (e.g. `PROJET_REP/mia-template`)
-- Plugin root `PROJET_REP/<NOUVEAU_NOM>` is expected to already exist when coming from `mia-git` (empty dir created by git if needed); `create-mia-plugin` fills it
+- Plugin root `PROJET_REP/<NOUVEAU_NOM>` is expected to already exist when coming from `mia-git` (git repo with `master`/`develop`, often only a placeholder `tmp.txt`); `create-mia-plugin` fills it
 
 ## Gate (do first)
 
@@ -40,14 +40,15 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 4. `npm install` in the template if needed.
 5. Run `npm run check-node-engine` and `npm run check-updates`.
 6. If either exits with **1**: status **`blocked`**, tell orchestrator to pause and call **`mia-deps`**. Do not copy yet.
-7. Run:
+7. In the plugin root, **delete `tmp.txt`** if present (placeholder left by `mia-git` for the initial commit). Keep the existing `.git` / branches.
+8. Run:
    ```bash
    npx create-mia-plugin --name "<NOUVEAU_NOM>" --description "<NOUVELLE_DESCRIPTION>" --directory "<PROJET_REP>/<NOUVEAU_NOM>"
    ```
-8. `npm install` inside the created plugin.
-9. Return the **absolute plugin root path** (cwd for all following agents).
+9. `npm install` inside the created plugin.
+10. Return the **absolute plugin root path** (cwd for all following agents).
 
-Do not recreate an existing plugin unless explicitly asked.
+Do not recreate an existing plugin unless explicitly asked. Do not remove `.git` or switch away from the current branch without need.
 
 ## Conclusion document
 
@@ -60,6 +61,7 @@ Do not recreate an existing plugin unless explicitly asked.
 ## Actions performed
 - Template: **[path]** — up to date: **yes/no**
 - Checks: `check-node-engine` **[ok/ko]**, `check-updates` **[ok/ko]**
+- Placeholder `tmp.txt` removed: **yes/no/n/a**
 - Plugin root: **[absolute path]** (if created)
 - Plugin `npm install`: **[ok/ko/n/a]**
 
@@ -67,5 +69,5 @@ Do not recreate an existing plugin unless explicitly asked.
 - **[outdated deps / other / none]** — call **mia-deps**: **yes/no**
 
 ## Proposed next step
-On **pass**: **mia-git** (local link / branches). On **blocked**: **mia-deps**.
+On **pass**: **mia-plan**. On **blocked**: **mia-deps**.
 ```

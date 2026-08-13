@@ -19,7 +19,7 @@ Agent skill bodies and conclusions are written in **English**.
    - **`maintain`** — update an existing plugin (skip init)
 3. Or call a single specialist with **`@mia-<name>`** (explicit invocation).
 
-After init (or from the start in maintain), work always happens in the **plugin root**, not in the template (except init/deps on the template). `mia-git` runs only in **create**: remote first (before init), then local branches after the plugin exists.
+After init (or from the start in maintain), work always happens in the **plugin root**, not in the template (except init/deps on the template). `mia-git` runs only in **create**, once, before init (remote + local `master`/`develop`).
 
 ## Modes
 
@@ -27,18 +27,17 @@ After init (or from the start in maintain), work always happens in the **plugin 
 
 Full routine, with a **user pause** after each step:
 
-1. `mia-git` — checks + remote + ensure plugin root dir exists (fail-fast; before init)
-2. `mia-init` — clone/update template, checks, `create-mia-plugin`, install
+1. `mia-git` — checks + remote + plugin root + `tmp.txt` + `master` / `develop` (fail-fast; before init)
+2. `mia-init` — clone/update template, checks, remove `tmp.txt`, `create-mia-plugin`, install
 3. `mia-deps` — only if version checks are blocked (exit code `1`)
-4. `mia-git` — local link + `master` / `develop` if still pending
-5. `mia-plan` — write plugin `PLAN.md` (time-boxed steps + `## Step status`)
-6. `mia-openapi` — update `lib/data/Descriptor.json`
-7. `mia-back` — Mediator (+ Server if events), `lint-back`, `build-back`
-8. `mia-front-sdk` — SDK + front OpenAPI types
-9. `mia-front-ui` — React/Bootstrap/Fontawesome components
-10. `mia-tests` — mocha, Mediator coverage ≥ 95%
-11. `mia-lint` — optional full lint gate
-12. `mia-review` — quality/security (+ Snyk/Sonar if available), `npm run tests`
+4. `mia-plan` — write plugin `PLAN.md` (time-boxed steps + `## Step status`)
+5. `mia-openapi` — update `lib/data/Descriptor.json`
+6. `mia-back` — Mediator (+ Server if events), `lint-back`, `build-back`
+7. `mia-front-sdk` — SDK + front OpenAPI types
+8. `mia-front-ui` — React/Bootstrap/Fontawesome components
+9. `mia-tests` — mocha, Mediator coverage ≥ 95%
+10. `mia-lint` — optional full lint gate
+11. `mia-review` — quality/security (+ Snyk/Sonar if available), `npm run tests`
 
 ### `maintain`
 
@@ -55,7 +54,7 @@ Re-invoking a specialist with new instructions means **update existing work**, n
 |-------|------|------|
 | `mia-orchestrator` | Lead — drives the pipeline, pauses for validation | Full create/maintain runs |
 | `mia-deps` | Dependency maintainer | Checks fail on outdated engines/packages |
-| `mia-git` | Git/GitHub provisioner (`master` + `develop`) | Create only, before init (remote), then local after plugin exists |
+| `mia-git` | Git/GitHub provisioner (`master` + `develop`) | Create only, once before init |
 | `mia-init` | Copy script from template | Create only |
 | `mia-plan` | Product owner → plugin `PLAN.md` | Plan or revise scope |
 | `mia-openapi` | Technical writer → Descriptor | API contract |

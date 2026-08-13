@@ -50,18 +50,17 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 
 ### Create order
 
-1. `mia-git` (remote + ensure plugin root dir; fail-fast)
-2. `mia-init`
+1. `mia-git` (remote + plugin root + `tmp.txt` + `master`/`develop`; fail-fast)
+2. `mia-init` (deletes `tmp.txt`, scaffolds plugin)
 3. If blocked on deps → `mia-deps` → resume checks / continue
-4. `mia-git` again if local link / `master`+`develop` still pending
-5. `mia-plan`
-6. `mia-openapi`
-7. `mia-back`
-8. `mia-front-sdk`
-9. Pause → `mia-front-ui`
-10. `mia-tests`
-11. Optional `mia-lint`
-12. `mia-review`
+4. `mia-plan`
+5. `mia-openapi`
+6. `mia-back`
+7. `mia-front-sdk`
+8. Pause → `mia-front-ui`
+9. `mia-tests`
+10. Optional `mia-lint`
+11. `mia-review`
 
 ### Maintain order
 
