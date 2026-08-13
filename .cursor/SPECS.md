@@ -45,7 +45,7 @@ III) conventions communes (à documenter aussi dans reference.md)
     - **interdire** toute autre modification du contenu du plan (objectifs, estimations, descriptions)
 - Statuts agent : `pass` (ok pour enchaîner), `fail` (erreurs à corriger), `blocked` (attente humaine, ex. deps obsolètes)
 - Entrées obligatoires : gate avant tout travail ; manquant → `fail` + message hyper concis avec champ(s) en **gras** (ex. `Missing: **plugin root**.`)
-- Git (`mia-git`) : avant `mia-init` ; vérifier `git` + `gh` / user loggué ; refuser si le répo distant du plugin existe déjà ; créer le répo ; créer `PROJET_REP` / racine plugin s'ils n'existent pas (dossiers vides) ; après init, branches `master` puis `develop` (issue de `master`) en local + push ; skip en `maintain`
+- Git (`mia-git`) : avant `mia-init` ; vérifier `git` + `gh` / user loggué ; refuser si le répo distant du plugin existe déjà ; créer le répo **public** (défaut) ; créer `PROJET_REP` / racine plugin s'ils n'existent pas (dossiers vides) ; après init, branches `master` puis `develop` (issue de `master`) en local + push ; skip en `maintain`
 
 IV) sous-agents
 

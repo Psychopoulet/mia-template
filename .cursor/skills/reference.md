@@ -14,6 +14,7 @@ Workflow overview: [AGENTS.md](../AGENTS.md) · Full spec: [SPECS.md](../SPECS.m
 - Tools: `git` + `gh` (logged-in GitHub user)
 - On create: runs **before** `mia-init` (checks + remote); after the plugin exists, link local and push **`master`**, then **`develop`** from `master`
 - Remote repo name = plugin name; fail if it already exists for the logged-in user (first provision call)
+- Visibility: **public** by default (`gh repo create … --public`); override to `private` only if requested
 - Skipped in `maintain` mode
 
 ## npm scripts

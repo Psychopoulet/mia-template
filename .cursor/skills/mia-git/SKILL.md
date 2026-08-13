@@ -29,7 +29,7 @@ Required:
 
 Optional:
 - **Plugin root** as **cwd** (absolute path; defaults to `PROJET_REP/<plugin-name>`)
-- Visibility: `private` (default) | `public`
+- Visibility: `public` (default) | `private`
 - Description (for `gh repo create`)
 
 ## Gate (do first)
@@ -42,7 +42,7 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 
 1. **Git accessibility**: `git --version` and `gh --version` succeed; `gh auth status` shows a logged-in user. Else **`fail`** / **`blocked`** (e.g. Missing: **`gh` auth**).
 2. **Repo must not exist** for the logged-in user (skip this check when re-invoked only to finish local linking and the remote was already created in this create run): resolve login (`gh api user -q .login`), then check `OWNER/<plugin-name>`. If it already exists **and** this is the first provision call → **`fail`** (e.g. Repo already exists: **`OWNER/name`**). Do not create or overwrite.
-3. **Create remote repo** named after the plugin (`gh repo create <plugin-name> …`), under the logged-in user (or confirmed org if explicitly provided), if it does not already exist from this create run.
+3. **Create remote repo** named after the plugin (`gh repo create <plugin-name> --public …`, or `--private` only if visibility was overridden), under the logged-in user (or confirmed org if explicitly provided), if it does not already exist from this create run.
 4. **Ensure directories**: if **`PROJET_REP`** or the **plugin root** (`PROJET_REP/<plugin-name>`) does not exist, create them (empty directories only). Do not invent a local file tree.
 5. If the plugin root is still **empty / not yet initialized by `mia-init`** (no plugin `package.json` or equivalent): stop here with **`pass`**; proposed next step **`mia-init`**. `mia-init` will use this plugin root.
 6. **Create branch `master`** in the plugin root (init local git if needed, ensure an initial commit exists so the branch can be pushed, set `master` as the default branch, link `origin`, push `master`).
