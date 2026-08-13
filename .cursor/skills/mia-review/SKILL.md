@@ -27,6 +27,10 @@ Scope:
 
 Optional: re-review instructions → focus on deltas / open points.
 
+## Gate (do first)
+
+Verify every **Required** input. If any is missing: status **`fail`**, stop, hyper-concise message with missing field(s) in **bold** (see [reference.md](../reference.md)). No other work until all required inputs are present.
+
 ## Expected output
 
 1. Confirm scope (global vs limited) when ambiguous.

@@ -59,6 +59,24 @@ Checklist (Descriptor):
 - Progress tracking: **only** update `## Step status` checkboxes
 - **Do not** edit plan goals, estimates, or descriptions when marking progress
 
+## Mandatory inputs gate
+
+**Before any other work**, every `mia-*` agent must verify that each **Required** input from its skill is present and usable.
+
+- If any required input is missing → status **`fail`** immediately; do **no** other work
+- Explanation must be **hyper-concise**; put each missing field in **bold**
+
+Example:
+
+```markdown
+# Conclusion — mia-<name>
+
+## Status
+**fail**
+
+Missing: **plugin root**, **scope**.
+```
+
 ## Agent exit status
 
 Every conclusion document must include:

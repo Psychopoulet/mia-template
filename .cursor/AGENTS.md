@@ -67,4 +67,6 @@ Sub-agents use `disable-model-invocation: true` (call them explicitly). The orch
 
 ## Exit status / PLAN.md / conventions
 
-Source of truth: [skills/reference.md](./skills/reference.md) (`pass` | `fail` | `blocked`, plugin `PLAN.md` + `## Step status`, npm scripts, OpenAPI, generated types).
+Source of truth: [skills/reference.md](./skills/reference.md) (`pass` | `fail` | `blocked`, mandatory-inputs gate, plugin `PLAN.md` + `## Step status`, npm scripts, OpenAPI, generated types).
+
+Every agent checks **Required** inputs first; missing → **`fail`** with a hyper-concise message and the missing field(s) in **bold**.

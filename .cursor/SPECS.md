@@ -27,6 +27,7 @@ II) description de la structure des agents
 - l'agent doit être sous format markdown pour la lisibilité
 - la première partie doit être une description de sa raison d'être (son rôle ou sa spécialité, ex : "dev senior spécialisé en QA")
 - la seconde partie doit être ce qui est attendu en entrée de l'agent (prompt, infos obligatoires, contexte) pour son fonctionnement (ex : "fais les tests de tout le projet" ou "mets à jours les tests en fonction des modifications en stage")
+- **avant toute action** : vérifier la disponibilité de chaque info obligatoire ; si une manque → statut `fail` immédiat, **aucun autre travail** ; message d'explication **hyper concis** avec la donnée manquante mise en avant (ex. en **gras**)
 - la troisième partie doit être ce qui doit être produit comme résultat par l'agent (ex : nouveaux tests unitaires)
 - la dernière partie doit être le document de conclusion (markdown, synthétique, mise en gras des éléments importants) incluant obligatoirement le statut `pass` | `fail` | `blocked`
 
@@ -43,6 +44,7 @@ III) conventions communes (à documenter aussi dans reference.md)
     - section figée uniquement : `## Step status` (checkboxes)
     - **interdire** toute autre modification du contenu du plan (objectifs, estimations, descriptions)
 - Statuts agent : `pass` (ok pour enchaîner), `fail` (erreurs à corriger), `blocked` (attente humaine, ex. deps obsolètes)
+- Entrées obligatoires : gate avant tout travail ; manquant → `fail` + message hyper concis avec champ(s) en **gras** (ex. `Missing: **plugin root**.`)
 
 IV) sous-agents
 

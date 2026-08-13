@@ -27,6 +27,10 @@ Required:
 Context:
 - Template repo must exist (or be clonable) as a subdirectory of `PROJET_REP` (e.g. `PROJET_REP/mia-template`)
 
+## Gate (do first)
+
+Verify every **Required** input. If any is missing: status **`fail`**, stop, hyper-concise message with missing field(s) in **bold** (see [reference.md](../reference.md)). No other work until all required inputs are present.
+
 ## Expected output
 
 1. Ensure `mia-template` exists under `PROJET_REP`; else clone https://github.com/Psychopoulet/mia-template.

@@ -23,6 +23,10 @@ Required:
 
 Optional: update instructions → evolve SDK, no full rewrite.
 
+## Gate (do first)
+
+Verify every **Required** input. If any is missing: status **`fail`**, stop, hyper-concise message with missing field(s) in **bold** (see [reference.md](../reference.md)). No other work until all required inputs are present.
+
 ## Expected output
 
 1. Read step **c)** in `PLAN.md`.

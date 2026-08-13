@@ -24,6 +24,10 @@ Required:
 
 In **maintain**: existing `PLAN.md` + instructions / scope → **update**, no full rewrite unless asked.
 
+## Gate (do first)
+
+Verify every **Required** input. If any is missing: status **`fail`**, stop, hyper-concise message with missing field(s) in **bold** (see [reference.md](../reference.md)). No other work until all required inputs are present.
+
 ## Expected output
 
 1. Clarify needs with the user (via orchestrator) until a coherent draft exists.
