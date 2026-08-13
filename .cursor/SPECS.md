@@ -35,6 +35,7 @@ III) conventions communes (à documenter aussi dans reference.md)
 - Scripts npm : toujours préfixer par `npm run` (`npm run build-back`, `npm run build-front`, `npm run unit-tests`, `npm run unit-tests-local`, `npm run tests`, `npm run lint-back`, `npm run lint-front`, etc.)
 - OpenAPI methods : `put` = création, `post` = mise à jour, `delete` = suppression, `get` = lecture
 - OpenAPI status : `201` pour les `put` ; sinon `200` avec corps ; sinon `204` succès sans corps
+- OpenAPI paramètres URL : **jamais** de donnée texte longue (ex. token, secret, payload) en path/query — toujours via le **body**
 - Types générés :
     - back : `npm run transpile-openapi-back` → `lib/src/Descriptor.ts`
     - front : `npm run transpile-openapi-front` → `public/src/Descriptor.ts`
@@ -92,6 +93,7 @@ IV) sous-agents
         - schémas de requête / réponse en `application/json` quand il y a un corps
         - schéma d'erreur aligné sur le Descriptor existant du template
         - méthodes et codes HTTP conformes (put/201, get/post → 200 ou 204, delete → 200 ou 204)
+        - jamais de texte long (token, secret, etc.) en paramètres URL (path/query) — passer par le body
     - il doit cocher ses points dans `## Step status` uniquement, sans modifier le reste du plan
     - conclusion avec statut `pass` | `fail` | `blocked`
 

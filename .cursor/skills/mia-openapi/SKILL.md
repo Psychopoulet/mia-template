@@ -27,9 +27,10 @@ Optional: update instructions → evolve existing Descriptor, no needless rewrit
 
 1. Read the OpenAPI step in `PLAN.md`.
 2. Update `lib/data/Descriptor.json` (routes + data types).
-3. Follow [reference.md](../reference.md) OpenAPI conventions and checklist (`operationId`, JSON bodies, error schema, methods/status codes).
-4. Check **only** `## Step status` item **a)** when done — do not edit other plan content.
-5. On incomplete/invalid Descriptor: **`fail`**, do not check the step.
+3. Follow [reference.md](../reference.md) OpenAPI conventions and checklist (`operationId`, JSON bodies, error schema, methods/status codes, no long text in URL params).
+4. **Never** add long text data (tokens, secrets, payloads, etc.) as path or query parameters — always pass them in the **request body**.
+5. Check **only** `## Step status` item **a)** when done — do not edit other plan content.
+6. On incomplete/invalid Descriptor: **`fail`**, do not check the step.
 
 ## Conclusion document
 

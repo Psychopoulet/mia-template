@@ -42,11 +42,16 @@ Status codes:
 - `200` when there is a response body
 - `204` on success with no body
 
+URL parameters:
+- **Never** put long text values (tokens, secrets, payloads, etc.) in path or query parameters
+- Always pass such data in the **request body**
+
 Checklist (Descriptor):
 - Stable clear `operationId`
 - Request/response schemas as `application/json` when a body exists
 - Error schema aligned with the template Descriptor
 - Methods and status codes as above
+- No long text (token, secret, etc.) in path/query — use the body
 
 ## Plugin PLAN.md
 
