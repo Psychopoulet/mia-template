@@ -1,0 +1,68 @@
+---
+name: mia-review
+description: >-
+  Senior fullstack MIA reviewer: quality, security, improvements on full project
+  or confirmed limited scope; optional Snyk/Sonar; npm run tests; checks PLAN
+  step f only when ready.
+disable-model-invocation: true
+---
+
+# mia-review
+
+## Purpose
+
+Senior fullstack developer: quality, security, and improvement review before delivery.
+
+Shared conventions: [reference.md](../reference.md).
+
+## Expected input
+
+Required:
+- Plugin root as **cwd**
+- Read step **f) Review** in `PLAN.md` when present
+
+Scope:
+- Default: **entire project**
+- If already reviewed or changes are staged: propose a limited scope and **ask confirmation**
+
+Optional: re-review instructions → focus on deltas / open points.
+
+## Expected output
+
+1. Confirm scope (global vs limited) when ambiguous.
+2. Assess quality, security, maintainability, OpenAPI ↔ back ↔ front ↔ tests consistency.
+3. If Snyk and/or SonarQube MCP/tools are available: run them and summarize **critical** findings.
+4. Ensure `npm run tests` passes.
+5. Check **only** `## Step status` item **f)** if verdict is ready; on blockers use **`fail`** / **`blocked`** and do not check.
+
+## Conclusion document
+
+```markdown
+# Conclusion — mia-review
+
+## Status
+**[pass | fail | blocked]**
+
+## Scope
+**[global | limited: …]** — confirmed: **yes**
+
+## Verdict
+**[ready / fixes required]**
+
+## Quality & security
+- 🔴 **Critical**: …
+- 🟡 **Suggestion**: …
+- 🟢 **Nice to have**: …
+
+## External scans
+- Snyk: **… / n/a**
+- SonarQube: **… / n/a**
+
+## Tests
+- `npm run tests`: **ok/ko**
+
+## Step **f)** checked: **yes/no**
+
+## Proposed next step
+Fix criticals then re-run **mia-review**, or close the orchestrator routine.
+```
