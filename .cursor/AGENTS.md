@@ -37,13 +37,14 @@ Full routine, with a **user pause** after each step:
 8. `mia-front-sdk` — SDK + front OpenAPI types
 9. `mia-front-ui` — React/Bootstrap/Fontawesome components
 10. `mia-lint` — optional full lint gate
-11. `mia-review` — quality/security (+ Snyk/Sonar if available), `npm run tests`
+11. `mia-readme` — succinct user-facing README (preserve template prefix + OpenAPI link)
+12. `mia-review` — quality/security (+ Snyk/Sonar if available), `npm run tests`
 
 ### `maintain`
 
 1. Confirm plugin root + scope (staged files, paths, instructions)
 2. `mia-plan` update if needed
-3. Run **only** the sub-agents impacted by the delta (if back changes → **`mia-tests`** next, blocking before front)
+3. Run **only** the sub-agents impacted by the delta (if back changes → **`mia-tests`** next, blocking before front; if user-facing behavior changes → **`mia-readme`** before review)
 4. End the batch with `mia-review`
 
 Re-invoking a specialist with new instructions means **update existing work**, not a full rewrite.
@@ -62,8 +63,9 @@ Re-invoking a specialist with new instructions means **update existing work**, n
 | `mia-tests` | Senior QA — mocha back unit tests | Step c after back; **blocking**; coverage ≥ 95% |
 | `mia-front-sdk` | Senior TS front — SDK | Step d |
 | `mia-front-ui` | Senior TS front — UI | Step e |
-| `mia-lint` | Lint guardian | Optional before review |
-| `mia-review` | Senior fullstack review | Final gate |
+| `mia-lint` | Lint guardian | Optional before readme/review |
+| `mia-readme` | Documentation writer — user-facing README | Step f after UI |
+| `mia-review` | Senior fullstack review | Step g, final gate |
 
 Sub-agents use `disable-model-invocation: true` (call them explicitly). The orchestrator stays discoverable.
 

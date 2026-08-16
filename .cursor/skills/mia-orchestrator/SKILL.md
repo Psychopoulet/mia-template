@@ -4,7 +4,7 @@ description: >-
   Reference MIA agent that drives specialized sub-agents to create or maintain
   home-automation plugins from mia-template. Use for full create/maintain
   workflows or to coordinate mia-deps, mia-git, mia-init, mia-plan, mia-openapi, mia-back,
-  mia-tests, mia-front-sdk, mia-front-ui, mia-lint, and mia-review. See root
+  mia-tests, mia-front-sdk, mia-front-ui, mia-lint, mia-readme, and mia-review. See root
   AGENTS.md for the workflow overview and SPECS.md for the full spec.
 ---
 
@@ -61,13 +61,14 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 8. `mia-front-sdk`
 9. Pause → `mia-front-ui`
 10. Optional `mia-lint`
-11. `mia-review`
+11. `mia-readme`
+12. `mia-review`
 
 ### Maintain order
 
 1. Confirm plugin root + scope
 2. `mia-plan` (update) if needed
-3. Only relevant sub-agents for the delta — if back changes, run **`mia-tests`** next and treat it as a **hard gate** before any front agents
+3. Only relevant sub-agents for the delta — if back changes, run **`mia-tests`** next and treat it as a **hard gate** before any front agents; if user-facing behavior changes, run **`mia-readme`** before **`mia-review`**
 4. `mia-review` at end of the batch
 
 Sub-agents live under `.cursor/skills/mia-*`.

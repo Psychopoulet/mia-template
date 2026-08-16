@@ -2,8 +2,8 @@
 name: mia-plan
 description: >-
   MIA product owner: creates or updates a timed plugin PLAN.md (OpenAPI, back,
-  unit tests, front SDK, UI, review) with a frozen Step status section. Use when
-  planning development or revising an existing plan.
+  unit tests, front SDK, UI, README, review) with a frozen Step status section.
+  Use when planning development or revising an existing plan.
 disable-model-invocation: true
 ---
 
@@ -37,9 +37,10 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
    - **c)** Unit tests (back; blocking before front)
    - **d)** Front-office SDK
    - **e)** Front-office components
-   - **f)** Review
+   - **f)** README (user-facing; no technical details)
+   - **g)** Review
 3. Save as **`PLAN.md`** at the plugin root.
-4. Include a frozen **`## Step status`** section (checkboxes a→f). Later agents may only edit this section for progress.
+4. Include a frozen **`## Step status`** section (checkboxes a→g). Later agents may only edit this section for progress.
 
 Template:
 
@@ -66,7 +67,10 @@ Template:
 ### e) Front components — ~Xh
 …
 
-### f) Review — ~Xh
+### f) README — ~Xh
+…
+
+### g) Review — ~Xh
 …
 
 ## Step status
@@ -75,7 +79,8 @@ Template:
 - [ ] c) Unit tests
 - [ ] d) Front SDK
 - [ ] e) Front components
-- [ ] f) Review
+- [ ] f) README
+- [ ] g) Review
 ```
 ## Conclusion document
 

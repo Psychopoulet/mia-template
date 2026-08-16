@@ -64,8 +64,8 @@ Checklist (Descriptor):
 ## Plugin PLAN.md
 
 - Written by `mia-plan` at the plugin root
-- Steps: **a)** OpenAPI → **b)** Back → **c)** Unit tests → **d)** Front SDK → **e)** Front components → **f)** Review
-- Create execution: `mia-tests` (step **c**) runs immediately after `mia-back` and is a **hard gate** before any front work
+- Steps: **a)** OpenAPI → **b)** Back → **c)** Unit tests → **d)** Front SDK → **e)** Front components → **f)** README → **g)** Review
+- Create execution: `mia-tests` (step **c**) runs immediately after `mia-back` and is a **hard gate** before any front work; `mia-readme` (step **f**) runs after UI (and optional lint), before `mia-review`
 - Progress tracking: **only** update `## Step status` checkboxes
 - **Do not** edit plan goals, estimates, or descriptions when marking progress
 

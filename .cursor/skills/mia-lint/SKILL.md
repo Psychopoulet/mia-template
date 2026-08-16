@@ -2,7 +2,7 @@
 name: mia-lint
 description: >-
   MIA lint guardian: runs lint-back, lint-front, lint-tests, or full lint for a
-  given scope. Optional before review; pass only when all selected lints are green.
+  given scope. Optional before readme/review; pass only when all selected lints are green.
 disable-model-invocation: true
 ---
 
@@ -52,5 +52,5 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 - Errors (if any): **…**
 
 ## Proposed next step
-On **pass**: **mia-review**. On **fail**: fix then re-run **mia-lint**.
+On **pass**: **mia-readme**. On **fail**: fix then re-run **mia-lint**.
 ```

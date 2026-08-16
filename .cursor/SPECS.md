@@ -13,7 +13,7 @@ I) description du projet
 - Je dois avoir un agent de référence qui communiquera avec moi et pilotera des sous-agents spécialisés (dans l'ordre de description), il demandera en entrée un dossier qui contiendra tous les projets et fera une pause entre chaque étape pour échanger avec l'utilisateurs sur ce qui a été fait (résumé court et synthétique, suggestions d'améliorations) pour éventuellement relancer l'agent
 - Je dois avoir plusieurs sous-agents qui auront chacun leur spécialité, décrits dans le chapitre "sous-agents", et qui pourront être appelés indépendament. Ils pourront être rappelés en modifiant les instructions, ce qui amènera à une mise à jour de l'existant et non une réécriture complète.
 - Modes d'exécution de l'orchestrateur :
-    - `create` : routine complète (git → init → … → review)
+    - `create` : routine complète (git → init → … → readme → review)
     - `maintain` : skip `mia-init` et `mia-git`, partir du plugin existant + `PLAN.md` + périmètre (staged / fichiers cités / consignes)
 - Après `mia-init` (ou dès le début en `maintain`), le cwd de travail est **toujours la racine du plugin**, jamais le template (sauf pour les étapes propres à `mia-init` / `mia-deps` sur le template).
 - Chaque sous-agent doit terminer avec un statut explicite : `pass` | `fail` | `blocked`. L'orchestrateur ne propose la suite que sur `pass` ; sur `fail`/`blocked`, pause obligatoire.
@@ -99,9 +99,10 @@ IV) sous-agents
         c) créer les tests unitaires back (bloquant avant le front)
         d) mettre à jour le SDK du front-office
         e) créer les composants du front-office
-        f) faire une review
+        f) rédiger / mettre à jour le README.md (doc utilisateur succincte)
+        g) faire une review
     - le document final doit être sous format markdown et être sauvegardé à la racine du plugin sous le nom "PLAN.md"
-    - il doit inclure une section figée `## Step status` avec checkboxes a→f (seule section modifiable ensuite par les autres agents pour l'avancement)
+    - il doit inclure une section figée `## Step status` avec checkboxes a→g (seule section modifiable ensuite par les autres agents pour l'avancement)
 
 4) un agent pour mettre à jour le document OpenAPI
     - raison d'être : documentaliste technique
@@ -171,15 +172,29 @@ IV) sous-agents
     - entrée : racine plugin + périmètre (`back` | `front` | `tests` | `all`)
     - exécute les scripts lint correspondants (`npm run lint-back`, `npm run lint-front`, `npm run lint-tests`, ou `npm run lint`)
     - statut `pass` seulement si tout est vert ; sinon `fail` avec liste des erreurs
-    - peut être sauté si chaque agent spé a déjà linté avec succès, mais l'orchestrateur peut le forcer avant `mia-review`
+    - peut être sauté si chaque agent spé a déjà linté avec succès, mais l'orchestrateur peut le forcer avant `mia-readme` / `mia-review`
 
-10) un agent pour faire une review
+10) un agent pour faire une doc succinte en améliorant le README.md (`mia-readme`)
+    - raison d'être : documentaliste (README utilisateur)
+    - cwd = racine du plugin
+    - Required : racine plugin ; `README.md` existant ; `PLAN.md` ; `lib/data/Descriptor.json` (pour le lien OpenAPI)
+    - gate : si une entrée Required manque → `fail` immédiat, aucun autre travail
+    - il doit conserver le préfixe README issu du template : titre `# <plugin>`, section Badges, et la section OpenAPI / lien existants
+    - il doit résumer le fonctionnement du plugin et de ses workflows utilisateur (qui peut faire quoi)
+    - il ne doit rien afficher de technique (pas de chemins `lib/`, Mediator, scripts npm, stack, coverage, détails d'implémentation)
+    - il doit faire mention du document OpenAPI et garantir un lien vers `./lib/data/Descriptor.json`
+    - sources : `PLAN.md`, Descriptor, UI si besoin ; en `maintain` → **update** du README, pas de réécriture complète
+    - il s'exécute après `mia-front-ui` (et `mia-lint` optionnel), avant `mia-review`
+    - il doit cocher l'étape f dans `## Step status` uniquement
+    - conclusion avec statut `pass` | `fail` | `blocked` ; next sur `pass` : `mia-review`
+
+11) un agent pour faire une review
     - raison d'être : developpeur sénior fullstack
     - il doit soit analyser l'ensemble du projet, ou limiter à un périmètre si le projet a déjà été analysé (si des documents sont en stage par exemple) (demander confirmation dans ce cas)
     - il doit s'assurer de la qualité du code livré, de la sécurité et des points d'amélioration
     - si disponibles (MCP / outils locaux) : s'appuyer aussi sur Snyk et/ou SonarQube pour sécurité / qualité, et résumer les findings critiques
     - il doit s'assurer que la suite passe avec "npm run tests"
-    - il doit cocher l'étape f dans `## Step status` uniquement si verdict prêt (ou documenter les blockers en `fail` / `blocked` sans cocher)
+    - il doit cocher l'étape g dans `## Step status` uniquement si verdict prêt (ou documenter les blockers en `fail` / `blocked` sans cocher)
 
 V) ordre orchestrateur
 
@@ -195,7 +210,8 @@ Mode `create` :
     8. mia-front-sdk
     9. pause → mia-front-ui
     10. (optionnel) mia-lint
-    11. mia-review
+    11. mia-readme
+    12. mia-review
     — pause utilisateur entre chaque étape
     — `fail` / `blocked` d'un sous-agent (surtout mia-tests) → stop pipeline
 
@@ -205,5 +221,6 @@ Mode `maintain` :
     2. mia-plan (update) si besoin
     3. enchaîner uniquement les sous-agents concernés par le delta / les consignes
        — si le back change : mia-tests juste après, gate bloquante avant tout front
+       — si le comportement utilisateur change : mia-readme avant mia-review
     4. mia-review en fin de lot
     — pause utilisateur entre chaque étape

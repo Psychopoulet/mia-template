@@ -54,6 +54,6 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 - Step **e)** checked: **yes/no**
 
 ## Proposed next step
-On **pass**: optional **mia-lint**, then **mia-review**.
+On **pass**: optional **mia-lint**, then **mia-readme**.
 ```
 
