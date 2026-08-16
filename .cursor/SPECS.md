@@ -96,9 +96,9 @@ IV) sous-agents
     - le document doit contenir un plan en plusieurs étapes chiffrées en temps :
         a) mettre à jour le document OpenAPI sur lequel se basera tout le plugin
         b) mettre à jour tout le back-office (essentiellement le Mediator, eventuellement le Serveur s'il y a des events)
-        c) mettre à jour le SDK du front-office
-        d) créer les composants du front-office
-        e) créer les tests unitaires
+        c) créer les tests unitaires back (bloquant avant le front)
+        d) mettre à jour le SDK du front-office
+        e) créer les composants du front-office
         f) faire une review
     - le document final doit être sous format markdown et être sauvegardé à la racine du plugin sous le nom "PLAN.md"
     - il doit inclure une section figée `## Step status` avec checkboxes a→f (seule section modifiable ensuite par les autres agents pour l'avancement)
@@ -127,40 +127,44 @@ IV) sous-agents
     - il doit exécuter "npm run lint-back" puis "npm run build-back"
     - en cas d'échec lint/build : statut `fail`, ne pas cocher le step
     - il doit cocher ses points dans `## Step status` uniquement, sans modifier le reste du plan
+    - l'étape suivante attendue est l'agent QA (tests unitaires back, gate bloquante)
 
-6) un agent pour mettre à jour le SDK front
-    - raison d'être : dev sénior Typescript
+6) un agent pour créer les tests unitaires back (immédiatement après le back)
+    - raison d'être : Quality Analyst sénior
     - il doit lire sa partie dans le document "PLAN.md" (étape c)
     - cwd = racine du plugin
+    - il s'exécute **après** l'agent back et **avant** tout travail front
+    - **gate bloquante** : en `fail` / `blocked`, l'orchestrateur n'enchaîne pas (pas de SDK / UI) tant que les tests ne passent pas
+    - il doit utiliser mocha
+    - il doit créer les tests unitaires dans le dossier "test" correspondant au nouveau code back en s'assurant un code coverage de 95% au minimum pour le Mediator
+    - mesure du coverage : "npm run unit-tests-local" (nyc). Si coverage Mediator < 95% : statut `fail`, ne pas cocher le step, lister les trous
+    - il doit s'assurer de la qualité du code livré, de sa découpe (fichiers dans "test", préfixe numérique croissant : 0_, 1_, 2_, …)
+    - il doit s'assurer que le code se teste bien avec "npm run build-back" puis "npm run unit-tests" (échec → `fail`, bloquant)
+    - lint tests recommandé : "npm run lint-tests" avant de conclure `pass`
+    - il doit cocher l'étape c dans `## Step status` uniquement
+
+7) un agent pour mettre à jour le SDK front
+    - raison d'être : dev sénior Typescript
+    - il doit lire sa partie dans le document "PLAN.md" (étape d)
+    - cwd = racine du plugin
+    - il ne démarre qu'après `pass` de l'agent QA (tests back)
     - il doit exécuter "npm run transpile-openapi-front" → types dans "public/src/Descriptor.ts"
     - il doit mettre à jour le SDK ("public/src/SDK.ts" et helpers si besoin) pour exposer les nouvelles opérations du Descriptor, en utilisant les types de "public/src/Descriptor.ts"
     - il doit s'assurer de la qualité / découpe du code
     - il doit exécuter "npm run lint-front" (périmètre SDK) puis vérifier que le front buildera (ou "npm run build-front" si nécessaire à ce stade)
     - pause orchestrateur après cet agent avant les composants
-    - il doit cocher l'étape c dans `## Step status` uniquement
+    - il doit cocher l'étape d dans `## Step status` uniquement
 
-7) un agent pour créer les composants front
+8) un agent pour créer les composants front
     - raison d'être : dev sénior Typescript front React/Bootstrap/Fontawesome — spécialité UI
-    - il doit lire sa partie dans le document "PLAN.md" (étape d)
+    - il doit lire sa partie dans le document "PLAN.md" (étape e)
     - cwd = racine du plugin
     - il s'appuie sur le SDK et sur "public/src/Descriptor.ts" (relancer "npm run transpile-openapi-front" si besoin)
     - il doit créer / mettre à jour les composants dans "public/src" (idéalement "public/src/components/") avec un workflow cohérent entre les composants
     - il doit s'assurer de la qualité / découpe du code
     - il doit exécuter "npm run lint-front" puis "npm run build-front"
     - en cas d'échec : statut `fail`, ne pas cocher
-    - il doit cocher l'étape d dans `## Step status` uniquement
-
-8) un agent pour créer les tests unitaires
-    - raison d'être : Quality Analyst sénior
-    - il doit lire sa partie dans le document "PLAN.md"
-    - cwd = racine du plugin
-    - il doit utiliser mocha
-    - il doit créer les tests unitaires dans le dossier "test" correspondant au nouveau code back en s'assurant un code coverage de 95% au minimum pour le Mediator
-    - mesure du coverage : "npm run unit-tests-local" (nyc). Si coverage Mediator < 95% : statut `fail`, ne pas cocher le step, lister les trous
-    - il doit s'assurer de la qualité du code livré, de sa découpe (fichiers dans "test", préfixe numérique croissant : 0_, 1_, 2_, …)
-    - il doit s'assurer que le code se teste bien avec "npm run build-back" puis "npm run unit-tests"
-    - lint tests recommandé : "npm run lint-tests" avant de conclure `pass`
-    - il doit cocher ses points dans `## Step status` uniquement
+    - il doit cocher l'étape e dans `## Step status` uniquement
 
 9) un agent transversal de lint (optionnel mais recommandé avant review, ou fusionné dans back/front/tests)
     - raison d'être : guardian of lint consistency
@@ -187,17 +191,19 @@ Mode `create` :
     4. mia-plan
     5. mia-openapi
     6. mia-back
-    7. mia-front-sdk
-    8. pause → mia-front-ui
-    9. mia-tests
+    7. mia-tests (bloquant : pas de front tant que `pass` n'est pas obtenu)
+    8. mia-front-sdk
+    9. pause → mia-front-ui
     10. (optionnel) mia-lint
     11. mia-review
     — pause utilisateur entre chaque étape
+    — `fail` / `blocked` d'un sous-agent (surtout mia-tests) → stop pipeline
 
 Mode `maintain` :
 
     1. confirmer racine plugin + périmètre
     2. mia-plan (update) si besoin
     3. enchaîner uniquement les sous-agents concernés par le delta / les consignes
+       — si le back change : mia-tests juste après, gate bloquante avant tout front
     4. mia-review en fin de lot
     — pause utilisateur entre chaque étape

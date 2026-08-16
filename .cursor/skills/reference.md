@@ -64,8 +64,11 @@ Checklist (Descriptor):
 ## Plugin PLAN.md
 
 - Written by `mia-plan` at the plugin root
+- Steps: **a)** OpenAPI → **b)** Back → **c)** Unit tests → **d)** Front SDK → **e)** Front components → **f)** Review
+- Create execution: `mia-tests` (step **c**) runs immediately after `mia-back` and is a **hard gate** before any front work
 - Progress tracking: **only** update `## Step status` checkboxes
 - **Do not** edit plan goals, estimates, or descriptions when marking progress
+
 
 ## Mandatory inputs gate
 
@@ -93,4 +96,4 @@ Every conclusion document must include:
 - **`fail`**: errors to fix; do not check the step
 - **`blocked`**: needs human action (e.g. outdated deps)
 
-Orchestrator continues only on `pass`.
+Orchestrator continues only on `pass`. In particular, **`mia-tests` must `pass`** before `mia-front-sdk` / `mia-front-ui`.

@@ -57,5 +57,6 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 - **…**
 
 ## Proposed next step
-On **pass**: **mia-front-sdk**.
+On **pass**: **mia-tests** (blocking gate before front).
 ```
+

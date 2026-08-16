@@ -4,7 +4,7 @@ description: >-
   Reference MIA agent that drives specialized sub-agents to create or maintain
   home-automation plugins from mia-template. Use for full create/maintain
   workflows or to coordinate mia-deps, mia-git, mia-init, mia-plan, mia-openapi, mia-back,
-  mia-front-sdk, mia-front-ui, mia-tests, mia-lint, and mia-review. See root
+  mia-tests, mia-front-sdk, mia-front-ui, mia-lint, and mia-review. See root
   AGENTS.md for the workflow overview and SPECS.md for the full spec.
 ---
 
@@ -44,9 +44,10 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 4. **Mandatory pause** after each sub-agent: short summary, suggestions, wait for validation.
 5. Read each sub-agent conclusion status:
    - **`pass`** → propose next step
-   - **`fail` / `blocked`** → pause; on deps issues call `mia-deps`
-6. Before each sub-agent: read its `SKILL.md` and [reference.md](../reference.md); follow exactly.
-7. On resume with new instructions: **update** existing work, do not full-rewrite.
+   - **`fail` / `blocked`** → pause; do **not** continue the pipeline; on deps issues call `mia-deps`
+6. **`mia-tests` is a hard gate** after `mia-back`: unit tests must **`pass`** (including Mediator coverage ≥ 95% and green `npm run unit-tests`) before any front work. On **`fail` / `blocked`**, stop the create/maintain flow until fixed.
+7. Before each sub-agent: read its `SKILL.md` and [reference.md](../reference.md); follow exactly.
+8. On resume with new instructions: **update** existing work, do not full-rewrite.
 
 ### Create order
 
@@ -56,9 +57,9 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 4. `mia-plan`
 5. `mia-openapi`
 6. `mia-back`
-7. `mia-front-sdk`
-8. Pause → `mia-front-ui`
-9. `mia-tests`
+7. `mia-tests` (**blocking** — back unit tests; no front until **`pass`**)
+8. `mia-front-sdk`
+9. Pause → `mia-front-ui`
 10. Optional `mia-lint`
 11. `mia-review`
 
@@ -66,7 +67,7 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 
 1. Confirm plugin root + scope
 2. `mia-plan` (update) if needed
-3. Only relevant sub-agents for the delta
+3. Only relevant sub-agents for the delta — if back changes, run **`mia-tests`** next and treat it as a **hard gate** before any front agents
 4. `mia-review` at end of the batch
 
 Sub-agents live under `.cursor/skills/mia-*`.

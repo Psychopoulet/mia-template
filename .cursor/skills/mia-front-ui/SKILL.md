@@ -3,7 +3,7 @@ name: mia-front-ui
 description: >-
   Senior TypeScript React/Bootstrap/Fontawesome MIA UI developer: components
   under public/src (preferably components/), coherent workflows, lint-front and
-  build-front. Use for PLAN.md step d after mia-front-sdk.
+  build-front. Use for PLAN.md step e after mia-front-sdk.
 disable-model-invocation: true
 ---
 
@@ -19,7 +19,7 @@ Shared conventions: [reference.md](../reference.md).
 
 Required:
 - Plugin root as **cwd**
-- Read step **d) Front components** in `PLAN.md`
+- Read step **e) Front components** in `PLAN.md`
 - Existing SDK from `mia-front-sdk`
 
 Optional: update instructions → evolve components, no full rewrite.
@@ -30,13 +30,13 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 
 ## Expected output
 
-1. Read step **d)** in `PLAN.md`.
+1. Read step **e)** in `PLAN.md`.
 2. Rely on SDK + `public/src/Descriptor.ts`; re-run `npm run transpile-openapi-front` if needed.
 3. Create / update components under `public/src` (preferably `public/src/components/`) with a coherent workflow.
 4. Ensure code quality / structure.
 5. Run `npm run lint-front` then `npm run build-front`.
 6. If either fails: **`fail`**, do not check the step.
-7. On success: check **only** `## Step status` item **d)**.
+7. On success: check **only** `## Step status` item **e)**.
 
 ## Conclusion document
 
@@ -51,8 +51,9 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 - UI workflow: **…**
 - `npm run lint-front`: **ok/ko**
 - `npm run build-front`: **ok/ko**
-- Step **d)** checked: **yes/no**
+- Step **e)** checked: **yes/no**
 
 ## Proposed next step
-On **pass**: **mia-tests**.
+On **pass**: optional **mia-lint**, then **mia-review**.
 ```
+

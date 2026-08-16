@@ -33,9 +33,9 @@ Full routine, with a **user pause** after each step:
 4. `mia-plan` — write plugin `PLAN.md` (time-boxed steps + `## Step status`)
 5. `mia-openapi` — update `lib/data/Descriptor.json`
 6. `mia-back` — Mediator (+ Server if events), `lint-back`, `build-back`
-7. `mia-front-sdk` — SDK + front OpenAPI types
-8. `mia-front-ui` — React/Bootstrap/Fontawesome components
-9. `mia-tests` — mocha, Mediator coverage ≥ 95%
+7. `mia-tests` — mocha back unit tests, Mediator coverage ≥ 95% (**blocking** before front)
+8. `mia-front-sdk` — SDK + front OpenAPI types
+9. `mia-front-ui` — React/Bootstrap/Fontawesome components
 10. `mia-lint` — optional full lint gate
 11. `mia-review` — quality/security (+ Snyk/Sonar if available), `npm run tests`
 
@@ -43,7 +43,7 @@ Full routine, with a **user pause** after each step:
 
 1. Confirm plugin root + scope (staged files, paths, instructions)
 2. `mia-plan` update if needed
-3. Run **only** the sub-agents impacted by the delta
+3. Run **only** the sub-agents impacted by the delta (if back changes → **`mia-tests`** next, blocking before front)
 4. End the batch with `mia-review`
 
 Re-invoking a specialist with new instructions means **update existing work**, not a full rewrite.
@@ -59,9 +59,9 @@ Re-invoking a specialist with new instructions means **update existing work**, n
 | `mia-plan` | Product owner → plugin `PLAN.md` | Plan or revise scope |
 | `mia-openapi` | Technical writer → Descriptor | API contract |
 | `mia-back` | Senior TS Node back | Mediator / Server |
-| `mia-front-sdk` | Senior TS front — SDK | Step c |
-| `mia-front-ui` | Senior TS front — UI | Step d |
-| `mia-tests` | Senior QA — mocha | Step e, coverage ≥ 95% |
+| `mia-tests` | Senior QA — mocha back unit tests | Step c after back; **blocking**; coverage ≥ 95% |
+| `mia-front-sdk` | Senior TS front — SDK | Step d |
+| `mia-front-ui` | Senior TS front — UI | Step e |
 | `mia-lint` | Lint guardian | Optional before review |
 | `mia-review` | Senior fullstack review | Final gate |
 
