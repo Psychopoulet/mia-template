@@ -2,8 +2,8 @@
 name: mia-init
 description: >-
   Copy script to initialize a new MIA plugin from mia-template (fetch/pull,
-  deps, checks, create-mia-plugin). Skipped in maintain mode. Use when creating
-  a new plugin from the template.
+  deps, checks, create-mia-plugin, npm install, npx husky). Skipped in maintain
+  mode. Use when creating a new plugin from the template.
 disable-model-invocation: true
 ---
 
@@ -46,7 +46,8 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
    npx create-mia-plugin --name "<NOUVEAU_NOM>" --description "<NOUVELLE_DESCRIPTION>" --directory "<PROJET_REP>/<NOUVEAU_NOM>"
    ```
 9. `npm install` inside the created plugin.
-10. Return the **absolute plugin root path** (cwd for all following agents).
+10. From the plugin root, run `npx husky` so Git hooks from `.husky/` are registered for this repo.
+11. Return the **absolute plugin root path** (cwd for all following agents).
 
 Do not recreate an existing plugin unless explicitly asked. Do not remove `.git` or switch away from the current branch without need.
 
@@ -64,6 +65,7 @@ Do not recreate an existing plugin unless explicitly asked. Do not remove `.git`
 - Placeholder `tmp.txt` removed: **yes/no/n/a**
 - Plugin root: **[absolute path]** (if created)
 - Plugin `npm install`: **[ok/ko/n/a]**
+- `npx husky` (Git hooks): **[ok/ko/n/a]**
 
 ## Blocker
 - **[outdated deps / other / none]** — call **mia-deps**: **yes/no**

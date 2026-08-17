@@ -93,6 +93,7 @@ IV) sous-agents
     - si ces versions sont obsolètes (retour process "1"), statut `blocked` : prévenir l'agent principal de mettre en pause et d'appeler `mia-deps`
     - il doit exécuter la commande de copie (npx create-mia-plugin --name "<NOUVEAU_NOM>" --description "<NOUVELLE_DESCRIPTION>" --directory "<PROJET_REP>/<NOUVEAU_NOM>")
     - il doit installer les dépendances dans le plugin créé
+    - il doit exécuter `npx husky` à la racine du plugin pour activer les Git hooks (`.husky/`)
     - en sortie : chemin absolu de la racine du plugin (cwd de travail pour la suite)
     - next step sur `pass` : `mia-git` (`commit`) puis `mia-plan`
 
