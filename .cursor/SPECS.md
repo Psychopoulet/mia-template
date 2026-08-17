@@ -35,7 +35,8 @@ III) conventions communes (à documenter aussi dans reference.md)
 
 - Scripts npm : toujours préfixer par `npm run` (`npm run build-back`, `npm run build-front`, `npm run unit-tests`, `npm run unit-tests-local`, `npm run tests`, `npm run lint-back`, `npm run lint-front`, etc.)
 - OpenAPI methods : `put` = création, `post` = mise à jour, `delete` = suppression, `get` = lecture
-- OpenAPI status : `201` pour les `put` ; sinon `200` avec corps ; sinon `204` succès sans corps
+- OpenAPI status : succès — `201` pour les `put` ; sinon `200` avec corps ; sinon `204` succès sans corps ; pour les **nouvelles** opérations, erreurs **uniquement via `default`** (ne pas ajouter `401` / `403` / `404` / `409` / etc.) ; **conserver** les réponses d'erreur spécifiques déjà fournies par le template (ex. `404` sur `getPluginStatus`)
+
 - OpenAPI paramètres URL : **jamais** de donnée texte longue (ex. token, secret, payload) en path/query — toujours via le **body**
 - Types générés :
     - back : `npm run transpile-openapi-back` → `lib/src/Descriptor.ts`
@@ -119,8 +120,11 @@ IV) sous-agents
     - checklist minimale à respecter :
         - `operationId` clair et stable
         - schémas de requête / réponse en `application/json` quand il y a un corps
-        - schéma d'erreur aligné sur le Descriptor existant du template
-        - méthodes et codes HTTP conformes (put/201, get/post → 200 ou 204, delete → 200 ou 204)
+        - pour les **nouvelles** opérations : **uniquement** la/les réponse(s) de **succès** (`200` / `201` / `204`) et la réponse **`default`** pour l'erreur (schéma Error)
+        - **interdire** d'ajouter des réponses d'erreur dédiées (`401`, `403`, `404`, `409`, etc.) sur les routes créées par l'agent
+        - **conserver** les réponses d'erreur spécifiques du template sur les routes scaffold (`getPluginStatus` `404`, front, descriptor, status, …) — ne pas les supprimer
+        - **pas de component à usage unique** : laisser les objets déclarés **inline** dans leur contexte (requestBody / response / `items`) ; n'extraire dans `components.schemas` que si le schéma est **réutilisé** (ou déjà fourni par le template : `Error`, `PluginName`, events, …)
+        - méthodes et codes HTTP de succès conformes (put/201, get/post → 200 ou 204, delete → 200 ou 204)
         - jamais de texte long (token, secret, etc.) en paramètres URL (path/query) — passer par le body
     - il doit cocher ses points dans `## Step status` uniquement, sans modifier le reste du plan
     - conclusion avec statut `pass` | `fail` | `blocked`

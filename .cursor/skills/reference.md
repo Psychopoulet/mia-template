@@ -52,9 +52,9 @@ Methods:
 - `get` = read
 
 Status codes:
-- `201` for `put`
-- `200` when there is a response body
-- `204` on success with no body
+- Success: `201` for `put`; `200` when there is a response body; `204` on success with no body
+- Errors for **new** operations: **only** the `default` response (Error schema) — do **not** add dedicated codes (`401`, `403`, `404`, `409`, etc.)
+- **Preserve** template-specific error responses on scaffold routes (`getPluginStatus` `404`, and any other codes already present from the template on front/descriptor/status paths). Do not strip them when editing the Descriptor.
 
 URL parameters:
 - **Never** put long text values (tokens, secrets, payloads, etc.) in path or query parameters
@@ -63,7 +63,10 @@ URL parameters:
 Checklist (Descriptor):
 - Stable clear `operationId`
 - Request/response schemas as `application/json` when a body exists
-- Error schema aligned with the template Descriptor
+- New operations: **success response(s)** + **`default`** error only
+- Keep existing template-specific error responses on template operations
+- **No single-use components**: inline one-off object schemas in context; extract to `components.schemas` only when reused (or template-provided: `Error`, `PluginName`, events, …)
+- Error schema aligned with the template Descriptor (`#/components/schemas/Error`)
 - Methods and status codes as above
 - No long text (token, secret, etc.) in path/query — use the body
 
