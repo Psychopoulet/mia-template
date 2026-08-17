@@ -60,6 +60,6 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 - Workflows covered: **…**
 
 ## Proposed next step
-On **pass**: **mia-review**.
+On **pass**: **mia-git** (`commit`), then **mia-review**.
 On **fail**: fix README then re-run **mia-readme**.
 ```

@@ -13,8 +13,8 @@ I) description du projet
 - Je dois avoir un agent de référence qui communiquera avec moi et pilotera des sous-agents spécialisés (dans l'ordre de description), il demandera en entrée un dossier qui contiendra tous les projets et fera une pause entre chaque étape pour échanger avec l'utilisateurs sur ce qui a été fait (résumé court et synthétique, suggestions d'améliorations) pour éventuellement relancer l'agent
 - Je dois avoir plusieurs sous-agents qui auront chacun leur spécialité, décrits dans le chapitre "sous-agents", et qui pourront être appelés indépendament. Ils pourront être rappelés en modifiant les instructions, ce qui amènera à une mise à jour de l'existant et non une réécriture complète.
 - Modes d'exécution de l'orchestrateur :
-    - `create` : routine complète (git → init → … → readme → review)
-    - `maintain` : skip `mia-init` et `mia-git`, partir du plugin existant + `PLAN.md` + périmètre (staged / fichiers cités / consignes)
+    - `create` : routine complète (git provision → init → commits après étapes clefs → … → readme → review → push final)
+    - `maintain` : skip `mia-init` et `mia-git` **provision** uniquement ; garder `mia-git` **commit** / **push**
 - Après `mia-init` (ou dès le début en `maintain`), le cwd de travail est **toujours la racine du plugin**, jamais le template (sauf pour les étapes propres à `mia-init` / `mia-deps` sur le template).
 - Chaque sous-agent doit terminer avec un statut explicite : `pass` | `fail` | `blocked`. L'orchestrateur ne propose la suite que sur `pass` ; sur `fail`/`blocked`, pause obligatoire.
 - Les sous-agents sont invocables explicitement (`@mia-…`). Préférer `disable-model-invocation: true` sur les sous-agents ; l'orchestrateur peut rester découvrable.
@@ -45,7 +45,16 @@ III) conventions communes (à documenter aussi dans reference.md)
     - **interdire** toute autre modification du contenu du plan (objectifs, estimations, descriptions)
 - Statuts agent : `pass` (ok pour enchaîner), `fail` (erreurs à corriger), `blocked` (attente humaine, ex. deps obsolètes)
 - Entrées obligatoires : gate avant tout travail ; manquant → `fail` + message hyper concis avec champ(s) en **gras** (ex. `Missing: **plugin root**.`)
-- Git (`mia-git`) : avant `mia-init` ; vérifier `git` + `gh` / user loggué ; refuser si le répo distant du plugin existe déjà ; créer le répo **public** (défaut) ; créer `PROJET_REP` / racine plugin s'ils n'existent pas ; créer un placeholder **`tmp.txt`** pour le commit initial ; créer/pousser `master` puis `develop` (issue de `master`) en **une seule passe** ; `mia-init` supprime `tmp.txt` ; skip en `maintain`
+- Git (`mia-git`) :
+    - opérations : **`provision`** | **`commit`** | **`push`**
+    - **confirmation utilisateur obligatoire** avant chaque mutation, avec résumé synthétique :
+        - commit → fichiers en stage + texte du message
+        - push → branche + noms des fichiers envoyés
+    - `provision` (create only, avant `mia-init`) : vérifier `git` + `gh` / user loggué ; refuser si le répo distant existe déjà ; créer le répo **public** (défaut) ; créer `PROJET_REP` / racine plugin ; placeholder **`tmp.txt`** ; créer/pousser `master` puis `develop` ; `mia-init` supprime `tmp.txt`
+    - `commit` : après chaque étape clef (init, plan, openapi, back, tests, sdk, front, readme, review si besoin, …)
+    - `push` : **uniquement en fin** de routine create/maintain (après review), avec confirmation
+    - en `maintain` : pas de `provision` ; oui `commit` / `push`
+
 
 IV) sous-agents
 
@@ -57,19 +66,17 @@ IV) sous-agents
     - il doit rejouer `npm run check-node-engine` et `npm run check-updates` jusqu'à `pass`, sinon rester `blocked`
     - conclusion avec statut `pass` | `fail` | `blocked`
 
-1) un agent pour provisionner le dépôt git distant
-    - raison d'être : git / GitHub provisioner
-    - ignoré en mode `maintain`
-    - appelé **avant** `mia-init` (fail-fast + création du remote + branches locales) — **une seule passe**, pas de re-appel après init
-    - il doit prendre en entrée le nom du plugin et le dossier projets (`PROJET_REP`) ; racine plugin attendue = `PROJET_REP/<nom>`
-    - **avant toute opération** :
-        1) vérifier l'accessibilité de `git` (et de `gh` pour l'utilisateur loggué)
-        2) vérifier que, pour l'utilisateur loggué, le répo avec le nom du plugin n'existe pas déjà ; s'il existe → `fail`
-        3) créer le répo git distant avec le nom du plugin
-        4) si `PROJET_REP` ou la racine plugin `PROJET_REP/<nom>` n'existe pas → les créer
-        5) créer un fichier vide **`tmp.txt`** dans la racine plugin (placeholder pour le commit initial ; `mia-init` le supprimera)
-        6) initialiser git local si besoin, committer `tmp.txt`, lier `origin`, créer/pousser `master` puis `develop` issue de `master` ; laisser le working tree sur `develop`
-    - ensuite → `pass` et proposer `mia-init` (qui utilisera la racine plugin ainsi créée / existante)
+1) un agent git / GitHub (`mia-git`)
+    - raison d'être : git / GitHub provisioner + committer + pusher
+    - opérations : **`provision`** | **`commit`** | **`push`**
+    - **avant toute mutation** : demander confirmation utilisateur avec résumé synthétique (commit : fichiers staged + message ; push : fichiers envoyés)
+    - `provision` (ignoré en `maintain`) : appelé **avant** `mia-init`
+        - entrée : nom du plugin + `PROJET_REP` ; racine = `PROJET_REP/<nom>`
+        - vérifier `git` + `gh` / user loggué ; si le répo distant existe déjà → `fail`
+        - créer le remote, les dossiers, `tmp.txt`, commit initial, pousser `master` puis `develop` (confirmations à chaque étape)
+        - next : `mia-init`
+    - `commit` : après étapes clefs ; cwd = racine plugin ; stage + message ; confirmation ; puis `git commit` (ou `pass` si rien à committer)
+    - `push` : en fin de lot ; confirmation avec liste des fichiers des commits à pousser ; puis `git push` (pas de force-push sauf demande explicite)
     - conclusion avec statut `pass` | `fail` | `blocked`
 
 2)  un agent pour initialiser le nouveau projet.
@@ -86,7 +93,7 @@ IV) sous-agents
     - il doit exécuter la commande de copie (npx create-mia-plugin --name "<NOUVEAU_NOM>" --description "<NOUVELLE_DESCRIPTION>" --directory "<PROJET_REP>/<NOUVEAU_NOM>")
     - il doit installer les dépendances dans le plugin créé
     - en sortie : chemin absolu de la racine du plugin (cwd de travail pour la suite)
-    - next step sur `pass` : `mia-plan`
+    - next step sur `pass` : `mia-git` (`commit`) puis `mia-plan`
 
 3) un agent pour plannifier le dev
     - raison d'être : product owner
@@ -200,27 +207,31 @@ V) ordre orchestrateur
 
 Mode `create` :
 
-    1. mia-git (remote + tmp.txt + master / develop ; fail-fast)
+    1. mia-git (provision : remote + tmp.txt + master / develop ; fail-fast ; confirmations)
     2. mia-init (supprime tmp.txt, scaffold)
-    3. (si blocked deps) mia-deps → reprise mia-init checks / suite
-    4. mia-plan
-    5. mia-openapi
-    6. mia-back
-    7. mia-tests (bloquant : pas de front tant que `pass` n'est pas obtenu)
-    8. mia-front-sdk
-    9. pause → mia-front-ui
-    10. (optionnel) mia-lint
-    11. mia-readme
-    12. mia-review
+    3. mia-git (commit) après init
+    4. (si blocked deps) mia-deps → reprise → mia-git (commit) si fichiers changés
+    5. mia-plan → mia-git (commit)
+    6. mia-openapi → mia-git (commit)
+    7. mia-back → mia-git (commit)
+    8. mia-tests (bloquant) → mia-git (commit)
+    9. mia-front-sdk → mia-git (commit)
+    10. pause → mia-front-ui → mia-git (commit)
+    11. (optionnel) mia-lint → mia-git (commit) si corrections
+    12. mia-readme → mia-git (commit)
+    13. mia-review → mia-git (commit) si besoin
+    14. mia-git (push) — push final avec confirmation
     — pause utilisateur entre chaque étape
     — `fail` / `blocked` d'un sous-agent (surtout mia-tests) → stop pipeline
 
 Mode `maintain` :
 
     1. confirmer racine plugin + périmètre
-    2. mia-plan (update) si besoin
+    2. mia-plan (update) si besoin → mia-git (commit)
     3. enchaîner uniquement les sous-agents concernés par le delta / les consignes
        — si le back change : mia-tests juste après, gate bloquante avant tout front
        — si le comportement utilisateur change : mia-readme avant mia-review
-    4. mia-review en fin de lot
+       — après chaque étape clef exécutée : mia-git (commit) avec confirmation
+    4. mia-review en fin de lot → mia-git (commit) si besoin
+    5. mia-git (push) — push final avec confirmation
     — pause utilisateur entre chaque étape

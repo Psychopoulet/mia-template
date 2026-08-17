@@ -59,6 +59,6 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 - Step **c)** checked: **yes/no**
 
 ## Proposed next step
-On **pass**: **mia-front-sdk**.
+On **pass**: **mia-git** (`commit`), then **mia-front-sdk**.
 On **fail** / **blocked**: stop — do **not** start front work until tests pass.
 ```

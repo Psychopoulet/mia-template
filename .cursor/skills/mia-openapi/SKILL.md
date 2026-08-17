@@ -53,5 +53,5 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 - Schemas: **…**
 
 ## Proposed next step
-On **pass**: **mia-back**.
+On **pass**: **mia-git** (`commit`), then **mia-back**.
 ```

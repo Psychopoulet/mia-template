@@ -57,5 +57,5 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 - Step **d)** checked: **yes/no**
 
 ## Proposed next step
-On **pass**: pause, then **mia-front-ui**.
+On **pass**: **mia-git** (`commit`), then pause, then **mia-front-ui**.
 ```

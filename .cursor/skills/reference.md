@@ -11,11 +11,17 @@ Workflow overview: [AGENTS.md](../AGENTS.md) · Full spec: [SPECS.md](../SPECS.m
 
 ## Git / GitHub (mia-git)
 
-- Tools: `git` + `gh` (logged-in GitHub user)
-- On create: runs **once before** `mia-init` — checks + remote + plugin root + placeholder **`tmp.txt`** + push **`master`**, then **`develop`** from `master`; `mia-init` deletes `tmp.txt`
-- Remote repo name = plugin name; fail if it already exists for the logged-in user (first provision call)
-- Visibility: **public** by default (`gh repo create … --public`); override to `private` only if requested
-- Skipped in `maintain` mode
+- Tools: `git` + `gh` (logged-in GitHub user when needed)
+- Operations: **`provision`** | **`commit`** | **`push`**
+- **Always confirm** with the user before any mutating operation:
+  - **commit**: synthetic summary = **staged files** + **commit message**
+  - **push**: synthetic summary = branch + **file names** being sent
+- `provision` (create only, before `mia-init`): checks + remote + plugin root + placeholder **`tmp.txt`** + push **`master`**, then **`develop`**; `mia-init` deletes `tmp.txt`
+- Remote repo name = plugin name; fail if it already exists for the logged-in user (`provision`)
+- Visibility: **public** by default; override to `private` only if requested
+- `commit` after key steps (init, plan, openapi, back, tests, sdk, front, readme, review if needed, …)
+- `push` **only at the end** of create/maintain (after review), with confirmation
+- In `maintain`: no `provision`; still use `commit` / `push`
 
 ## npm scripts
 

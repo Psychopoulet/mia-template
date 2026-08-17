@@ -16,36 +16,38 @@ Agent skill bodies and conclusions are written in **English**.
 1. Open this repo (or a plugin that includes `.cursor/skills/`) in Cursor.
 2. Invoke **`@mia-orchestrator`** and choose a mode:
    - **`create`** — new plugin from the template
-   - **`maintain`** — update an existing plugin (skip init)
+   - **`maintain`** — update an existing plugin (skip init / git provision)
 3. Or call a single specialist with **`@mia-<name>`** (explicit invocation).
 
-After init (or from the start in maintain), work always happens in the **plugin root**, not in the template (except init/deps on the template). `mia-git` runs only in **create**, once, before init (remote + local `master`/`develop`).
+After init (or from the start in maintain), work always happens in the **plugin root**, not in the template (except init/deps on the template). `mia-git` **`provision`** runs once in **create** before init; **`commit`** runs after key steps; **`push`** runs at the end (always with user confirmation).
 
 ## Modes
 
 ### `create`
 
-Full routine, with a **user pause** after each step:
+Full routine, with a **user pause** after each step. After each key deliverable step, **`mia-git` (`commit`)** (confirm staged files + message). Final **`mia-git` (`push`)** after review.
 
-1. `mia-git` — checks + remote + plugin root + `tmp.txt` + `master` / `develop` (fail-fast; before init)
+1. `mia-git` (`provision`) — remote + plugin root + `tmp.txt` + `master` / `develop`
 2. `mia-init` — clone/update template, checks, remove `tmp.txt`, `create-mia-plugin`, install
-3. `mia-deps` — only if version checks are blocked (exit code `1`)
-4. `mia-plan` — write plugin `PLAN.md` (time-boxed steps + `## Step status`)
-5. `mia-openapi` — update `lib/data/Descriptor.json`
-6. `mia-back` — Mediator (+ Server if events), `lint-back`, `build-back`
-7. `mia-tests` — mocha back unit tests, Mediator coverage ≥ 95% (**blocking** before front)
-8. `mia-front-sdk` — SDK + front OpenAPI types
-9. `mia-front-ui` — React/Bootstrap/Fontawesome components
-10. `mia-lint` — optional full lint gate
-11. `mia-readme` — succinct user-facing README (preserve template prefix + OpenAPI link)
-12. `mia-review` — quality/security (+ Snyk/Sonar if available), `npm run tests`
+3. `mia-git` (`commit`) — after init
+4. `mia-deps` — only if version checks are blocked (exit code `1`) → then commit if needed
+5. `mia-plan` → `mia-git` (`commit`)
+6. `mia-openapi` → `mia-git` (`commit`)
+7. `mia-back` → `mia-git` (`commit`)
+8. `mia-tests` — mocha back unit tests, Mediator coverage ≥ 95% (**blocking** before front) → `mia-git` (`commit`)
+9. `mia-front-sdk` → `mia-git` (`commit`)
+10. `mia-front-ui` → `mia-git` (`commit`)
+11. `mia-lint` — optional; commit only if files were fixed
+12. `mia-readme` → `mia-git` (`commit`)
+13. `mia-review` → `mia-git` (`commit`) if needed
+14. `mia-git` (`push`) — final push (confirm files being sent)
 
 ### `maintain`
 
 1. Confirm plugin root + scope (staged files, paths, instructions)
-2. `mia-plan` update if needed
-3. Run **only** the sub-agents impacted by the delta (if back changes → **`mia-tests`** next, blocking before front; if user-facing behavior changes → **`mia-readme`** before review)
-4. End the batch with `mia-review`
+2. `mia-plan` update if needed → `mia-git` (`commit`)
+3. Run **only** the sub-agents impacted by the delta (if back changes → **`mia-tests`** next, blocking before front; if user-facing behavior changes → **`mia-readme`** before review); **`mia-git` (`commit`)** after each key step
+4. End the batch with `mia-review` → commit if needed → **`mia-git` (`push`)**
 
 Re-invoking a specialist with new instructions means **update existing work**, not a full rewrite.
 
@@ -55,7 +57,7 @@ Re-invoking a specialist with new instructions means **update existing work**, n
 |-------|------|------|
 | `mia-orchestrator` | Lead — drives the pipeline, pauses for validation | Full create/maintain runs |
 | `mia-deps` | Dependency maintainer | Checks fail on outdated engines/packages |
-| `mia-git` | Git/GitHub provisioner (`master` + `develop`) | Create only, once before init |
+| `mia-git` | Git/GitHub: **provision** / **commit** / **push** (confirm before each mutation) | Provision: create before init; commit after key steps; push at end |
 | `mia-init` | Copy script from template | Create only |
 | `mia-plan` | Product owner → plugin `PLAN.md` | Plan or revise scope |
 | `mia-openapi` | Technical writer → Descriptor | API contract |
@@ -65,7 +67,7 @@ Re-invoking a specialist with new instructions means **update existing work**, n
 | `mia-front-ui` | Senior TS front — UI | Step e |
 | `mia-lint` | Lint guardian | Optional before readme/review |
 | `mia-readme` | Documentation writer — user-facing README | Step f after UI |
-| `mia-review` | Senior fullstack review | Step g, final gate |
+| `mia-review` | Senior fullstack review | Step g, final gate before push |
 
 Sub-agents use `disable-model-invocation: true` (call them explicitly). The orchestrator stays discoverable.
 

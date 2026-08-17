@@ -69,5 +69,5 @@ Do not recreate an existing plugin unless explicitly asked. Do not remove `.git`
 - **[outdated deps / other / none]** — call **mia-deps**: **yes/no**
 
 ## Proposed next step
-On **pass**: **mia-plan**. On **blocked**: **mia-deps**.
+On **pass**: **mia-git** (`commit`), then **mia-plan**. On **blocked**: **mia-deps**.
 ```

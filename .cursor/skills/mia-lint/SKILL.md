@@ -52,5 +52,5 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 - Errors (if any): **…**
 
 ## Proposed next step
-On **pass**: **mia-readme**. On **fail**: fix then re-run **mia-lint**.
+On **pass**: **mia-readme** (or **mia-git** `commit` first if this step fixed files). On **fail**: fix then re-run **mia-lint**.
 ```

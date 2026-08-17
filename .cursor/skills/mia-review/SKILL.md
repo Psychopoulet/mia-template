@@ -68,5 +68,5 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 ## Step **g)** checked: **yes/no**
 
 ## Proposed next step
-Fix criticals then re-run **mia-review**, or close the orchestrator routine.
+**mia-git** (`commit`) if needed, then **mia-git** (`push`) with confirmation — or fix criticals and re-run **mia-review**.
 ```

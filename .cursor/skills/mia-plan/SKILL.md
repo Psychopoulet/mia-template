@@ -99,5 +99,5 @@ Template:
 - Open points: **…**
 
 ## Proposed next step
-Validate, then **mia-openapi**.
+Validate, then **mia-git** (`commit`), then **mia-openapi**.
 ```
