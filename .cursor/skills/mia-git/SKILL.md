@@ -16,7 +16,7 @@ Git / GitHub agent for MIA plugins. Three operations:
 
 | Operation | When |
 |-----------|------|
-| **`provision`** | Create only, **before** `mia-init` — remote + dirs + `tmp.txt` + `master`/`develop` |
+| **`provision`** | Create only, **before** `mia-init` — remote + dirs + `tmp.txt` + `master`/`develop`; then local **`develop`** only |
 | **`commit`** | After key steps (init, plan, openapi, back, tests, sdk, front, readme, …) — stage + commit |
 | **`push`** | End of create/maintain batch — push current branch to `origin` |
 
@@ -29,6 +29,7 @@ Shared conventions: [reference.md](../reference.md).
 | Operation | Summary must include |
 |-----------|----------------------|
 | Remote create / dir create / branch create | What will be created (name, visibility, paths, branches) |
+| Local checkout / delete local `master` | Checkout **`develop`**; delete **local** `master` only (keep remote `master`) |
 | **`commit`** | List of **staged files** + full **commit message** text |
 | **`push`** | Branch name + list of **file names** included in the commit(s) being pushed (from `git show --name-only` / range vs upstream) |
 
@@ -84,8 +85,9 @@ Optional:
 4. Confirm → create empty **`tmp.txt`** if missing (`mia-init` deletes it later).
 5. Confirm → init git if needed, stage/commit `tmp.txt`, set `master`, link `origin`, push `master`.
 6. Confirm → create `develop` from `master`, push `develop`.
+7. Confirm → checkout **`develop`**, then delete the **local** `master` branch (`git branch -d master`). Keep **remote** `master`.
 
-Leave working tree on **`develop`**. Do not delete or force-push existing remotes.
+Leave working tree on **`develop`** with no local `master`. Do not delete or force-push existing remotes.
 
 ### Operation `commit`
 
@@ -122,7 +124,7 @@ Leave working tree on **`develop`**. Do not delete or force-push existing remote
 - User approved: **yes/no/n/a**
 
 ## Deliverables
-- (provision) Remote: **[URL or n/a]** — Plugin root: **[path]** — Branches: **master**, **develop** — Current: **develop**
+- (provision) Remote: **[URL or n/a]** — Plugin root: **[path]** — Remote branches: **master**, **develop** — Local: **develop** only (local **master** deleted)
 - (commit) Message: **…** — Files committed: **…** — or **nothing to commit**
 - (push) Branch: **…** — Files pushed: **…** — Remote: **…**
 

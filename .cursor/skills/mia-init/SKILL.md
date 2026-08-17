@@ -26,7 +26,7 @@ Required:
 
 Context:
 - Template repo must exist (or be clonable) as a subdirectory of `PROJET_REP` (e.g. `PROJET_REP/mia-template`)
-- Plugin root `PROJET_REP/<NOUVEAU_NOM>` is expected to already exist when coming from `mia-git` (git repo with `master`/`develop`, often only a placeholder `tmp.txt`); `create-mia-plugin` fills it
+- Plugin root `PROJET_REP/<NOUVEAU_NOM>` is expected to already exist when coming from `mia-git` (git repo on **`develop`**, remotes `master`/`develop`, often only a placeholder `tmp.txt`); `create-mia-plugin` fills it
 
 ## Gate (do first)
 
@@ -40,7 +40,7 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 4. `npm install` in the template if needed.
 5. Run `npm run check-node-engine` and `npm run check-updates`.
 6. If either exits with **1**: status **`blocked`**, tell orchestrator to pause and call **`mia-deps`**. Do not copy yet.
-7. In the plugin root, **delete `tmp.txt`** if present (placeholder left by `mia-git` for the initial commit). Keep the existing `.git` / branches.
+7. In the plugin root, **delete `tmp.txt`** if present (placeholder left by `mia-git` for the initial commit). Keep the existing `.git` and **`develop`** branch.
 8. Run:
    ```bash
    npx create-mia-plugin --name "<NOUVEAU_NOM>" --description "<NOUVELLE_DESCRIPTION>" --directory "<PROJET_REP>/<NOUVEAU_NOM>"

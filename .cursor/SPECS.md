@@ -51,7 +51,7 @@ III) conventions communes (à documenter aussi dans reference.md)
     - **confirmation utilisateur obligatoire** avant chaque mutation, avec résumé synthétique :
         - commit → fichiers en stage + texte du message
         - push → branche + noms des fichiers envoyés
-    - `provision` (create only, avant `mia-init`) : vérifier `git` + `gh` / user loggué ; refuser si le répo distant existe déjà ; créer le répo **public** (défaut) ; créer `PROJET_REP` / racine plugin ; placeholder **`tmp.txt`** ; créer/pousser `master` puis `develop` ; `mia-init` supprime `tmp.txt`
+    - `provision` (create only, avant `mia-init`) : vérifier `git` + `gh` / user loggué ; refuser si le répo distant existe déjà ; créer le répo **public** (défaut) ; créer `PROJET_REP` / racine plugin ; placeholder **`tmp.txt`** ; créer/pousser `master` puis `develop` ; basculer en local sur `develop` et supprimer la branche **locale** `master` (conserver `master` distant) ; `mia-init` supprime `tmp.txt`
     - `commit` : après chaque étape clef (init, plan, openapi, back, tests, sdk, front, readme, review si besoin, …)
     - `push` : **uniquement en fin** de routine create/maintain (après review), avec confirmation
     - en `maintain` : pas de `provision` ; oui `commit` / `push`
@@ -74,7 +74,7 @@ IV) sous-agents
     - `provision` (ignoré en `maintain`) : appelé **avant** `mia-init`
         - entrée : nom du plugin + `PROJET_REP` ; racine = `PROJET_REP/<nom>`
         - vérifier `git` + `gh` / user loggué ; si le répo distant existe déjà → `fail`
-        - créer le remote, les dossiers, `tmp.txt`, commit initial, pousser `master` puis `develop` (confirmations à chaque étape)
+        - créer le remote, les dossiers, `tmp.txt`, commit initial, pousser `master` puis `develop` (confirmations à chaque étape) ; checkout `develop` et suppression de `master` locale (conserver `master` distant)
         - next : `mia-init`
     - `commit` : après étapes clefs ; cwd = racine plugin ; stage + message ; confirmation ; puis `git commit` (ou `pass` si rien à committer)
     - `push` : en fin de lot ; confirmation avec liste des fichiers des commits à pousser ; puis `git push` (pas de force-push sauf demande explicite)
