@@ -31,7 +31,7 @@ Full routine, with a **user pause** after each step. After each key deliverable 
 2. `mia-init` — clone/update template, checks, remove `tmp.txt`, `create-mia-plugin`, install
 3. `mia-git` (`commit`) — after init
 4. `mia-deps` — only if version checks are blocked (exit code `1`) → then commit if needed
-5. `mia-plan` → `mia-git` (`commit`)
+5. `mia-plan` (local `PLAN.md` only — not committed)
 6. `mia-openapi` → `mia-git` (`commit`)
 7. `mia-back` → `mia-git` (`commit`)
 8. `mia-tests` — mocha back unit tests, Mediator coverage ≥ 95% (**blocking** before front) → `mia-git` (`commit`)
@@ -40,14 +40,14 @@ Full routine, with a **user pause** after each step. After each key deliverable 
 11. `mia-lint` — optional; commit only if files were fixed
 12. `mia-readme` → `mia-git` (`commit`)
 13. `mia-review` → `mia-git` (`commit`) if needed
-14. `mia-git` (`push`) — final push (confirm files being sent)
+14. `mia-git` (`push`) — final push (confirm files being sent); **delete local `PLAN.md`**
 
 ### `maintain`
 
 1. Confirm plugin root + scope (staged files, paths, instructions)
-2. `mia-plan` update if needed → `mia-git` (`commit`)
-3. Run **only** the sub-agents impacted by the delta (if back changes → **`mia-tests`** next, blocking before front; if user-facing behavior changes → **`mia-readme`** before review); **`mia-git` (`commit`)** after each key step
-4. End the batch with `mia-review` → commit if needed → **`mia-git` (`push`)**
+2. `mia-plan` update if needed (**no commit** — `PLAN.md` is gitignored/local)
+3. Run **only** the sub-agents impacted by the delta (if back changes → **`mia-tests`** next, blocking before front; if user-facing behavior changes → **`mia-readme`** before review); **`mia-git` (`commit`)** after each key step (never stage `PLAN.md`)
+4. End the batch with `mia-review` → commit if needed → **`mia-git` (`push`)** → **delete local `PLAN.md`**
 
 Re-invoking a specialist with new instructions means **update existing work**, not a full rewrite.
 
@@ -73,6 +73,6 @@ Sub-agents use `disable-model-invocation: true` (call them explicitly). The orch
 
 ## Exit status / PLAN.md / conventions
 
-Source of truth: [skills/reference.md](./skills/reference.md) (`pass` | `fail` | `blocked`, mandatory-inputs gate, plugin `PLAN.md` + `## Step status`, npm scripts, OpenAPI, generated types).
+Source of truth: [skills/reference.md](./skills/reference.md) (`pass` | `fail` | `blocked`, mandatory-inputs gate, local plugin `PLAN.md` + `## Step status`, npm scripts, OpenAPI, generated types).
 
 Every agent checks **Required** inputs first; missing → **`fail`** with a hyper-concise message and the missing field(s) in **bold**.

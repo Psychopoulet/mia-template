@@ -92,17 +92,19 @@ Leave working tree on **`develop`** with no local `master`. Do not delete or for
 ### Operation `commit`
 
 1. In plugin root: `git status` / diff; stage appropriate files (exclude secrets: `.env`, credentials, etc.).
-2. Draft a concise commit message focused on **why** (step context).
-3. **Confirm** with summary: **staged files** + **commit message**.
-4. On approval: `git commit`. On refusal: do not commit → **`blocked`**.
-5. If nothing to commit: **`pass`** with note **nothing to commit** (skip).
+2. **Never stage `PLAN.md`** — local-only, listed in `.gitignore` (see [reference.md](../reference.md)).
+3. Draft a concise commit message focused on **why** (step context).
+4. **Confirm** with summary: **staged files** + **commit message**.
+5. On approval: `git commit`. On refusal: do not commit → **`blocked`**.
+6. If nothing to commit: **`pass`** with note **nothing to commit** (skip).
 
 ### Operation `push`
 
-1. Determine commits ahead of upstream; list **file names** touched by those commits.
+1. Determine commits ahead of upstream; list **file names** touched by those commits (**must not** include `PLAN.md` going forward).
 2. **Confirm** with summary: branch + **files being pushed**.
 3. On approval: `git push` (or `git push -u origin HEAD` if no upstream). On refusal: **`blocked`**.
 4. Never force-push unless the user explicitly requests it in the confirmation.
+5. **After a successful push** (end of create/maintain batch): delete **`PLAN.md`** from the plugin root if the file exists. Report deletion in the conclusion.
 
 ## Conclusion document
 
@@ -126,10 +128,10 @@ Leave working tree on **`develop`** with no local `master`. Do not delete or for
 ## Deliverables
 - (provision) Remote: **[URL or n/a]** — Plugin root: **[path]** — Remote branches: **master**, **develop** — Local: **develop** only (local **master** deleted)
 - (commit) Message: **…** — Files committed: **…** — or **nothing to commit**
-- (push) Branch: **…** — Files pushed: **…** — Remote: **…**
+- (push) Branch: **…** — Files pushed: **…** — Remote: **…** — **`PLAN.md` deleted locally**: **yes/no/n/a**
 
 ## Proposed next step
 (provision) **mia-init**
 (commit) next domain agent per orchestrator
-(push) close routine / done
+(push) routine complete — **`PLAN.md` removed** (local only)
 ```

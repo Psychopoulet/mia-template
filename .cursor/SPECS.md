@@ -41,7 +41,7 @@ III) conventions communes (à documenter aussi dans reference.md)
 - Types générés :
     - back : `npm run transpile-openapi-back` → `lib/src/Descriptor.ts`
     - front : `npm run transpile-openapi-front` → `public/src/Descriptor.ts`
-- Marquage d'avancement dans le `PLAN.md` du plugin :
+- Marquage d'avancement dans le `PLAN.md` du plugin (fichier **local**, **jamais commité**, **supprimé après le push final**) :
     - section figée uniquement : `## Step status` (checkboxes)
     - **interdire** toute autre modification du contenu du plan (objectifs, estimations, descriptions)
 - Statuts agent : `pass` (ok pour enchaîner), `fail` (erreurs à corriger), `blocked` (attente humaine, ex. deps obsolètes)
@@ -52,8 +52,8 @@ III) conventions communes (à documenter aussi dans reference.md)
         - commit → fichiers en stage + texte du message
         - push → branche + noms des fichiers envoyés
     - `provision` (create only, avant `mia-init`) : vérifier `git` + `gh` / user loggué ; refuser si le répo distant existe déjà ; créer le répo **public** (défaut) ; créer `PROJET_REP` / racine plugin ; placeholder **`tmp.txt`** ; créer/pousser `master` puis `develop` ; basculer en local sur `develop` et supprimer la branche **locale** `master` (conserver `master` distant) ; `mia-init` supprime `tmp.txt`
-    - `commit` : après chaque étape clef (init, plan, openapi, back, tests, sdk, front, readme, review si besoin, …)
-    - `push` : **uniquement en fin** de routine create/maintain (après review), avec confirmation
+    - `commit` : après chaque étape clef (init, openapi, back, tests, sdk, front, readme, review si besoin, …) — **jamais** `PLAN.md`
+    - `push` : **uniquement en fin** de routine create/maintain (après review), avec confirmation ; **puis suppression locale de `PLAN.md`**
     - en `maintain` : pas de `provision` ; oui `commit` / `push`
 
 
@@ -110,7 +110,7 @@ IV) sous-agents
         e) créer les composants du front-office
         f) rédiger / mettre à jour le README.md (doc utilisateur succincte)
         g) faire une review
-    - le document final doit être sous format markdown et être sauvegardé à la racine du plugin sous le nom "PLAN.md"
+    - le document final doit être sous format markdown et être sauvegardé à la racine du plugin sous le nom "PLAN.md" (**local uniquement** : entrée dans `.gitignore`, jamais commité, supprimé après le push final)
     - il doit inclure une section figée `## Step status` avec checkboxes a→g (seule section modifiable ensuite par les autres agents pour l'avancement)
 
 4) un agent pour mettre à jour le document OpenAPI

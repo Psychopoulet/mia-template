@@ -19,8 +19,8 @@ Workflow overview: [AGENTS.md](../AGENTS.md) · Full spec: [SPECS.md](../SPECS.m
 - `provision` (create only, before `mia-init`): checks + remote + plugin root + placeholder **`tmp.txt`** + push **`master`**, then **`develop`**; checkout **`develop`** locally and delete local **`master`** (keep remote `master`); `mia-init` deletes `tmp.txt`
 - Remote repo name = plugin name; fail if it already exists for the logged-in user (`provision`)
 - Visibility: **public** by default; override to `private` only if requested
-- `commit` after key steps (init, plan, openapi, back, tests, sdk, front, readme, review if needed, …)
-- `push` **only at the end** of create/maintain (after review), with confirmation
+- `commit` after key steps (init, openapi, back, tests, sdk, front, readme, review if needed, …) — **never** `PLAN.md`
+- `push` **only at the end** of create/maintain (after review), with confirmation; **then delete local `PLAN.md`**
 - In `maintain`: no `provision`; still use `commit` / `push`
 
 ## npm scripts
@@ -77,7 +77,9 @@ Checklist (Descriptor):
 
 ## Plugin PLAN.md
 
-- Written by `mia-plan` at the plugin root
+- **Local-only** working document at the plugin root (written/updated by `mia-plan`)
+- **Never published**: must appear in the plugin **`.gitignore`** (`PLAN.md`); `mia-git` **`commit`** must **never** stage it
+- **Deleted after the final `push`** of a create/maintain batch (`mia-git` **`push`** removes the file from disk once the remote is updated)
 - Steps: **a)** OpenAPI → **b)** Back → **c)** Unit tests → **d)** Front SDK → **e)** Front components → **f)** README → **g)** Review
 - Create execution: `mia-tests` (step **c**) runs immediately after `mia-back` and is a **hard gate** before any front work; `mia-readme` (step **f**) runs after UI (and optional lint), before `mia-review`
 - Progress tracking: **only** update `## Step status` checkboxes

@@ -39,8 +39,9 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
    - **e)** Front-office components
    - **f)** README (user-facing; no technical details)
    - **g)** Review
-3. Save as **`PLAN.md`** at the plugin root.
-4. Include a frozen **`## Step status`** section (checkboxes a→g). Later agents may only edit this section for progress.
+3. Save as **`PLAN.md`** at the plugin root (**local only** — never committed).
+4. Ensure the plugin **`.gitignore`** contains **`PLAN.md`** (append if missing).
+5. Include a frozen **`## Step status`** section (checkboxes a→g). Later agents may only edit this section for progress.
 
 Template:
 
@@ -99,5 +100,5 @@ Template:
 - Open points: **…**
 
 ## Proposed next step
-Validate, then **mia-git** (`commit`), then **mia-openapi**.
+Validate, then **mia-openapi** (no git commit for `PLAN.md`).
 ```
