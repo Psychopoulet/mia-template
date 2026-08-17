@@ -13,6 +13,7 @@
         MEDIATOR_FILENAME,
         ORCHESTRATOR_FILENAME,
         SERVER_FILENAME,
+        SDK_FILENAME,
         POSTFIX_EVENTS_NAME,
         POSTFIX_EVENTS_DESCRIPTION,
         PLUGIN_INITIAL_VERSION
@@ -35,6 +36,7 @@ module.exports = async function updateDestinationFiles (destination, name, descr
     const mediatorPath = join(destination, MEDIATOR_FILENAME);
     const orchestratorPath = join(destination, ORCHESTRATOR_FILENAME);
     const serverPath = join(destination, SERVER_FILENAME);
+    const sdkPath = join(destination, SDK_FILENAME);
 
     const packageData = await readJSON(packagePath);
     const readme = await readFile(readmePath, "utf-8");
@@ -43,6 +45,7 @@ module.exports = async function updateDestinationFiles (destination, name, descr
     const mediator = await readFile(mediatorPath, "utf-8");
     const orchestrator = await readFile(orchestratorPath, "utf-8");
     const server = await readFile(serverPath, "utf-8");
+    const sdk = await readFile(sdkPath, "utf-8");
 
     const oldClassSuffix = toPascalCaseSuffix(oldName);
     const newClassSuffix = toPascalCaseSuffix(name);
@@ -72,5 +75,6 @@ module.exports = async function updateDestinationFiles (destination, name, descr
     await writeFile(mediatorPath, updateClassNames(mediator, oldClassSuffix, newClassSuffix), "utf-8");
     await writeFile(orchestratorPath, updateClassNames(orchestrator, oldClassSuffix, newClassSuffix), "utf-8");
     await writeFile(serverPath, updateClassNames(server, oldClassSuffix, newClassSuffix), "utf-8");
+    await writeFile(sdkPath, sdk.replaceAll(oldName, name), "utf-8");
 
 };
