@@ -180,6 +180,7 @@ IV) sous-agents
     - cwd = racine du plugin
     - il s'appuie sur le SDK et sur "public/src/Descriptor.ts" (relancer "npm run transpile-openapi-front" si besoin)
     - il doit créer / mettre à jour les composants dans "public/src" (idéalement "public/src/components/") avec un workflow cohérent entre les composants
+    - un fichier de composant (`.tsx`) doit **toujours** porter le même nom que le composant qu'il exporte (ex. `StatusCard.tsx` exporte `StatusCard`)
     - il doit s'assurer de la qualité / découpe du code
     - il doit exécuter "npm run lint-front" puis "npm run build-front"
     - en cas d'échec : statut `fail`, ne pas cocher

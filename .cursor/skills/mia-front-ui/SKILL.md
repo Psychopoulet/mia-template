@@ -33,10 +33,11 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 1. Read step **e)** in `PLAN.md`.
 2. Rely on SDK + `public/src/Descriptor.ts`; re-run `npm run transpile-openapi-front` if needed.
 3. Create / update components under `public/src` (preferably `public/src/components/`) with a coherent workflow.
-4. Ensure code quality / structure.
-5. Run `npm run lint-front` then `npm run build-front`.
-6. If either fails: **`fail`**, do not check the step.
-7. On success: check **only** `## Step status` item **e)**.
+4. **File naming**: a `.tsx` component file **must** have the same name as the component it exports (e.g. `StatusCard.tsx` exports `StatusCard`). Rename file and component together; never mismatch.
+5. Ensure code quality / structure.
+6. Run `npm run lint-front` then `npm run build-front`.
+7. If either fails: **`fail`**, do not check the step.
+8. On success: check **only** `## Step status` item **e)**.
 
 ## Conclusion document
 

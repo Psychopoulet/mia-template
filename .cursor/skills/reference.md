@@ -70,6 +70,11 @@ Checklist (Descriptor):
 - Methods and status codes as above
 - No long text (token, secret, etc.) in path/query — use the body
 
+## Front UI (mia-front-ui)
+
+- A `.tsx` component file **must** be named the same as the component it exports (`StatusCard.tsx` → `export … StatusCard`)
+- Rename file and component together; never leave a mismatch
+
 ## Plugin PLAN.md
 
 - Written by `mia-plan` at the plugin root
