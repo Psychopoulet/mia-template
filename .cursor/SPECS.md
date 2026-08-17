@@ -135,7 +135,13 @@ IV) sous-agents
     - cwd = racine du plugin
     - il doit exécuter la commande "npm run transpile-openapi-back" pour créer les types issus du document OpenAPI (`lib/src/Descriptor.ts`)
     - il doit créer les fonctions dans "lib/src/Mediator.ts" correspondant aux nouvelles opérations de "lib/data/Descriptor.json" en s'assurant d'utiliser des types présents dans "lib/src/Descriptor.ts"
-    - il doit s'assurer de la qualité du code livré, de sa découpe (en créant d'éventuels nouveaux fichiers dans "lib/src/utils")
+    - **ne pas** contrôler / valider les paramètres d'entrée dans le Mediator (géré ailleurs : host / Server / `checkParameters`)
+    - **ne pas** ré-implémenter l'**authentification** host (login, vérification JWT comme gate) ; en revanche, si le PLAN du plugin impose des règles d'**autorisation** métier (ex. soi-même ou admin), les implémenter dans le Mediator
+    - se concentrer sur la logique métier et les services Container (ex. `auth-db`)
+    - il doit s'assurer de la qualité du code livré, de sa découpe :
+        - fichiers avec du **code exécutable** (fonctions, classes, exports runtime) → `lib/src/utils/`
+        - fichiers **uniquement** de typing (`type` / `interface` / aliases, sans runtime) → `lib/src/@types/`
+        - un fichier mixte (code + types locaux) reste dans `utils` ; ne pas mettre de runtime dans `@types`
     - il doit exécuter "npm run lint-back" puis "npm run build-back"
     - en cas d'échec lint/build : statut `fail`, ne pas cocher le step
     - il doit cocher ses points dans `## Step status` uniquement, sans modifier le reste du plan
