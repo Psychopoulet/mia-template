@@ -81,9 +81,10 @@ Checklist (Descriptor):
 - **Never published**: must appear in the plugin **`.gitignore`** (`PLAN.md`); `mia-git` **`commit`** must **never** stage it
 - **Deleted after the final `push`** of a create/maintain batch (`mia-git` **`push`** removes the file from disk once the remote is updated)
 - Steps: **a)** OpenAPI → **b)** Back → **c)** Unit tests → **d)** Front SDK → **e)** Front components → **f)** README → **g)** Review
+- **Numbered items**: each a→g section body is an ordered list (`1.` `2.` `3.` …) of discrete actions. Specialists execute those items **in order**. Do not treat a prose paragraph as the step contract.
 - Create execution: `mia-tests` (step **c**) runs immediately after `mia-back` and is a **hard gate** before any front work; `mia-readme` (step **f**) runs after UI (and optional lint), before `mia-review`
 - Progress tracking: **only** update `## Step status` checkboxes
-- **Do not** edit plan goals, estimates, or descriptions when marking progress
+- **Do not** edit plan goals, estimates, descriptions, or numbered items when marking progress
 
 
 ## Mandatory inputs gate

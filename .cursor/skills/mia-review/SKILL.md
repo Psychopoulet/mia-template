@@ -33,7 +33,7 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 
 ## Expected output
 
-1. Confirm scope (global vs limited) when ambiguous.
+1. Confirm scope (global vs limited) when ambiguous. If step **g)** lists numbered items, execute them **in order** as the review checklist.
 2. Assess quality, security, maintainability, OpenAPI ↔ back ↔ front ↔ tests ↔ README consistency.
 3. If Snyk and/or SonarQube MCP/tools are available: run them and summarize **critical** findings.
 4. Ensure `npm run tests` passes.

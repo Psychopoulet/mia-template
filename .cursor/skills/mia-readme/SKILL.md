@@ -32,7 +32,7 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 
 ## Expected output
 
-1. Read step **f)** in `PLAN.md` and skim Descriptor (+ UI if useful) for user workflows.
+1. Read step **f)** in `PLAN.md` and execute its **numbered items in order**. Skim Descriptor (+ UI if useful) for user workflows.
 2. **Preserve** the template README prefix: `# <plugin>` title, **Badges** section, and existing **OpenAPI** section/link structure.
 3. Add or update a short **user-facing** summary: what the plugin does and its main workflows (who can do what).
 4. **No technical content**: no `lib/` paths, Mediator/Server, npm scripts, stack, coverage, or implementation details.

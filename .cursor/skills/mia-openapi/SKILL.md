@@ -30,7 +30,7 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 
 ## Expected output
 
-1. Read the OpenAPI step in `PLAN.md`.
+1. Read step **a)** in `PLAN.md` and execute its **numbered items in order**.
 2. Update `lib/data/Descriptor.json` (routes + data types).
 3. Follow [reference.md](../reference.md) OpenAPI conventions and checklist (`operationId`, JSON bodies, methods/status codes, no long text in URL params).
 4. **Responses**:

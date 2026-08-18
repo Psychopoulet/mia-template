@@ -32,7 +32,7 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 
 ## Expected output
 
-1. Read step **d)** in `PLAN.md`.
+1. Read step **d)** in `PLAN.md` and execute its **numbered items in order**.
 2. `npm run transpile-openapi-front` → `public/src/Descriptor.ts`.
 3. Update `public/src/SDK.ts` (and helpers if needed) for new operations, using `public/src/Descriptor.ts` types.
 4. Ensure code quality / structure.

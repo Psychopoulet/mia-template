@@ -31,7 +31,7 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 
 ## Expected output
 
-1. Read the back-office step in `PLAN.md`.
+1. Read step **b)** in `PLAN.md` and execute its **numbered items in order**.
 2. `npm run transpile-openapi-back` → `lib/src/Descriptor.ts`.
 3. Implement / update `lib/src/Mediator.ts` for new Descriptor operations using `lib/src/Descriptor.ts` types.
 4. Update `lib/src/Server.ts` if events are required.

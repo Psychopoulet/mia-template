@@ -59,7 +59,7 @@ Re-invoking a specialist with new instructions means **update existing work**, n
 | `mia-deps` | Dependency maintainer | Checks fail on outdated engines/packages |
 | `mia-git` | Git/GitHub: **provision** / **commit** / **push** (confirm before each mutation) | Provision: create before init; commit after key steps; push at end |
 | `mia-init` | Copy script from template | Create only |
-| `mia-plan` | Product owner → plugin `PLAN.md` | Plan or revise scope |
+| `mia-plan` | Product owner → plugin `PLAN.md` with numbered items per step | Plan or revise scope |
 | `mia-openapi` | Technical writer → Descriptor | API contract |
 | `mia-back` | Senior TS Node back | Mediator / Server |
 | `mia-tests` | Senior QA — mocha back unit tests | Step c after back; **blocking**; coverage ≥ 95% |

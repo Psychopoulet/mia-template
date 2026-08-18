@@ -30,7 +30,7 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 
 ## Expected output
 
-1. Read step **e)** in `PLAN.md`.
+1. Read step **e)** in `PLAN.md` and execute its **numbered items in order**.
 2. Rely on SDK + `public/src/Descriptor.ts`; re-run `npm run transpile-openapi-front` if needed.
 3. Create / update components under `public/src` (preferably `public/src/components/`) with a coherent workflow.
 4. **File naming**: a `.tsx` component file **must** have the same name as the component it exports (e.g. `StatusCard.tsx` exports `StatusCard`). Rename file and component together; never mismatch.

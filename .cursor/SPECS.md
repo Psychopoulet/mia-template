@@ -43,7 +43,7 @@ III) conventions communes (à documenter aussi dans reference.md)
     - front : `npm run transpile-openapi-front` → `public/src/Descriptor.ts`
 - Marquage d'avancement dans le `PLAN.md` du plugin (fichier **local**, **jamais commité**, **supprimé après le push final**) :
     - section figée uniquement : `## Step status` (checkboxes)
-    - **interdire** toute autre modification du contenu du plan (objectifs, estimations, descriptions)
+    - **interdire** toute autre modification du contenu du plan (objectifs, estimations, descriptions, items numérotés)
 - Statuts agent : `pass` (ok pour enchaîner), `fail` (erreurs à corriger), `blocked` (attente humaine, ex. deps obsolètes)
 - Entrées obligatoires : gate avant tout travail ; manquant → `fail` + message hyper concis avec champ(s) en **gras** (ex. `Missing: **plugin root**.`)
 - Git (`mia-git`) :
@@ -110,12 +110,13 @@ IV) sous-agents
         e) créer les composants du front-office
         f) rédiger / mettre à jour le README.md (doc utilisateur succincte)
         g) faire une review
+    - **sous-étapes numérotées (obligatoire)** : le corps de **chaque** étape a→g est une **liste ordonnée** `1.` `2.` `3.` … d'actions **discrètes et implémentables** (une action = un livrable clair : route, schéma, fonction, fichier, cas de test, composant, paragraphe README, point de review). Interdire un paragraphe de prose à la place de la liste. Les identifiants a→g restent stables ; en `maintain`, ne pas renuméroter les items existants (ajouter à la suite). Les agents suivants exécutent ces items **dans l'ordre**.
     - le document final doit être sous format markdown et être sauvegardé à la racine du plugin sous le nom "PLAN.md" (**local uniquement** : entrée dans `.gitignore`, jamais commité, supprimé après le push final)
     - il doit inclure une section figée `## Step status` avec checkboxes a→g (seule section modifiable ensuite par les autres agents pour l'avancement)
 
 4) un agent pour mettre à jour le document OpenAPI
     - raison d'être : documentaliste technique
-    - il doit lire sa partie dans le document "PLAN.md"
+    - il doit lire sa partie dans le document "PLAN.md" et exécuter les items numérotés **dans l'ordre**
     - il doit mettre à jour le document OpenAPI "lib/data/Descriptor.json", autant les routes que les types de données
     - il doit respecter les conventions du chapitre III
     - checklist minimale à respecter :
@@ -132,7 +133,7 @@ IV) sous-agents
 
 5) un agent pour mettre à jour le back
     - raison d'être : dev sénior Typescript back NodeJS
-    - il doit lire sa partie dans le document "PLAN.md"
+    - il doit lire sa partie dans le document "PLAN.md" et exécuter les items numérotés **dans l'ordre**
     - cwd = racine du plugin
     - il doit exécuter la commande "npm run transpile-openapi-back" pour créer les types issus du document OpenAPI (`lib/src/Descriptor.ts`)
     - il doit créer les fonctions dans "lib/src/Mediator.ts" correspondant aux nouvelles opérations de "lib/data/Descriptor.json" en s'assurant d'utiliser des types présents dans "lib/src/Descriptor.ts"
@@ -150,7 +151,7 @@ IV) sous-agents
 
 6) un agent pour créer les tests unitaires back (immédiatement après le back)
     - raison d'être : Quality Analyst sénior
-    - il doit lire sa partie dans le document "PLAN.md" (étape c)
+    - il doit lire sa partie dans le document "PLAN.md" (étape c) et exécuter les items numérotés **dans l'ordre**
     - cwd = racine du plugin
     - il s'exécute **après** l'agent back et **avant** tout travail front
     - **gate bloquante** : en `fail` / `blocked`, l'orchestrateur n'enchaîne pas (pas de SDK / UI) tant que les tests ne passent pas
@@ -164,7 +165,7 @@ IV) sous-agents
 
 7) un agent pour mettre à jour le SDK front
     - raison d'être : dev sénior Typescript
-    - il doit lire sa partie dans le document "PLAN.md" (étape d)
+    - il doit lire sa partie dans le document "PLAN.md" (étape d) et exécuter les items numérotés **dans l'ordre**
     - cwd = racine du plugin
     - il ne démarre qu'après `pass` de l'agent QA (tests back)
     - il doit exécuter "npm run transpile-openapi-front" → types dans "public/src/Descriptor.ts"
@@ -176,7 +177,7 @@ IV) sous-agents
 
 8) un agent pour créer les composants front
     - raison d'être : dev sénior Typescript front React/Bootstrap/Fontawesome — spécialité UI
-    - il doit lire sa partie dans le document "PLAN.md" (étape e)
+    - il doit lire sa partie dans le document "PLAN.md" (étape e) et exécuter les items numérotés **dans l'ordre**
     - cwd = racine du plugin
     - il s'appuie sur le SDK et sur "public/src/Descriptor.ts" (relancer "npm run transpile-openapi-front" si besoin)
     - il doit créer / mettre à jour les composants dans "public/src" (idéalement "public/src/components/") avec un workflow cohérent entre les composants
@@ -202,7 +203,7 @@ IV) sous-agents
     - il doit résumer le fonctionnement du plugin et de ses workflows utilisateur (qui peut faire quoi)
     - il ne doit rien afficher de technique (pas de chemins `lib/`, Mediator, scripts npm, stack, coverage, détails d'implémentation)
     - il doit faire mention du document OpenAPI et garantir un lien vers `./lib/data/Descriptor.json`
-    - sources : `PLAN.md`, Descriptor, UI si besoin ; en `maintain` → **update** du README, pas de réécriture complète
+    - sources : `PLAN.md` (items numérotés de l'étape f, **dans l'ordre**), Descriptor, UI si besoin ; en `maintain` → **update** du README, pas de réécriture complète
     - il s'exécute après `mia-front-ui` (et `mia-lint` optionnel), avant `mia-review`
     - il doit cocher l'étape f dans `## Step status` uniquement
     - conclusion avec statut `pass` | `fail` | `blocked` ; next sur `pass` : `mia-review`
@@ -210,6 +211,7 @@ IV) sous-agents
 11) un agent pour faire une review
     - raison d'être : developpeur sénior fullstack
     - il doit soit analyser l'ensemble du projet, ou limiter à un périmètre si le projet a déjà été analysé (si des documents sont en stage par exemple) (demander confirmation dans ce cas)
+    - s'il y a des items numérotés à l'étape g, les suivre **dans l'ordre** comme checklist de review
     - il doit s'assurer de la qualité du code livré, de la sécurité et des points d'amélioration
     - si disponibles (MCP / outils locaux) : s'appuyer aussi sur Snyk et/ou SonarQube pour sécurité / qualité, et résumer les findings critiques
     - il doit s'assurer que la suite passe avec "npm run tests"

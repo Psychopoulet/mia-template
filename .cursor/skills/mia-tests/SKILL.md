@@ -33,7 +33,7 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 
 ## Expected output
 
-1. Read the unit-tests step in `PLAN.md`.
+1. Read step **c)** in `PLAN.md` and execute its **numbered items in order**.
 2. Create / update **mocha** tests under `test/` for new back-end code (Mediator first).
 3. Name files with increasing numeric prefixes: `0_…`, `1_…`, `2_…`.
 4. Measure coverage with `npm run unit-tests-local` (nyc). **Mediator coverage must be ≥ 95%**. If below: status **`fail`**, list gaps, do **not** check the step.
