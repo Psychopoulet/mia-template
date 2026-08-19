@@ -145,6 +145,9 @@ IV) sous-agents
         - fichiers avec du **code exécutable** (fonctions, classes, exports runtime) → `lib/src/utils/`
         - fichiers **uniquement** de typing (`type` / `interface` / aliases, sans runtime) → `lib/src/@types/`
         - un fichier mixte (code + types locaux) reste dans `utils` ; ne pas mettre de runtime dans `@types`
+    - **commentaires d'explication dans le Mediator** (et helpers `utils/` appelés par lui) dès qu'une méthode a un corps ≥ **25 lignes** :
+        - commentaire anglais `//` au-dessus de la méthode (but + flux principal), indenté comme le fichier existant
+        - expliquer le *pourquoi*, pas narrer chaque ligne ; les méthodes plus courtes **peuvent** aussi être commentées si ça aide
     - il doit exécuter "npm run lint-back" puis "npm run build-back"
     - en cas d'échec lint/build : statut `fail`, ne pas marquer le titre
     - sur `pass` : marquer **uniquement** le titre de l'étape b (`### [x] b) …`) ; ne rien changer d'autre dans le plan
@@ -213,7 +216,7 @@ IV) sous-agents
     - raison d'être : developpeur sénior fullstack
     - il doit soit analyser l'ensemble du projet, ou limiter à un périmètre si le projet a déjà été analysé (si des documents sont en stage par exemple) (demander confirmation dans ce cas)
     - s'il y a des items numérotés à l'étape g, les suivre **dans l'ordre** comme checklist de review
-    - il doit s'assurer de la qualité du code livré, de la sécurité et des points d'amélioration
+    - il doit s'assurer de la qualité du code livré, de la sécurité et des points d'amélioration (dont commentaires d'explication sur les méthodes Mediator ≥ 25 lignes)
     - si disponibles (MCP / outils locaux) : s'appuyer aussi sur Snyk et/ou SonarQube pour sécurité / qualité, et résumer les findings critiques
     - il doit s'assurer que la suite passe avec "npm run tests"
     - sur verdict prêt : marquer **uniquement** le titre de l'étape g (`### [x] g) …`) ; en `fail` / `blocked` ne pas marquer le titre

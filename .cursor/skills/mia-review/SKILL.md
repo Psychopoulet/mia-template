@@ -34,7 +34,7 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 ## Expected output
 
 1. Confirm scope (global vs limited) when ambiguous. If step **g)** lists numbered items, execute them **in order** as the review checklist.
-2. Assess quality, security, maintainability, OpenAPI ↔ back ↔ front ↔ tests ↔ README consistency.
+2. Assess quality, security, maintainability, OpenAPI ↔ back ↔ front ↔ tests ↔ README consistency. On the Mediator: may **suggest** comments on methods ≥ 25 lines that lack them (see [reference.md](../reference.md)); this is not a blocker.
 3. If Snyk and/or SonarQube MCP/tools are available: run them and summarize **critical** findings.
 4. Ensure `npm run tests` passes.
 5. Mark **only** the step **g)** heading (`### [x] g) …`) if verdict is ready; on blockers use **`fail`** / **`blocked`** and do not mark the heading.

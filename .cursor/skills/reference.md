@@ -75,6 +75,14 @@ Checklist (Descriptor):
 - A `.tsx` component file **must** be named the same as the component it exports (`StatusCard.tsx` → `export … StatusCard`)
 - Rename file and component together; never leave a mismatch
 
+## Mediator comments (mia-back)
+
+Explanatory English `//` comments in `lib/src/Mediator.ts` (and `lib/src/utils/` helpers it calls) when a method **body is ≥ 25 lines**. Comment above the method (purpose + main flow). Match existing indent / section-comment style. Methods **under 25 lines may still be commented** when an explanation helps.
+
+Do **not** narrate obvious lines (`// increment i`).
+
+Missing comments are **not** a **`fail`** / do not block marking step **b)**.
+
 ## Plugin PLAN.md
 
 - **Local-only** working document at the plugin root (written/updated by `mia-plan`)
