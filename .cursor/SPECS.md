@@ -42,7 +42,8 @@ III) conventions communes (à documenter aussi dans reference.md)
     - back : `npm run transpile-openapi-back` → `lib/src/Descriptor.ts`
     - front : `npm run transpile-openapi-front` → `public/src/Descriptor.ts`
 - Marquage d'avancement dans le `PLAN.md` du plugin (fichier **local**, **jamais commité**, **supprimé après le push final**) :
-    - section figée uniquement : `## Step status` (checkboxes)
+    - **uniquement le titre** de l'étape validée : préfixer `[x]` (`### [x] a) OpenAPI — ~2h`)
+    - **pas** de section / tableau `## Step status`
     - **interdire** toute autre modification du contenu du plan (objectifs, estimations, descriptions, items numérotés)
 - Statuts agent : `pass` (ok pour enchaîner), `fail` (erreurs à corriger), `blocked` (attente humaine, ex. deps obsolètes)
 - Entrées obligatoires : gate avant tout travail ; manquant → `fail` + message hyper concis avec champ(s) en **gras** (ex. `Missing: **plugin root**.`)
@@ -112,7 +113,7 @@ IV) sous-agents
         g) faire une review
     - **sous-étapes numérotées (obligatoire)** : le corps de **chaque** étape a→g est une **liste ordonnée** `1.` `2.` `3.` … d'actions **discrètes et implémentables** (une action = un livrable clair : route, schéma, fonction, fichier, cas de test, composant, paragraphe README, point de review). Interdire un paragraphe de prose à la place de la liste. Les identifiants a→g restent stables ; en `maintain`, ne pas renuméroter les items existants (ajouter à la suite). Les agents suivants exécutent ces items **dans l'ordre**.
     - le document final doit être sous format markdown et être sauvegardé à la racine du plugin sous le nom "PLAN.md" (**local uniquement** : entrée dans `.gitignore`, jamais commité, supprimé après le push final)
-    - il doit inclure une section figée `## Step status` avec checkboxes a→g (seule section modifiable ensuite par les autres agents pour l'avancement)
+    - **pas** de section / tableau `## Step status` : l'avancement se marque sur le **titre** de l'étape (`### [x] a) …`). En `maintain`, supprimer un éventuel `## Step status` existant et reporter les cases cochées sur les titres.
 
 4) un agent pour mettre à jour le document OpenAPI
     - raison d'être : documentaliste technique
@@ -128,7 +129,7 @@ IV) sous-agents
         - **pas de component à usage unique** : laisser les objets déclarés **inline** dans leur contexte (requestBody / response / `items`) ; n'extraire dans `components.schemas` que si le schéma est **réutilisé** (ou déjà fourni par le template : `Error`, `PluginName`, events, …)
         - méthodes et codes HTTP de succès conformes (put/201, get/post → 200 ou 204, delete → 200 ou 204)
         - jamais de texte long (token, secret, etc.) en paramètres URL (path/query) — passer par le body
-    - il doit cocher ses points dans `## Step status` uniquement, sans modifier le reste du plan
+    - sur `pass` : marquer **uniquement** le titre de l'étape a (`### [x] a) …`) ; ne rien changer d'autre dans le plan
     - conclusion avec statut `pass` | `fail` | `blocked`
 
 5) un agent pour mettre à jour le back
@@ -145,8 +146,8 @@ IV) sous-agents
         - fichiers **uniquement** de typing (`type` / `interface` / aliases, sans runtime) → `lib/src/@types/`
         - un fichier mixte (code + types locaux) reste dans `utils` ; ne pas mettre de runtime dans `@types`
     - il doit exécuter "npm run lint-back" puis "npm run build-back"
-    - en cas d'échec lint/build : statut `fail`, ne pas cocher le step
-    - il doit cocher ses points dans `## Step status` uniquement, sans modifier le reste du plan
+    - en cas d'échec lint/build : statut `fail`, ne pas marquer le titre
+    - sur `pass` : marquer **uniquement** le titre de l'étape b (`### [x] b) …`) ; ne rien changer d'autre dans le plan
     - l'étape suivante attendue est l'agent QA (tests unitaires back, gate bloquante)
 
 6) un agent pour créer les tests unitaires back (immédiatement après le back)
@@ -157,11 +158,11 @@ IV) sous-agents
     - **gate bloquante** : en `fail` / `blocked`, l'orchestrateur n'enchaîne pas (pas de SDK / UI) tant que les tests ne passent pas
     - il doit utiliser mocha
     - il doit créer les tests unitaires dans le dossier "test" correspondant au nouveau code back en s'assurant un code coverage de 95% au minimum pour le Mediator
-    - mesure du coverage : "npm run unit-tests-local" (nyc). Si coverage Mediator < 95% : statut `fail`, ne pas cocher le step, lister les trous
+    - mesure du coverage : "npm run unit-tests-local" (nyc). Si coverage Mediator < 95% : statut `fail`, ne pas marquer le titre, lister les trous
     - il doit s'assurer de la qualité du code livré, de sa découpe (fichiers dans "test", préfixe numérique croissant : 0_, 1_, 2_, …)
     - il doit s'assurer que le code se teste bien avec "npm run build-back" puis "npm run unit-tests" (échec → `fail`, bloquant)
     - lint tests recommandé : "npm run lint-tests" avant de conclure `pass`
-    - il doit cocher l'étape c dans `## Step status` uniquement
+    - sur `pass` : marquer **uniquement** le titre de l'étape c (`### [x] c) …`)
 
 7) un agent pour mettre à jour le SDK front
     - raison d'être : dev sénior Typescript
@@ -173,7 +174,7 @@ IV) sous-agents
     - il doit s'assurer de la qualité / découpe du code
     - il doit exécuter "npm run lint-front" (périmètre SDK) puis vérifier que le front buildera (ou "npm run build-front" si nécessaire à ce stade)
     - pause orchestrateur après cet agent avant les composants
-    - il doit cocher l'étape d dans `## Step status` uniquement
+    - sur `pass` : marquer **uniquement** le titre de l'étape d (`### [x] d) …`)
 
 8) un agent pour créer les composants front
     - raison d'être : dev sénior Typescript front React/Bootstrap/Fontawesome — spécialité UI
@@ -184,8 +185,8 @@ IV) sous-agents
     - un fichier de composant (`.tsx`) doit **toujours** porter le même nom que le composant qu'il exporte (ex. `StatusCard.tsx` exporte `StatusCard`)
     - il doit s'assurer de la qualité / découpe du code
     - il doit exécuter "npm run lint-front" puis "npm run build-front"
-    - en cas d'échec : statut `fail`, ne pas cocher
-    - il doit cocher l'étape e dans `## Step status` uniquement
+    - en cas d'échec : statut `fail`, ne pas marquer le titre
+    - sur `pass` : marquer **uniquement** le titre de l'étape e (`### [x] e) …`)
 
 9) un agent transversal de lint (optionnel mais recommandé avant review, ou fusionné dans back/front/tests)
     - raison d'être : guardian of lint consistency
@@ -205,7 +206,7 @@ IV) sous-agents
     - il doit faire mention du document OpenAPI et garantir un lien vers `./lib/data/Descriptor.json`
     - sources : `PLAN.md` (items numérotés de l'étape f, **dans l'ordre**), Descriptor, UI si besoin ; en `maintain` → **update** du README, pas de réécriture complète
     - il s'exécute après `mia-front-ui` (et `mia-lint` optionnel), avant `mia-review`
-    - il doit cocher l'étape f dans `## Step status` uniquement
+    - sur `pass` : marquer **uniquement** le titre de l'étape f (`### [x] f) …`)
     - conclusion avec statut `pass` | `fail` | `blocked` ; next sur `pass` : `mia-review`
 
 11) un agent pour faire une review
@@ -215,7 +216,7 @@ IV) sous-agents
     - il doit s'assurer de la qualité du code livré, de la sécurité et des points d'amélioration
     - si disponibles (MCP / outils locaux) : s'appuyer aussi sur Snyk et/ou SonarQube pour sécurité / qualité, et résumer les findings critiques
     - il doit s'assurer que la suite passe avec "npm run tests"
-    - il doit cocher l'étape g dans `## Step status` uniquement si verdict prêt (ou documenter les blockers en `fail` / `blocked` sans cocher)
+    - sur verdict prêt : marquer **uniquement** le titre de l'étape g (`### [x] g) …`) ; en `fail` / `blocked` ne pas marquer le titre
 
 V) ordre orchestrateur
 

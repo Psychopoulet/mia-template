@@ -83,8 +83,8 @@ Checklist (Descriptor):
 - Steps: **a)** OpenAPI → **b)** Back → **c)** Unit tests → **d)** Front SDK → **e)** Front components → **f)** README → **g)** Review
 - **Numbered items**: each a→g section body is an ordered list (`1.` `2.` `3.` …) of discrete actions. Specialists execute those items **in order**. Do not treat a prose paragraph as the step contract.
 - Create execution: `mia-tests` (step **c**) runs immediately after `mia-back` and is a **hard gate** before any front work; `mia-readme` (step **f**) runs after UI (and optional lint), before `mia-review`
-- Progress tracking: **only** update `## Step status` checkboxes
-- **Do not** edit plan goals, estimates, descriptions, or numbered items when marking progress
+- Progress tracking: mark the **validated step heading only** — prefix `[x]` (`### [x] a) OpenAPI — ~Xh`). **No** `## Step status` section/table.
+- **Do not** edit plan goals, estimates, descriptions, or numbered items when marking progress. On **`fail`**, do not mark the heading.
 
 
 ## Mandatory inputs gate
@@ -110,7 +110,7 @@ Missing: **plugin root**, **scope**.
 Every conclusion document must include:
 
 - **`pass`**: safe to continue
-- **`fail`**: errors to fix; do not check the step
+- **`fail`**: errors to fix; do not mark the step heading
 - **`blocked`**: needs human action (e.g. outdated deps)
 
 Orchestrator continues only on `pass`. In particular, **`mia-tests` must `pass`** before `mia-front-sdk` / `mia-front-ui`.

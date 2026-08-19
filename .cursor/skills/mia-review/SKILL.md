@@ -37,7 +37,7 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 2. Assess quality, security, maintainability, OpenAPI ↔ back ↔ front ↔ tests ↔ README consistency.
 3. If Snyk and/or SonarQube MCP/tools are available: run them and summarize **critical** findings.
 4. Ensure `npm run tests` passes.
-5. Check **only** `## Step status` item **g)** if verdict is ready; on blockers use **`fail`** / **`blocked`** and do not check.
+5. Mark **only** the step **g)** heading (`### [x] g) …`) if verdict is ready; on blockers use **`fail`** / **`blocked`** and do not mark the heading.
 
 ## Conclusion document
 

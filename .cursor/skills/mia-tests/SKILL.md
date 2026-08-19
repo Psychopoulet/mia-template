@@ -4,7 +4,7 @@ description: >-
   Senior MIA Quality Analyst: mocha back unit tests under test/, Mediator
   coverage >= 95% via unit-tests-local, lint-tests, build-back, unit-tests.
   Runs immediately after mia-back; hard gate before front. Use for PLAN.md
-  step c; fail without checking if coverage is below target or tests fail.
+  step c; fail without marking the heading if coverage is below target or tests fail.
 disable-model-invocation: true
 ---
 
@@ -36,10 +36,10 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 1. Read step **c)** in `PLAN.md` and execute its **numbered items in order**.
 2. Create / update **mocha** tests under `test/` for new back-end code (Mediator first).
 3. Name files with increasing numeric prefixes: `0_…`, `1_…`, `2_…`.
-4. Measure coverage with `npm run unit-tests-local` (nyc). **Mediator coverage must be ≥ 95%**. If below: status **`fail`**, list gaps, do **not** check the step.
+4. Measure coverage with `npm run unit-tests-local` (nyc). **Mediator coverage must be ≥ 95%**. If below: status **`fail`**, list gaps, do **not** mark the heading.
 5. Verify `npm run build-back` then `npm run unit-tests`. Any failure → **`fail`** (blocking).
 6. Recommended: `npm run lint-tests` before concluding **`pass`**.
-7. On success: check **only** `## Step status` item **c)**.
+7. On success: mark **only** the step **c)** heading (`### [x] c) …`).
 
 ## Conclusion document
 
