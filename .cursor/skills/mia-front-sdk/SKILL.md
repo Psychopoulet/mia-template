@@ -36,7 +36,7 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 2. `npm run transpile-openapi-front` → `public/src/Descriptor.ts`.
 3. Update `public/src/SDK.ts` (and helpers if needed) for new operations, using `public/src/Descriptor.ts` types.
 4. Ensure code quality / structure.
-5. Run `npm run lint-front` (SDK scope). Run `npm run build-front` if needed to validate compile.
+5. **Success condition:** `npm run lint-front` must pass (SDK scope). Run `npm run build-front` if needed to validate compile.
 6. If lint/build fails: **`fail`**, do not mark the heading.
 7. On success: mark **only** the step **d)** heading (`### [x] d) …`).
 8. Orchestrator **must pause** before `mia-front-ui`.

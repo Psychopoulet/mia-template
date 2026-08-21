@@ -148,7 +148,7 @@ IV) sous-agents
     - **commentaires d'explication dans le Mediator** (et helpers `utils/` appelés par lui) dès qu'une méthode a un corps ≥ **25 lignes** :
         - commentaire anglais `//` au-dessus de la méthode (but + flux principal), indenté comme le fichier existant
         - expliquer le *pourquoi*, pas narrer chaque ligne ; les méthodes plus courtes **peuvent** aussi être commentées si ça aide
-    - il doit exécuter "npm run lint-back" puis "npm run build-back"
+    - **condition de succès** : `npm run lint-back` doit passer, puis `npm run build-back`
     - en cas d'échec lint/build : statut `fail`, ne pas marquer le titre
     - sur `pass` : marquer **uniquement** le titre de l'étape b (`### [x] b) …`) ; ne rien changer d'autre dans le plan
     - l'étape suivante attendue est l'agent QA (tests unitaires back, gate bloquante)
@@ -175,7 +175,7 @@ IV) sous-agents
     - il doit exécuter "npm run transpile-openapi-front" → types dans "public/src/Descriptor.ts"
     - il doit mettre à jour le SDK ("public/src/SDK.ts" et helpers si besoin) pour exposer les nouvelles opérations du Descriptor, en utilisant les types de "public/src/Descriptor.ts"
     - il doit s'assurer de la qualité / découpe du code
-    - il doit exécuter "npm run lint-front" (périmètre SDK) puis vérifier que le front buildera (ou "npm run build-front" si nécessaire à ce stade)
+    - **condition de succès** : `npm run lint-front` doit passer (périmètre SDK) ; vérifier que le front buildera (ou `npm run build-front` si nécessaire à ce stade)
     - pause orchestrateur après cet agent avant les composants
     - sur `pass` : marquer **uniquement** le titre de l'étape d (`### [x] d) …`)
 
@@ -187,18 +187,11 @@ IV) sous-agents
     - il doit créer / mettre à jour les composants dans "public/src" (idéalement "public/src/components/") avec un workflow cohérent entre les composants
     - un fichier de composant (`.tsx`) doit **toujours** porter le même nom que le composant qu'il exporte (ex. `StatusCard.tsx` exporte `StatusCard`)
     - il doit s'assurer de la qualité / découpe du code
-    - il doit exécuter "npm run lint-front" puis "npm run build-front"
+    - **condition de succès** : `npm run lint-front` puis `npm run build-front` doivent passer
     - en cas d'échec : statut `fail`, ne pas marquer le titre
     - sur `pass` : marquer **uniquement** le titre de l'étape e (`### [x] e) …`)
 
-9) un agent transversal de lint (optionnel mais recommandé avant review, ou fusionné dans back/front/tests)
-    - raison d'être : guardian of lint consistency
-    - entrée : racine plugin + périmètre (`back` | `front` | `tests` | `all`)
-    - exécute les scripts lint correspondants (`npm run lint-back`, `npm run lint-front`, `npm run lint-tests`, ou `npm run lint`)
-    - statut `pass` seulement si tout est vert ; sinon `fail` avec liste des erreurs
-    - peut être sauté si chaque agent spé a déjà linté avec succès, mais l'orchestrateur peut le forcer avant `mia-readme` / `mia-review`
-
-10) un agent pour faire une doc succinte en améliorant le README.md (`mia-readme`)
+9) un agent pour faire une doc succinte en améliorant le README.md (`mia-readme`)
     - raison d'être : documentaliste (README utilisateur)
     - cwd = racine du plugin
     - Required : racine plugin ; `README.md` existant ; `PLAN.md` ; `lib/data/Descriptor.json` (pour le lien OpenAPI)
@@ -208,11 +201,11 @@ IV) sous-agents
     - il ne doit rien afficher de technique (pas de chemins `lib/`, Mediator, scripts npm, stack, coverage, détails d'implémentation)
     - il doit faire mention du document OpenAPI et garantir un lien vers `./lib/data/Descriptor.json`
     - sources : `PLAN.md` (items numérotés de l'étape f, **dans l'ordre**), Descriptor, UI si besoin ; en `maintain` → **update** du README, pas de réécriture complète
-    - il s'exécute après `mia-front-ui` (et `mia-lint` optionnel), avant `mia-review`
+    - il s'exécute après `mia-front-ui`, avant `mia-review`
     - sur `pass` : marquer **uniquement** le titre de l'étape f (`### [x] f) …`)
     - conclusion avec statut `pass` | `fail` | `blocked` ; next sur `pass` : `mia-review`
 
-11) un agent pour faire une review
+10) un agent pour faire une review
     - raison d'être : developpeur sénior fullstack
     - il doit soit analyser l'ensemble du projet, ou limiter à un périmètre si le projet a déjà été analysé (si des documents sont en stage par exemple) (demander confirmation dans ce cas)
     - s'il y a des items numérotés à l'étape g, les suivre **dans l'ordre** comme checklist de review
@@ -225,20 +218,21 @@ V) ordre orchestrateur
 
 Mode `create` :
 
+    Agents métier dans cet ordre. Après chaque spécialiste qui produit des livrables : `mia-git` (`commit`) (confirmation utilisateur ; jamais `PLAN.md`). `mia-plan` : pas de commit. `mia-git` (`push`) uniquement après review, puis suppression locale de `PLAN.md`.
+    Le lint n'est **pas** un agent : condition de succès de `mia-back` (`npm run lint-back`), `mia-front-sdk` et `mia-front-ui` (`npm run lint-front`).
+
     1. mia-git (provision : remote + tmp.txt + master / develop ; fail-fast ; confirmations)
     2. mia-init (supprime tmp.txt, scaffold)
-    3. mia-git (commit) après init
-    4. (si blocked deps) mia-deps → reprise → mia-git (commit) si fichiers changés
-    5. mia-plan → mia-git (commit)
-    6. mia-openapi → mia-git (commit)
-    7. mia-back → mia-git (commit)
-    8. mia-tests (bloquant) → mia-git (commit)
-    9. mia-front-sdk → mia-git (commit)
-    10. pause → mia-front-ui → mia-git (commit)
-    11. (optionnel) mia-lint → mia-git (commit) si corrections
-    12. mia-readme → mia-git (commit)
-    13. mia-review → mia-git (commit) si besoin
-    14. mia-git (push) — push final avec confirmation
+    3. (si blocked deps) mia-deps → reprise
+    4. mia-plan (pas de commit)
+    5. mia-openapi
+    6. mia-back — **pass** exige `npm run lint-back`
+    7. mia-tests (bloquant avant le front)
+    8. mia-front-sdk — **pass** exige `npm run lint-front`
+    9. pause → mia-front-ui — **pass** exige `npm run lint-front`
+    10. mia-readme
+    11. mia-review
+    12. mia-git (push) — push final avec confirmation
     — pause utilisateur entre chaque étape
     — `fail` / `blocked` d'un sous-agent (surtout mia-tests) → stop pipeline
 
@@ -247,7 +241,8 @@ Mode `maintain` :
     1. confirmer racine plugin + périmètre
     2. mia-plan (update) si besoin → mia-git (commit)
     3. enchaîner uniquement les sous-agents concernés par le delta / les consignes
-       — si le back change : mia-tests juste après, gate bloquante avant tout front
+       — si le back change : mia-tests juste après, gate bloquante avant tout front ; **pass** de mia-back exige `npm run lint-back`
+       — si SDK / UI : **pass** exige `npm run lint-front`
        — si le comportement utilisateur change : mia-readme avant mia-review
        — après chaque étape clef exécutée : mia-git (commit) avec confirmation
     4. mia-review en fin de lot → mia-git (commit) si besoin

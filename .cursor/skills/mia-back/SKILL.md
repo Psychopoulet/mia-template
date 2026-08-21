@@ -42,7 +42,7 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 6. **Explanatory comments** in `lib/src/Mediator.ts` (and `utils/` it calls) when a method body is ≥ **25 lines** (see [reference.md](../reference.md)). English `//` above the method (purpose + main flow), not every line. Methods under 25 lines **may** still be commented when useful. Missing comments do **not** cause **`fail`** and do not block marking the heading.
 7. **Do not** validate incoming request parameters in the Mediator — `checkParameters` / OpenAPI validation are handled by the host / Server elsewhere.
 8. **Do not** re-implement host **authentication** (login, JWT verification as a gate). If the plugin’s PLAN requires **authorization** rules (e.g. self-or-admin), implement those as domain logic (resolve caller identity from the already-authenticated request context / token + Container services as needed).
-9. Run `npm run lint-back` then `npm run build-back`.
+9. **Success condition:** `npm run lint-back` must pass, then `npm run build-back`.
 10. If lint/build fails: status **`fail`**, do **not** mark the heading.
 11. On success: mark **only** the step **b)** heading (`### [x] b) …`).
 

@@ -43,6 +43,16 @@ Always use `npm run`:
 | `npm run unit-tests-local` | Mocha + nyc coverage |
 | `npm run tests` | Full suite (lint, checks, build, unit tests) |
 
+## Lint success conditions
+
+Not a separate agent. Green lint is required for **`pass`**:
+
+- `mia-back` → `npm run lint-back`
+- `mia-front-sdk` → `npm run lint-front`
+- `mia-front-ui` → `npm run lint-front`
+
+Failure → **`fail`**, do not mark the PLAN heading.
+
 ## OpenAPI conventions
 
 Methods:
@@ -90,7 +100,7 @@ Missing comments are **not** a **`fail`** / do not block marking step **b)**.
 - **Deleted after the final `push`** of a create/maintain batch (`mia-git` **`push`** removes the file from disk once the remote is updated)
 - Steps: **a)** OpenAPI → **b)** Back → **c)** Unit tests → **d)** Front SDK → **e)** Front components → **f)** README → **g)** Review
 - **Numbered items**: each a→g section body is an ordered list (`1.` `2.` `3.` …) of discrete actions. Specialists execute those items **in order**. Do not treat a prose paragraph as the step contract.
-- Create execution: `mia-tests` (step **c**) runs immediately after `mia-back` and is a **hard gate** before any front work; `mia-readme` (step **f**) runs after UI (and optional lint), before `mia-review`
+- Create execution: `mia-tests` (step **c**) runs immediately after `mia-back` and is a **hard gate** before any front work; `mia-readme` (step **f**) runs after UI, before `mia-review`
 - Progress tracking: mark the **validated step heading only** — prefix `[x]` (`### [x] a) OpenAPI — ~Xh`). **No** `## Step status` section/table.
 - **Do not** edit plan goals, estimates, descriptions, or numbered items when marking progress. On **`fail`**, do not mark the heading.
 

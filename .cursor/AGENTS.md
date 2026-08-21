@@ -29,24 +29,22 @@ Full routine, with a **user pause** after each step. After each key deliverable 
 
 1. `mia-git` (`provision`) — remote + plugin root + `tmp.txt` + `master` / `develop`
 2. `mia-init` — clone/update template, checks, remove `tmp.txt`, `create-mia-plugin`, install
-3. `mia-git` (`commit`) — after init
-4. `mia-deps` — only if version checks are blocked (exit code `1`) → then commit if needed
-5. `mia-plan` (local `PLAN.md` only — not committed)
-6. `mia-openapi` → `mia-git` (`commit`)
-7. `mia-back` → `mia-git` (`commit`)
-8. `mia-tests` — mocha back unit tests, Mediator coverage ≥ 95% (**blocking** before front) → `mia-git` (`commit`)
-9. `mia-front-sdk` → `mia-git` (`commit`)
-10. `mia-front-ui` → `mia-git` (`commit`)
-11. `mia-lint` — optional; commit only if files were fixed
-12. `mia-readme` → `mia-git` (`commit`)
-13. `mia-review` → `mia-git` (`commit`) if needed
-14. `mia-git` (`push`) — final push (confirm files being sent); **delete local `PLAN.md`**
+3. `mia-deps` — only if version checks are blocked (exit code `1`)
+4. `mia-plan` (local `PLAN.md` only — not committed)
+5. `mia-openapi`
+6. `mia-back` — **`pass`** requires `npm run lint-back`
+7. `mia-tests` — mocha back unit tests, Mediator coverage ≥ 95% (**blocking** before front)
+8. `mia-front-sdk` — **`pass`** requires `npm run lint-front`
+9. `mia-front-ui` — **`pass`** requires `npm run lint-front`
+10. `mia-readme`
+11. `mia-review`
+12. `mia-git` (`push`) — final push (confirm files being sent); **delete local `PLAN.md`**
 
 ### `maintain`
 
 1. Confirm plugin root + scope (staged files, paths, instructions)
 2. `mia-plan` update if needed (**no commit** — `PLAN.md` is gitignored/local)
-3. Run **only** the sub-agents impacted by the delta (if back changes → **`mia-tests`** next, blocking before front; if user-facing behavior changes → **`mia-readme`** before review); **`mia-git` (`commit`)** after each key step (never stage `PLAN.md`)
+3. Run **only** the sub-agents impacted by the delta (if back changes → **`mia-tests`** next, blocking before front, and `mia-back` **`pass`** requires `npm run lint-back`; SDK/UI **`pass`** requires `npm run lint-front`; if user-facing behavior changes → **`mia-readme`** before review); **`mia-git` (`commit`)** after each key step (never stage `PLAN.md`)
 4. End the batch with `mia-review` → commit if needed → **`mia-git` (`push`)** → **delete local `PLAN.md`**
 
 Re-invoking a specialist with new instructions means **update existing work**, not a full rewrite.
@@ -61,11 +59,10 @@ Re-invoking a specialist with new instructions means **update existing work**, n
 | `mia-init` | Copy script from template | Create only |
 | `mia-plan` | Product owner → plugin `PLAN.md` with numbered items per step | Plan or revise scope |
 | `mia-openapi` | Technical writer → Descriptor | API contract |
-| `mia-back` | Senior TS Node back | Mediator / Server |
+| `mia-back` | Senior TS Node back | Mediator / Server; **`pass`** requires `npm run lint-back` |
 | `mia-tests` | Senior QA — mocha back unit tests | Step c after back; **blocking**; coverage ≥ 95% |
-| `mia-front-sdk` | Senior TS front — SDK | Step d |
-| `mia-front-ui` | Senior TS front — UI | Step e |
-| `mia-lint` | Lint guardian | Optional before readme/review |
+| `mia-front-sdk` | Senior TS front — SDK | Step d; **`pass`** requires `npm run lint-front` |
+| `mia-front-ui` | Senior TS front — UI | Step e; **`pass`** requires `npm run lint-front` |
 | `mia-readme` | Documentation writer — user-facing README | Step f after UI |
 | `mia-review` | Senior fullstack review | Step g, final gate before push |
 

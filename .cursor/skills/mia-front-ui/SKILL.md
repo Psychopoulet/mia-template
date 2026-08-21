@@ -35,7 +35,7 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 3. Create / update components under `public/src` (preferably `public/src/components/`) with a coherent workflow.
 4. **File naming**: a `.tsx` component file **must** have the same name as the component it exports (e.g. `StatusCard.tsx` exports `StatusCard`). Rename file and component together; never mismatch.
 5. Ensure code quality / structure.
-6. Run `npm run lint-front` then `npm run build-front`.
+6. **Success condition:** `npm run lint-front` then `npm run build-front` must pass.
 7. If either fails: **`fail`**, do not mark the heading.
 8. On success: mark **only** the step **e)** heading (`### [x] e) …`).
 
@@ -55,6 +55,6 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 - Step **e)** checked: **yes/no**
 
 ## Proposed next step
-On **pass**: **mia-git** (`commit`), then optional **mia-lint**, then **mia-readme**.
+On **pass**: **mia-git** (`commit`), then **mia-readme**.
 ```
 

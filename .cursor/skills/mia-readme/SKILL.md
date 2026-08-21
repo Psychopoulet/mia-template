@@ -3,8 +3,8 @@ name: mia-readme
 description: >-
   MIA documentation writer: updates plugin README.md with succinct user-facing
   purpose and workflows, preserves template prefix (title, Badges, OpenAPI link),
-  no technical implementation details. Use for PLAN.md step f after UI (and
-  optional lint); before mia-review.
+  no technical implementation details. Use for PLAN.md step f after UI;
+  before mia-review.
 disable-model-invocation: true
 ---
 
