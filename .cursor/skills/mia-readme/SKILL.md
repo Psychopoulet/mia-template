@@ -26,9 +26,7 @@ Required:
 
 Optional: update instructions → evolve README, no full rewrite.
 
-## Gate (do first)
-
-Verify every **Required** input. If any is missing: status **`fail`**, stop, hyper-concise message with missing field(s) in **bold** (see [reference.md](../reference.md)). No other work until all required inputs are present.
+Gate: see [reference.md](../reference.md).
 
 ## Expected output
 
@@ -41,25 +39,4 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 7. On incomplete/invalid README (prefix lost, technical leakage, missing OpenAPI link): **`fail`**, mark the heading **❌**.
 8. On success: mark **only** the step **f)** heading with trailing **✅** (`### f) … ✅`).
 
-## Conclusion document
-
-```markdown
-# Conclusion — mia-readme
-
-## Status
-**[pass | fail | blocked]**
-
-## Deliverables
-- **README.md** updated
-- Template prefix preserved: **yes/no**
-- OpenAPI link (`./lib/data/Descriptor.json`): **yes/no**
-- Step **f)** heading: **✅ / ❌ / unmarked**
-
-## Content synopsis
-- Purpose: **…**
-- Workflows covered: **…**
-
-## Proposed next step
-On **pass**: **mia-git** (`commit`), then **mia-review**.
-On **fail**: fix README then re-run **mia-readme**.
-```
+Conclude: 5 lines per [reference.md](../reference.md). Deliverables: prefix preserved; OpenAPI link; purpose; workflows. Next: **pass** → `mia-git` commit then `mia-review`; **fail** → fix and re-run.

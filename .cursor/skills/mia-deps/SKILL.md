@@ -23,9 +23,7 @@ Required:
 
 Called by the orchestrator when those checks return exit code `1`.
 
-## Gate (do first)
-
-Verify every **Required** input. If any is missing: status **`fail`**, stop, hyper-concise message with missing field(s) in **bold** (see [reference.md](../reference.md)). No other work until all required inputs are present.
+Gate: see [reference.md](../reference.md).
 
 ## Expected output
 
@@ -35,24 +33,4 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 4. Repeat until both pass, otherwise remain **`blocked`**.
 5. Do not invent unrelated refactors.
 
-## Conclusion document
-
-```markdown
-# Conclusion — mia-deps
-
-## Status
-**[pass | fail | blocked]**
-
-## Project
-**[path]**
-
-## Changes applied
-- **…**
-
-## Re-checks
-- `check-node-engine`: **ok/ko**
-- `check-updates`: **ok/ko**
-
-## Proposed next step
-Resume **mia-init** checks / orchestrator routine, or wait for user if **blocked**.
-```
+Conclude: 5 lines per [reference.md](../reference.md). Deliverables: project path; changes. Checks: `check-node-engine`, `check-updates`. Heading: `n/a`. Next: resume init / orchestrator, or wait if **blocked**.

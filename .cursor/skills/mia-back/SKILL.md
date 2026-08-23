@@ -25,9 +25,7 @@ Required:
 
 Optional: update instructions → extend/fix existing code, no full rewrite.
 
-## Gate (do first)
-
-Verify every **Required** input. If any is missing: status **`fail`**, stop, hyper-concise message with missing field(s) in **bold** (see [reference.md](../reference.md)). No other work until all required inputs are present.
+Gate: see [reference.md](../reference.md).
 
 ## Expected output
 
@@ -46,28 +44,4 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 10. If lint/build fails: status **`fail`**, mark the heading **❌**.
 11. On success: mark **only** the step **b)** heading with trailing **✅** (`### b) … ✅`).
 
-## Conclusion document
-
-```markdown
-# Conclusion — mia-back
-
-## Status
-**[pass | fail | blocked]**
-
-## Deliverables
-- Types: **lib/src/Descriptor.ts**
-- Mediator / Server / `utils` / `@types`: **…**
-- `npm run lint-back`: **ok/ko**
-- `npm run build-back`: **ok/ko**
-- Step **b)** heading: **✅ / ❌ / unmarked**
-
-## Notable points
-- No param validation in Mediator: **yes**
-- No host-auth reimplementation; domain authorization if PLAN requires: **yes**
-- Runtime in `utils`, typing-only in `@types`: **yes**
-- Mediator comments on methods ≥ 25 lines: **yes / n/a**
-- **…**
-
-## Proposed next step
-On **pass**: **mia-git** (`commit`), then **mia-tests** (blocking gate before front).
-```
+Conclude: 5 lines per [reference.md](../reference.md). Deliverables: Mediator/Server/`utils`/`@types`; no param validation; no host-auth reimplementation; comments ≥ 25 lines. Checks: `lint-back`, `build-back`. Next: `mia-git` commit then `mia-tests`.

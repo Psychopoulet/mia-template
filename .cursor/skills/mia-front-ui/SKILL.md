@@ -24,9 +24,7 @@ Required:
 
 Optional: update instructions → evolve components, no full rewrite.
 
-## Gate (do first)
-
-Verify every **Required** input. If any is missing: status **`fail`**, stop, hyper-concise message with missing field(s) in **bold** (see [reference.md](../reference.md)). No other work until all required inputs are present.
+Gate: see [reference.md](../reference.md).
 
 ## Expected output
 
@@ -39,22 +37,5 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 7. If either fails: **`fail`**, mark the heading **❌**.
 8. On success: mark **only** the step **e)** heading with trailing **✅** (`### e) … ✅`).
 
-## Conclusion document
-
-```markdown
-# Conclusion — mia-front-ui
-
-## Status
-**[pass | fail | blocked]**
-
-## Deliverables
-- Components: **…**
-- UI workflow: **…**
-- `npm run lint-front`: **ok/ko**
-- `npm run build-front`: **ok/ko**
-- Step **e)** heading: **✅ / ❌ / unmarked**
-
-## Proposed next step
-On **pass**: **mia-git** (`commit`), then **mia-readme**.
-```
+Conclude: 5 lines per [reference.md](../reference.md). Deliverables: components; UI workflow. Checks: `lint-front`, `build-front`. Next: `mia-git` commit then `mia-readme`.
 

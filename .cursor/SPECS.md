@@ -1,7 +1,7 @@
 # SPECS
 
-Spécification de conception des agents MIA (source de vérité).
-Documentation d'usage : [AGENTS.md](./AGENTS.md). Skills exécutables : `.cursor/skills/mia-*/SKILL.md`. Conventions partagées : [skills/reference.md](./skills/reference.md).
+Spécification de conception des agents MIA (archive de conception — **pas** un document runtime).
+Documentation d'usage : [AGENTS.md](./AGENTS.md). Pipeline runtime : [skills/mia-orchestrator/SKILL.md](./skills/mia-orchestrator/SKILL.md). Skills exécutables : `.cursor/skills/mia-*/SKILL.md`. Conventions partagées : [skills/reference.md](./skills/reference.md).
 
 je veux que tu m'aide à créer une série d'agents IA
 

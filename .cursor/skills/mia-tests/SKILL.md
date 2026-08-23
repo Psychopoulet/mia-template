@@ -27,9 +27,7 @@ Required:
 
 Optional: update instructions → adapt tests to changed code, no full rewrite.
 
-## Gate (do first)
-
-Verify every **Required** input. If any is missing: status **`fail`**, stop, hyper-concise message with missing field(s) in **bold** (see [reference.md](../reference.md)). No other work until all required inputs are present.
+Gate: see [reference.md](../reference.md).
 
 ## Expected output
 
@@ -41,24 +39,4 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 6. Recommended: `npm run lint-tests` before concluding **`pass`**.
 7. On success: mark **only** the step **c)** heading with trailing **✅** (`### c) … ✅`).
 
-## Conclusion document
-
-```markdown
-# Conclusion — mia-tests
-
-## Status
-**[pass | fail | blocked]**
-
-## Deliverables
-- Test files: **…**
-- Mediator coverage: **…%** (target **≥ 95%**)
-- Coverage gaps (if any): **…**
-- `npm run lint-tests`: **ok/ko/n/a**
-- `npm run build-back`: **ok/ko**
-- `npm run unit-tests`: **ok/ko**
-- Step **c)** heading: **✅ / ❌ / unmarked**
-
-## Proposed next step
-On **pass**: **mia-git** (`commit`), then **mia-front-sdk**.
-On **fail** / **blocked**: stop — do **not** start front work until tests pass.
-```
+Conclude: 5 lines per [reference.md](../reference.md). Deliverables: test files; coverage % (target ≥ 95%); gaps. Checks: `lint-tests`, `build-back`, `unit-tests`. Next: **pass** → `mia-git` commit then `mia-front-sdk`; **fail**/**blocked** → stop, no front.

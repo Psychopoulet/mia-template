@@ -27,9 +27,7 @@ Scope:
 
 Optional: re-review instructions → focus on deltas / open points.
 
-## Gate (do first)
-
-Verify every **Required** input. If any is missing: status **`fail`**, stop, hyper-concise message with missing field(s) in **bold** (see [reference.md](../reference.md)). No other work until all required inputs are present.
+Gate: see [reference.md](../reference.md).
 
 ## Expected output
 
@@ -39,34 +37,4 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 4. Ensure `npm run tests` passes.
 5. Mark **only** the step **g)** heading with trailing **✅** (`### g) … ✅`) if verdict is ready; on **`fail`** mark **❌**; on **`blocked`** leave the heading unmarked.
 
-## Conclusion document
-
-```markdown
-# Conclusion — mia-review
-
-## Status
-**[pass | fail | blocked]**
-
-## Scope
-**[global | limited: …]** — confirmed: **yes**
-
-## Verdict
-**[ready / fixes required]**
-
-## Quality & security
-- 🔴 **Critical**: …
-- 🟡 **Suggestion**: …
-- 🟢 **Nice to have**: …
-
-## External scans
-- Snyk: **… / n/a**
-- SonarQube: **… / n/a**
-
-## Tests
-- `npm run tests`: **ok/ko**
-
-## Step **g)** heading: **✅ / ❌ / unmarked**
-
-## Proposed next step
-**mia-git** (`commit`) if needed, then **mia-git** (`push`) with confirmation — or fix criticals and re-run **mia-review**.
-```
+Conclude: 5 lines per [reference.md](../reference.md). Deliverables: scope confirmed; verdict; critical / suggestion / nice-to-have; Snyk/Sonar. Checks: `npm run tests`. Next: `mia-git` commit if needed then `push`, or fix criticals and re-run.

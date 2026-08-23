@@ -4,8 +4,8 @@ description: >-
   Reference MIA agent that drives specialized sub-agents to create or maintain
   home-automation plugins from mia-template. Use for full create/maintain
   workflows or to coordinate mia-deps, mia-git, mia-init, mia-plan, mia-openapi, mia-back,
-  mia-tests, mia-front-sdk, mia-front-ui, mia-readme, and mia-review. See root
-  AGENTS.md for the workflow overview and SPECS.md for the full spec.
+  mia-tests, mia-front-sdk, mia-front-ui, mia-readme, and mia-review. See
+  AGENTS.md to invoke; this skill owns the create/maintain pipeline.
 ---
 
 # mia-orchestrator
@@ -16,7 +16,7 @@ Reference / technical lead agent. Talks to the user and drives specialized MIA s
 
 Mandatory reference: [Psychopoulet/mia-template](https://github.com/Psychopoulet/mia-template).
 
-Docs: [AGENTS.md](../../AGENTS.md) (workflow) · [SPECS.md](../../SPECS.md) (spec) · [reference.md](../reference.md) (conventions).
+Docs: [AGENTS.md](../../AGENTS.md) (how to invoke) · [reference.md](../reference.md) (conventions).
 
 All agent instructions and conclusions are in **English**.
 
@@ -32,9 +32,7 @@ Depending on step / mode:
 - Update instructions and scope: staged files, paths, or free-text (maintain)
 - Resume instructions for a single sub-agent
 
-## Gate (do first)
-
-Verify every **Required** input. If any is missing: status **`fail`**, stop, hyper-concise message with missing field(s) in **bold** (see [reference.md](../reference.md)). No other work until all required inputs are present.
+Gate: see [reference.md](../reference.md).
 
 ## Expected output
 
@@ -52,7 +50,7 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
    - `mia-front-ui` **`pass`** requires green `npm run lint-front`
 8. After each **key step** that produces deliverables, run **`mia-git` (`commit`)** before the next domain agent. `mia-git` must obtain user confirmation (staged files + commit message) before committing.
 9. At the **end** of the create/maintain batch (after `mia-review`), run **`mia-git` (`push`)** with confirmation (files being pushed). **`PLAN.md` is never committed**; after a successful push, **`mia-git` deletes it locally**. Do not push earlier unless the user explicitly asks.
-10. Before each sub-agent: read its `SKILL.md` and [reference.md](../reference.md); follow exactly.
+10. Invoke each specialist (`@mia-*` or Task). Do **not** pre-read its `SKILL.md` or [reference.md](../reference.md); the specialist loads its own skill.
 11. On resume with new instructions: **update** existing work, do not full-rewrite.
 
 ### Create order
@@ -83,29 +81,4 @@ Domain agents in this order. After each specialist that produces deliverables: *
 
 Sub-agents live under `.cursor/skills/mia-*`.
 
-## Conclusion document
-
-```markdown
-# Conclusion — mia-orchestrator
-
-## Status
-**[pass | fail | blocked]**
-
-## Mode
-**[create | maintain]**
-
-## Step completed
-**[sub-agent]** — [one sentence]
-
-## Summary
-- …
-
-## Attention points
-- **…**
-
-## Suggestions
-- …
-
-## Proposed next step
-**[next sub-agent or pause]** — waiting for user validation
-```
+Conclude: 5 lines per [reference.md](../reference.md). Deliverables: mode; step completed; attention; suggestions. Heading: `n/a`. Next: next sub-agent or pause (wait for user).

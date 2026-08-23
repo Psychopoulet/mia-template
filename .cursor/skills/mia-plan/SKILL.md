@@ -26,9 +26,7 @@ Required:
 
 In **maintain**: existing `PLAN.md` + instructions / scope → **update**, no full rewrite unless asked.
 
-## Gate (do first)
-
-Verify every **Required** input. If any is missing: status **`fail`**, stop, hyper-concise message with missing field(s) in **bold** (see [reference.md](../reference.md)). No other work until all required inputs are present.
+Gate: see [reference.md](../reference.md).
 
 ## Expected output
 
@@ -111,23 +109,4 @@ Item granularity examples (adapt to the plugin; do not copy blindly):
 
 If any a→g step lacks an ordered list, or items are too vague to implement: status **`fail`**, fix the plan before concluding **`pass`**.
 
-## Conclusion document
-
-```markdown
-# Conclusion — mia-plan
-
-## Status
-**[pass | fail | blocked]**
-
-## Deliverable
-**PLAN.md** at plugin root.
-
-## Plan synopsis
-- Scope: **…**
-- Total estimate: **…**
-- Numbered items a→g: **yes / no**
-- Open points: **…**
-
-## Proposed next step
-Validate, then **mia-openapi** (no git commit for `PLAN.md`).
-```
+Conclude: 5 lines per [reference.md](../reference.md). Deliverables: `PLAN.md`; scope; estimate; numbered items a→g yes/no; open points. Heading: `n/a`. Next: validate, then `mia-openapi` (no commit for `PLAN.md`).

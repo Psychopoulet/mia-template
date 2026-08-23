@@ -2,7 +2,7 @@
 
 Shared conventions for all `mia-*` skills. Read this before executing specialized work.
 
-Workflow overview: [AGENTS.md](../AGENTS.md) · Full spec: [SPECS.md](../SPECS.md)
+Pipeline: [mia-orchestrator](mia-orchestrator/SKILL.md) · How to invoke: [AGENTS.md](../AGENTS.md)
 
 ## Repository
 
@@ -127,9 +127,22 @@ Example:
 Missing: **plugin root**, **scope**.
 ```
 
+## Conclusion (exactly 5 lines)
+
+After the title `# Conclusion — mia-<name>`, the body is **exactly these 5 lines** — no extra headings or sections. Fold skill-specific fields into **Deliverables** / **Checks**. Bold important values. Missing-inputs **fail** (gate) may be shorter.
+
+```markdown
+# Conclusion — mia-<name>
+**Status:** pass | fail | blocked
+**Deliverables:** files / actions
+**Checks:** commands ok/ko (or n/a)
+**Heading:** ✅ | ❌ | unmarked | n/a
+**Next:** next specialist or pause
+```
+
 ## Agent exit status
 
-Every conclusion document must include:
+Every conclusion **Status** is:
 
 - **`pass`**: safe to continue
 - **`fail`**: errors to fix; mark the step heading with trailing **❌**

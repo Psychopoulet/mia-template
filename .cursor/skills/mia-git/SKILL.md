@@ -68,10 +68,7 @@ Required:
 Optional:
 - Remote / branch (default: `origin` + current branch, usually `develop`)
 
-## Gate (do first)
-
-1. Verify every **Required** input for the selected operation. Missing → **`fail`**, hyper-concise, fields in **bold**.
-2. **Git accessibility**: `git --version` succeeds. For `provision` and `push`: `gh --version` + `gh auth status` logged-in (or equivalent push auth). Else **`fail`** / **`blocked`**.
+Gate: see [reference.md](../reference.md). Then **Git accessibility**: `git --version` succeeds. For `provision` and `push`: `gh --version` + `gh auth status` logged-in (or equivalent push auth). Else **`fail`** / **`blocked`**.
 
 ## Expected output
 
@@ -106,32 +103,4 @@ Leave working tree on **`develop`** with no local `master`. Do not delete or for
 4. Never force-push unless the user explicitly requests it in the confirmation.
 5. **After a successful push** (end of create/maintain batch): delete **`PLAN.md`** from the plugin root if the file exists. Report deletion in the conclusion.
 
-## Conclusion document
-
-```markdown
-# Conclusion — mia-git
-
-## Status
-**[pass | fail | blocked]**
-
-## Operation
-**[provision | commit | push]**
-
-## Checks
-- `git`: **ok/ko**
-- `gh` auth / user: **[login or n/a or ko]**
-
-## Confirmation
-- Asked: **yes**
-- User approved: **yes/no/n/a**
-
-## Deliverables
-- (provision) Remote: **[URL or n/a]** — Plugin root: **[path]** — Remote branches: **master**, **develop** — Local: **develop** only (local **master** deleted)
-- (commit) Message: **…** — Files committed: **…** — or **nothing to commit**
-- (push) Branch: **…** — Files pushed: **…** — Remote: **…** — **`PLAN.md` deleted locally**: **yes/no/n/a**
-
-## Proposed next step
-(provision) **mia-init**
-(commit) next domain agent per orchestrator
-(push) routine complete — **`PLAN.md` removed** (local only)
-```
+Conclude: 5 lines per [reference.md](../reference.md). Deliverables: operation; confirmation asked/approved; provision → URL+root+branches (local `develop` only); commit → message+files or nothing; push → branch+files+`PLAN.md` deleted. Heading: `n/a`. Next: provision → `mia-init`; commit → next domain agent; push → done.

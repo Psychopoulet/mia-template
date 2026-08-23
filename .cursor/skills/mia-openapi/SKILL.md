@@ -24,9 +24,7 @@ Required:
 
 Optional: update instructions → evolve existing Descriptor, no needless rewrite.
 
-## Gate (do first)
-
-Verify every **Required** input. If any is missing: status **`fail`**, stop, hyper-concise message with missing field(s) in **bold** (see [reference.md](../reference.md)). No other work until all required inputs are present.
+Gate: see [reference.md](../reference.md).
 
 ## Expected output
 
@@ -45,25 +43,4 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 7. Check **only** the step **a)** heading when done — trailing **✅** (`### a) … ✅`) — do not edit other plan content.
 8. On incomplete/invalid Descriptor (including stripping template errors, adding forbidden dedicated codes on new routes, or single-use components): **`fail`**, mark the heading **❌**.
 
-## Conclusion document
-
-```markdown
-# Conclusion — mia-openapi
-
-## Status
-**[pass | fail | blocked]**
-
-## Deliverables
-- **lib/data/Descriptor.json** updated
-- Step **a)** heading: **✅ / ❌ / unmarked**
-- Responses: success + **default** only (new ops): **yes/no**
-- Template-specific errors preserved: **yes/no**
-- No single-use components: **yes/no**
-
-## Key changes
-- Routes: **…**
-- Schemas: **…**
-
-## Proposed next step
-On **pass**: **mia-git** (`commit`), then **mia-back**.
-```
+Conclude: 5 lines per [reference.md](../reference.md). Deliverables: `Descriptor.json`; routes; schemas; new ops success+`default` only; template errors preserved; no single-use components. Next: `mia-git` commit then `mia-back`.

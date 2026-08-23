@@ -26,9 +26,7 @@ Required:
 
 Optional: update instructions → evolve SDK, no full rewrite.
 
-## Gate (do first)
-
-Verify every **Required** input. If any is missing: status **`fail`**, stop, hyper-concise message with missing field(s) in **bold** (see [reference.md](../reference.md)). No other work until all required inputs are present.
+Gate: see [reference.md](../reference.md).
 
 ## Expected output
 
@@ -41,21 +39,4 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 7. On success: mark **only** the step **d)** heading with trailing **✅** (`### d) … ✅`).
 8. Orchestrator **must pause** before `mia-front-ui`.
 
-## Conclusion document
-
-```markdown
-# Conclusion — mia-front-sdk
-
-## Status
-**[pass | fail | blocked]**
-
-## Deliverables
-- Types: **public/src/Descriptor.ts**
-- SDK: **…**
-- `npm run lint-front`: **ok/ko**
-- `npm run build-front` (if run): **ok/ko/n/a**
-- Step **d)** heading: **✅ / ❌ / unmarked**
-
-## Proposed next step
-On **pass**: **mia-git** (`commit`), then pause, then **mia-front-ui**.
-```
+Conclude: 5 lines per [reference.md](../reference.md). Deliverables: `public/src/Descriptor.ts`; SDK files. Checks: `lint-front`; `build-front` if run. Next: `mia-git` commit, pause, then `mia-front-ui`.
