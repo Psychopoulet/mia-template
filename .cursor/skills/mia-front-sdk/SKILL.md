@@ -37,8 +37,8 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 3. Update `public/src/SDK.ts` (and helpers if needed) for new operations, using `public/src/Descriptor.ts` types.
 4. Ensure code quality / structure.
 5. **Success condition:** `npm run lint-front` must pass (SDK scope). Run `npm run build-front` if needed to validate compile.
-6. If lint/build fails: **`fail`**, do not mark the heading.
-7. On success: mark **only** the step **d)** heading (`### [x] d) …`).
+6. If lint/build fails: **`fail`**, mark the heading **❌**.
+7. On success: mark **only** the step **d)** heading with trailing **✅** (`### d) … ✅`).
 8. Orchestrator **must pause** before `mia-front-ui`.
 
 ## Conclusion document
@@ -54,7 +54,7 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 - SDK: **…**
 - `npm run lint-front`: **ok/ko**
 - `npm run build-front` (if run): **ok/ko/n/a**
-- Step **d)** checked: **yes/no**
+- Step **d)** heading: **✅ / ❌ / unmarked**
 
 ## Proposed next step
 On **pass**: **mia-git** (`commit`), then pause, then **mia-front-ui**.

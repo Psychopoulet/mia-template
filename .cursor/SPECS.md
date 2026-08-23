@@ -42,8 +42,10 @@ III) conventions communes (à documenter aussi dans reference.md)
     - back : `npm run transpile-openapi-back` → `lib/src/Descriptor.ts`
     - front : `npm run transpile-openapi-front` → `public/src/Descriptor.ts`
 - Marquage d'avancement dans le `PLAN.md` du plugin (fichier **local**, **jamais commité**, **supprimé après le push final**) :
-    - **uniquement le titre** de l'étape validée : préfixer `[x]` (`### [x] a) OpenAPI — ~2h`)
-    - **pas** de section / tableau `## Step status`
+    - **uniquement le titre** de l'étape, **en fin de ligne** (jamais de préfixe `[x]` / `[ ]`, jamais de tableau `## Step status`) :
+        - **`pass`** → **✅** (`### a) OpenAPI — ~2h ✅`)
+        - **`fail`** → **❌** (`### a) OpenAPI — ~2h ❌`)
+        - pending / **`blocked`** → aucun marqueur
     - **interdire** toute autre modification du contenu du plan (objectifs, estimations, descriptions, items numérotés)
 - Statuts agent : `pass` (ok pour enchaîner), `fail` (erreurs à corriger), `blocked` (attente humaine, ex. deps obsolètes)
 - Entrées obligatoires : gate avant tout travail ; manquant → `fail` + message hyper concis avec champ(s) en **gras** (ex. `Missing: **plugin root**.`)
@@ -113,7 +115,7 @@ IV) sous-agents
         g) faire une review
     - **sous-étapes numérotées (obligatoire)** : le corps de **chaque** étape a→g est une **liste ordonnée** `1.` `2.` `3.` … d'actions **discrètes et implémentables** (une action = un livrable clair : route, schéma, fonction, fichier, cas de test, composant, paragraphe README, point de review). Interdire un paragraphe de prose à la place de la liste. Les identifiants a→g restent stables ; en `maintain`, ne pas renuméroter les items existants (ajouter à la suite). Les agents suivants exécutent ces items **dans l'ordre**.
     - le document final doit être sous format markdown et être sauvegardé à la racine du plugin sous le nom "PLAN.md" (**local uniquement** : entrée dans `.gitignore`, jamais commité, supprimé après le push final)
-    - **pas** de section / tableau `## Step status` : l'avancement se marque sur le **titre** de l'étape (`### [x] a) …`). En `maintain`, supprimer un éventuel `## Step status` existant et reporter les cases cochées sur les titres.
+    - **pas** de section / tableau `## Step status` : l'avancement se marque **en fin de titre** (**✅** si `pass`, **❌** si `fail`). En `maintain`, supprimer un éventuel `## Step status` existant et reporter les anciens `[x]` en **✅** en fin de titre.
 
 4) un agent pour mettre à jour le document OpenAPI
     - raison d'être : documentaliste technique
@@ -129,7 +131,7 @@ IV) sous-agents
         - **pas de component à usage unique** : laisser les objets déclarés **inline** dans leur contexte (requestBody / response / `items`) ; n'extraire dans `components.schemas` que si le schéma est **réutilisé** (ou déjà fourni par le template : `Error`, `PluginName`, events, …)
         - méthodes et codes HTTP de succès conformes (put/201, get/post → 200 ou 204, delete → 200 ou 204)
         - jamais de texte long (token, secret, etc.) en paramètres URL (path/query) — passer par le body
-    - sur `pass` : marquer **uniquement** le titre de l'étape a (`### [x] a) …`) ; ne rien changer d'autre dans le plan
+    - sur `pass` : marquer **uniquement** le titre de l'étape a en **✅** (`### a) … ✅`) ; sur `fail` : **❌** ; ne rien changer d'autre dans le plan
     - conclusion avec statut `pass` | `fail` | `blocked`
 
 5) un agent pour mettre à jour le back
@@ -149,8 +151,8 @@ IV) sous-agents
         - commentaire anglais `//` au-dessus de la méthode (but + flux principal), indenté comme le fichier existant
         - expliquer le *pourquoi*, pas narrer chaque ligne ; les méthodes plus courtes **peuvent** aussi être commentées si ça aide
     - **condition de succès** : `npm run lint-back` doit passer, puis `npm run build-back`
-    - en cas d'échec lint/build : statut `fail`, ne pas marquer le titre
-    - sur `pass` : marquer **uniquement** le titre de l'étape b (`### [x] b) …`) ; ne rien changer d'autre dans le plan
+    - en cas d'échec lint/build : statut `fail`, marquer le titre **❌**
+    - sur `pass` : marquer **uniquement** le titre de l'étape b en **✅** (`### b) … ✅`) ; ne rien changer d'autre dans le plan
     - l'étape suivante attendue est l'agent QA (tests unitaires back, gate bloquante)
 
 6) un agent pour créer les tests unitaires back (immédiatement après le back)
@@ -161,11 +163,11 @@ IV) sous-agents
     - **gate bloquante** : en `fail` / `blocked`, l'orchestrateur n'enchaîne pas (pas de SDK / UI) tant que les tests ne passent pas
     - il doit utiliser mocha
     - il doit créer les tests unitaires dans le dossier "test" correspondant au nouveau code back en s'assurant un code coverage de 95% au minimum pour le Mediator
-    - mesure du coverage : "npm run unit-tests-local" (nyc). Si coverage Mediator < 95% : statut `fail`, ne pas marquer le titre, lister les trous
+    - mesure du coverage : "npm run unit-tests-local" (nyc). Si coverage Mediator < 95% : statut `fail`, marquer le titre **❌**, lister les trous
     - il doit s'assurer de la qualité du code livré, de sa découpe (fichiers dans "test", préfixe numérique croissant : 0_, 1_, 2_, …)
     - il doit s'assurer que le code se teste bien avec "npm run build-back" puis "npm run unit-tests" (échec → `fail`, bloquant)
     - lint tests recommandé : "npm run lint-tests" avant de conclure `pass`
-    - sur `pass` : marquer **uniquement** le titre de l'étape c (`### [x] c) …`)
+    - sur `pass` : marquer **uniquement** le titre de l'étape c en **✅** (`### c) … ✅`) ; sur `fail` : **❌**
 
 7) un agent pour mettre à jour le SDK front
     - raison d'être : dev sénior Typescript
@@ -177,7 +179,7 @@ IV) sous-agents
     - il doit s'assurer de la qualité / découpe du code
     - **condition de succès** : `npm run lint-front` doit passer (périmètre SDK) ; vérifier que le front buildera (ou `npm run build-front` si nécessaire à ce stade)
     - pause orchestrateur après cet agent avant les composants
-    - sur `pass` : marquer **uniquement** le titre de l'étape d (`### [x] d) …`)
+    - sur `pass` : marquer **uniquement** le titre de l'étape d en **✅** (`### d) … ✅`) ; sur `fail` : **❌**
 
 8) un agent pour créer les composants front
     - raison d'être : dev sénior Typescript front React/Bootstrap/Fontawesome — spécialité UI
@@ -188,8 +190,8 @@ IV) sous-agents
     - un fichier de composant (`.tsx`) doit **toujours** porter le même nom que le composant qu'il exporte (ex. `StatusCard.tsx` exporte `StatusCard`)
     - il doit s'assurer de la qualité / découpe du code
     - **condition de succès** : `npm run lint-front` puis `npm run build-front` doivent passer
-    - en cas d'échec : statut `fail`, ne pas marquer le titre
-    - sur `pass` : marquer **uniquement** le titre de l'étape e (`### [x] e) …`)
+    - en cas d'échec : statut `fail`, marquer le titre **❌**
+    - sur `pass` : marquer **uniquement** le titre de l'étape e en **✅** (`### e) … ✅`)
 
 9) un agent pour faire une doc succinte en améliorant le README.md (`mia-readme`)
     - raison d'être : documentaliste (README utilisateur)
@@ -202,7 +204,7 @@ IV) sous-agents
     - il doit faire mention du document OpenAPI et garantir un lien vers `./lib/data/Descriptor.json`
     - sources : `PLAN.md` (items numérotés de l'étape f, **dans l'ordre**), Descriptor, UI si besoin ; en `maintain` → **update** du README, pas de réécriture complète
     - il s'exécute après `mia-front-ui`, avant `mia-review`
-    - sur `pass` : marquer **uniquement** le titre de l'étape f (`### [x] f) …`)
+    - sur `pass` : marquer **uniquement** le titre de l'étape f en **✅** (`### f) … ✅`) ; sur `fail` : **❌**
     - conclusion avec statut `pass` | `fail` | `blocked` ; next sur `pass` : `mia-review`
 
 10) un agent pour faire une review
@@ -212,7 +214,7 @@ IV) sous-agents
     - il doit s'assurer de la qualité du code livré, de la sécurité et des points d'amélioration (dont commentaires d'explication sur les méthodes Mediator ≥ 25 lignes)
     - si disponibles (MCP / outils locaux) : s'appuyer aussi sur Snyk et/ou SonarQube pour sécurité / qualité, et résumer les findings critiques
     - il doit s'assurer que la suite passe avec "npm run tests"
-    - sur verdict prêt : marquer **uniquement** le titre de l'étape g (`### [x] g) …`) ; en `fail` / `blocked` ne pas marquer le titre
+    - sur verdict prêt (`pass`) : marquer **uniquement** le titre de l'étape g en **✅** (`### g) … ✅`) ; en `fail` : **❌** ; en `blocked` : aucun marqueur
 
 V) ordre orchestrateur
 

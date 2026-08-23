@@ -43,8 +43,8 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 7. **Do not** validate incoming request parameters in the Mediator — `checkParameters` / OpenAPI validation are handled by the host / Server elsewhere.
 8. **Do not** re-implement host **authentication** (login, JWT verification as a gate). If the plugin’s PLAN requires **authorization** rules (e.g. self-or-admin), implement those as domain logic (resolve caller identity from the already-authenticated request context / token + Container services as needed).
 9. **Success condition:** `npm run lint-back` must pass, then `npm run build-back`.
-10. If lint/build fails: status **`fail`**, do **not** mark the heading.
-11. On success: mark **only** the step **b)** heading (`### [x] b) …`).
+10. If lint/build fails: status **`fail`**, mark the heading **❌**.
+11. On success: mark **only** the step **b)** heading with trailing **✅** (`### b) … ✅`).
 
 ## Conclusion document
 
@@ -59,7 +59,7 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 - Mediator / Server / `utils` / `@types`: **…**
 - `npm run lint-back`: **ok/ko**
 - `npm run build-back`: **ok/ko**
-- Step **b)** checked: **yes/no**
+- Step **b)** heading: **✅ / ❌ / unmarked**
 
 ## Notable points
 - No param validation in Mediator: **yes**

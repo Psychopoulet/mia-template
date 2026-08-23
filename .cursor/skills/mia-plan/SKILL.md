@@ -3,8 +3,8 @@ name: mia-plan
 description: >-
   MIA product owner: creates or updates a timed plugin PLAN.md (OpenAPI, back,
   unit tests, front SDK, UI, README, review) with numbered implementation items
-  in each step. Progress is marked on the step heading (`### [x] a) …`), never
-  in a separate status table. Use when planning development or revising an
+  in each step. Progress is marked at the end of the step heading (`### a) … ✅`
+  or `❌`), never in a separate status table. Use when planning development or revising an
   existing plan.
 disable-model-invocation: true
 ---
@@ -47,7 +47,7 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
    - Vague items (`implement the API`, `update the back`) are **`fail`** — rewrite until a later agent can execute without guessing.
 4. Save as **`PLAN.md`** at the plugin root (**local only** — never committed).
 5. Ensure the plugin **`.gitignore`** contains **`PLAN.md`** (append if missing).
-6. **No `## Step status` section.** Later agents mark progress **on the step heading only** (`### [x] a) OpenAPI — ~Xh`). If an older plan still has `## Step status`, delete that section and copy any checked boxes onto the matching headings.
+6. **No `## Step status` section.** Later agents mark progress **at the end of the step heading only** (`### a) OpenAPI — ~Xh ✅` on pass, `❌` on fail). If an older plan still has `## Step status` or a `[x]` / `[ ]` heading prefix, delete that section and convert prefixes to a trailing **✅** / no mark.
 
 Template:
 

@@ -42,8 +42,8 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
    - Declare one-off objects **inline** in the operation (requestBody / response schema / array `items`).
    - Extract a component **only** when the same schema is referenced in **multiple** places (or it already comes from the template, e.g. `Error`, `PluginName`, push events).
 6. **Never** add long text data (tokens, secrets, payloads, etc.) as path or query parameters — always pass them in the **request body**.
-7. Check **only** the step **a)** heading when done (`### [x] a) …`) — do not edit other plan content.
-8. On incomplete/invalid Descriptor (including stripping template errors, adding forbidden dedicated codes on new routes, or single-use components): **`fail`**, do not mark the heading.
+7. Check **only** the step **a)** heading when done — trailing **✅** (`### a) … ✅`) — do not edit other plan content.
+8. On incomplete/invalid Descriptor (including stripping template errors, adding forbidden dedicated codes on new routes, or single-use components): **`fail`**, mark the heading **❌**.
 
 ## Conclusion document
 
@@ -55,7 +55,7 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 
 ## Deliverables
 - **lib/data/Descriptor.json** updated
-- Step **a)** checked: **yes/no**
+- Step **a)** heading: **✅ / ❌ / unmarked**
 - Responses: success + **default** only (new ops): **yes/no**
 - Template-specific errors preserved: **yes/no**
 - No single-use components: **yes/no**

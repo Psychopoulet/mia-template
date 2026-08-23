@@ -38,8 +38,8 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 4. **No technical content**: no `lib/` paths, Mediator/Server, npm scripts, stack, coverage, or implementation details.
 5. Ensure OpenAPI is mentioned with a link to **`./lib/data/Descriptor.json`** (keep/update the template link; do not invent another path).
 6. In **maintain**: **update** the existing README; do not full-rewrite unless asked.
-7. On incomplete/invalid README (prefix lost, technical leakage, missing OpenAPI link): **`fail`**, do not mark the heading.
-8. On success: mark **only** the step **f)** heading (`### [x] f) …`).
+7. On incomplete/invalid README (prefix lost, technical leakage, missing OpenAPI link): **`fail`**, mark the heading **❌**.
+8. On success: mark **only** the step **f)** heading with trailing **✅** (`### f) … ✅`).
 
 ## Conclusion document
 
@@ -53,7 +53,7 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 - **README.md** updated
 - Template prefix preserved: **yes/no**
 - OpenAPI link (`./lib/data/Descriptor.json`): **yes/no**
-- Step **f)** checked: **yes/no**
+- Step **f)** heading: **✅ / ❌ / unmarked**
 
 ## Content synopsis
 - Purpose: **…**

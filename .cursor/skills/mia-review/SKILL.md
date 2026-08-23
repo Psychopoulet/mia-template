@@ -37,7 +37,7 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 2. Assess quality, security, maintainability, OpenAPI ↔ back ↔ front ↔ tests ↔ README consistency. On the Mediator: may **suggest** comments on methods ≥ 25 lines that lack them (see [reference.md](../reference.md)); this is not a blocker.
 3. If Snyk and/or SonarQube MCP/tools are available: run them and summarize **critical** findings.
 4. Ensure `npm run tests` passes.
-5. Mark **only** the step **g)** heading (`### [x] g) …`) if verdict is ready; on blockers use **`fail`** / **`blocked`** and do not mark the heading.
+5. Mark **only** the step **g)** heading with trailing **✅** (`### g) … ✅`) if verdict is ready; on **`fail`** mark **❌**; on **`blocked`** leave the heading unmarked.
 
 ## Conclusion document
 
@@ -65,7 +65,7 @@ Verify every **Required** input. If any is missing: status **`fail`**, stop, hyp
 ## Tests
 - `npm run tests`: **ok/ko**
 
-## Step **g)** checked: **yes/no**
+## Step **g)** heading: **✅ / ❌ / unmarked**
 
 ## Proposed next step
 **mia-git** (`commit`) if needed, then **mia-git** (`push`) with confirmation — or fix criticals and re-run **mia-review**.
