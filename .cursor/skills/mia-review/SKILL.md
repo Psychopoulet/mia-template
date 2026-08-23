@@ -13,7 +13,7 @@ disable-model-invocation: true
 
 Senior fullstack developer: quality, security, and improvement review before delivery.
 
-Shared conventions: [reference.md](../reference.md).
+Shared conventions: [reference.md](../reference.md) · [openapi.md](../openapi.md).
 
 ## Expected input
 
@@ -32,7 +32,7 @@ Gate: see [reference.md](../reference.md).
 ## Expected output
 
 1. Confirm scope (global vs limited) when ambiguous. If step **g)** lists numbered items, execute them **in order** as the review checklist.
-2. Assess quality, security, maintainability, OpenAPI ↔ back ↔ front ↔ tests ↔ README consistency. On the Mediator: may **suggest** comments on methods ≥ 25 lines that lack them (see [reference.md](../reference.md)); this is not a blocker.
+2. Assess quality, security, maintainability, OpenAPI ↔ back ↔ front ↔ tests ↔ README consistency (OpenAPI: [openapi.md](../openapi.md)). On the Mediator: may **suggest** comments on methods ≥ 25 lines that lack them; this is not a blocker.
 3. If Snyk and/or SonarQube MCP/tools are available: run them and summarize **critical** findings.
 4. Ensure `npm run tests` passes.
 5. Mark **only** the step **g)** heading with trailing **✅** (`### g) … ✅`) if verdict is ready; on **`fail`** mark **❌**; on **`blocked`** leave the heading unmarked.

@@ -4,8 +4,8 @@ description: >-
   MIA product owner: creates or updates a timed plugin PLAN.md (OpenAPI, back,
   unit tests, front SDK, UI, README, review) with numbered implementation items
   in each step. Progress is marked at the end of the step heading (`### a) … ✅`
-  or `❌`), never in a separate status table. Use when planning development or revising an
-  existing plan.
+  or `❌`), never in a separate status table. Use when planning or revising an
+  existing plan. Read template.md when writing PLAN.md.
 disable-model-invocation: true
 ---
 
@@ -45,67 +45,8 @@ Gate: see [reference.md](../reference.md).
    - Vague items (`implement the API`, `update the back`) are **`fail`** — rewrite until a later agent can execute without guessing.
 4. Save as **`PLAN.md`** at the plugin root (**local only** — never committed).
 5. Ensure the plugin **`.gitignore`** contains **`PLAN.md`** (append if missing).
-6. **No `## Step status` section.** Later agents mark progress **at the end of the step heading only** (`### a) OpenAPI — ~Xh ✅` on pass, `❌` on fail). If an older plan still has `## Step status` or a `[x]` / `[ ]` heading prefix, delete that section and convert prefixes to a trailing **✅** / no mark.
-
-Template:
-
-```markdown
-# PLAN — <plugin name>
-
-## Context
-…
-
-## Steps
-
-### a) OpenAPI — ~Xh
-
-1. …
-2. …
-3. …
-
-### b) Back-office — ~Xh
-
-1. …
-2. …
-3. …
-
-### c) Unit tests — ~Xh
-
-1. …
-2. …
-3. …
-
-### d) Front SDK — ~Xh
-
-1. …
-2. …
-
-### e) Front components — ~Xh
-
-1. …
-2. …
-3. …
-
-### f) README — ~Xh
-
-1. …
-2. …
-
-### g) Review — ~Xh
-
-1. …
-2. …
-```
-
-Item granularity examples (adapt to the plugin; do not copy blindly):
-
-- OpenAPI: `1. Add put /devices (operationId: createDevice) with JSON body { name, type }; success 201; default Error.`
-- Back: `1. Implement createDevice in Mediator using Descriptor types; persist via Container service X.`
-- Tests: `1. Add test/1_createDevice.ts covering success and default-error paths.`
-- Front SDK: `1. Expose createDevice on SDK using public/src/Descriptor.ts types.`
-- UI: `1. Add DeviceForm.tsx (exports DeviceForm) calling SDK.createDevice.`
-- README: `1. Describe who can create a device and what they see after success.`
-- Review: `1. Check OpenAPI ↔ Mediator ↔ tests ↔ SDK ↔ UI ↔ README for createDevice.`
+6. **No `## Step status` section.** Later agents mark progress **at the end of the step heading only** (see [reference.md](../reference.md)). If an older plan still has `## Step status` or a `[x]` / `[ ]` heading prefix, delete that section and convert prefixes to a trailing **✅** / no mark.
+7. When writing the file, read [template.md](template.md) (shape + granularity examples). Do not inline that template here.
 
 If any a→g step lacks an ordered list, or items are too vague to implement: status **`fail`**, fix the plan before concluding **`pass`**.
 

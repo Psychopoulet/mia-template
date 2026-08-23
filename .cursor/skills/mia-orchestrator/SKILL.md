@@ -48,8 +48,8 @@ Gate: see [reference.md](../reference.md).
    - `mia-back` **`pass`** requires green `npm run lint-back`
    - `mia-front-sdk` **`pass`** requires green `npm run lint-front`
    - `mia-front-ui` **`pass`** requires green `npm run lint-front`
-8. After each **key step** that produces deliverables, run **`mia-git` (`commit`)** before the next domain agent. `mia-git` must obtain user confirmation (staged files + commit message) before committing.
-9. At the **end** of the create/maintain batch (after `mia-review`), run **`mia-git` (`push`)** with confirmation (files being pushed). **`PLAN.md` is never committed**; after a successful push, **`mia-git` deletes it locally**. Do not push earlier unless the user explicitly asks.
+8. After each **key step** that produces deliverables: **`mia-git` (`commit`)** (user confirms; never `PLAN.md`).
+9. After `mia-review`: **`mia-git` (`push`)**, then delete local `PLAN.md`. No earlier push unless the user asks.
 10. Invoke each specialist (`@mia-*` or Task). Do **not** pre-read its `SKILL.md` or [reference.md](../reference.md); the specialist loads its own skill.
 11. On resume with new instructions: **update** existing work, do not full-rewrite.
 
@@ -57,7 +57,7 @@ Gate: see [reference.md](../reference.md).
 
 Domain agents in this order. After each specialist that produces deliverables: **`mia-git` (`commit`)** (user confirms; never `PLAN.md`). **`mia-plan`**: no commit. Final **`mia-git` (`push`)** after review, then delete local `PLAN.md`.
 
-1. `mia-git` (`provision`) — remote + plugin root + `tmp.txt` + `master`/`develop` (fail-fast; confirm each mutation)
+1. `mia-git` (`provision`)
 2. `mia-init` (deletes `tmp.txt`, scaffolds plugin)
 3. If blocked on deps → `mia-deps` → resume checks / continue
 4. `mia-plan` (no commit — `PLAN.md` is local/gitignored)
