@@ -147,6 +147,7 @@ IV) sous-agents
         - fichiers avec du **code exécutable** (fonctions, classes, exports runtime) → `lib/src/utils/`
         - fichiers **uniquement** de typing (`type` / `interface` / aliases, sans runtime) → `lib/src/@types/`
         - un fichier mixte (code + types locaux) reste dans `utils` ; ne pas mettre de runtime dans `@types`
+        - fonctions **autonomes** (pas de `this` / état d'instance) : **fichier à part** dans `utils/` quand c'est possible (un fichier par fonction, nommé comme l'export) ; **pas** de méthodes `private` pour ça (Mediator / Server). Garder les méthodes de classe pour les opérations OpenAPI, le cycle de vie, et la logique qui a besoin de l'instance
     - **commentaires d'explication dans le Mediator** (et helpers `utils/` appelés par lui) dès qu'une méthode a un corps ≥ **25 lignes** :
         - commentaire anglais `//` au-dessus de la méthode (but + flux principal), indenté comme le fichier existant
         - expliquer le *pourquoi*, pas narrer chaque ligne ; les méthodes plus courtes **peuvent** aussi être commentées si ça aide
