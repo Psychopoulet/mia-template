@@ -1,6 +1,7 @@
 # SPECS
 
-Spécification de conception des agents MIA (archive de conception — **pas** un document runtime).
+Spécification de conception des agents MIA (document de création / **source de vérité** — **pas** un document runtime).
+Ne **jamais** le charger pendant un create/maintain. Ne **supprimer aucun contenu** (brief, sous-agents, ordre V). Runtime = skills.
 Documentation d'usage : [AGENTS.md](./AGENTS.md). Pipeline runtime : [skills/mia-orchestrator/SKILL.md](./skills/mia-orchestrator/SKILL.md). Skills exécutables : `.cursor/skills/mia-*/SKILL.md`. Conventions partagées : [skills/reference.md](./skills/reference.md).
 
 je veux que tu m'aide à créer une série d'agents IA

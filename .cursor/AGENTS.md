@@ -17,3 +17,10 @@ Skill bodies and conclusions are in **English**.
 3. Or call one specialist with **`@mia-<name>`**.
 
 After init (or from the start in maintain), cwd is the **plugin root**. Specialists are `disable-model-invocation: true`; the orchestrator stays discoverable. Pipeline, pauses, git, and lint gates: **[mia-orchestrator](./skills/mia-orchestrator/SKILL.md)** — do not duplicate them here.
+
+## Anti-drift
+
+- Domain `SKILL.md` **< 80 lines**
+- `reference.md` core **< 60 lines**
+- Do **not** copy a block already in `reference.md`
+- Never load `SPECS.md` during create/maintain (creation source of truth — do not delete its content)
