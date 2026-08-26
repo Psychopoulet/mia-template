@@ -30,13 +30,12 @@ Gate: see [reference.md](../reference.md).
 
 ## Expected output
 
-1. Read step **d)** in `PLAN.md` and execute its **numbered items in order**.
+1. Read step **d)** in `PLAN.md` (**read-only** — never write `PLAN.md`) and execute its **numbered items in order**.
 2. `npm run transpile-openapi-front` → `public/src/Descriptor.ts`.
 3. Update `public/src/SDK.ts` (and helpers if needed) for new operations, using `public/src/Descriptor.ts` types.
 4. Ensure code quality / structure.
-5. **Success condition:** `npm run lint-front` must pass (SDK scope). Run `npm run build-front` if needed to validate compile.
-6. If lint/build fails: **`fail`**, mark the heading **❌**.
-7. On success: mark **only** the step **d)** heading with trailing **✅** (`### d) … ✅`).
-8. Orchestrator **must pause** before `mia-front-ui`.
+5. **`pass`** requires green `npm run lint-front` (SDK scope). Run `npm run build-front` if needed to validate compile.
+6. Build fails → **`fail`**. Lint fails but build passes, work incomplete, or an attention point remains → **`warning`**.
+7. Orchestrator **must pause** before `mia-front-ui`.
 
-Conclude: 5 lines per [reference.md](../reference.md). Deliverables: `public/src/Descriptor.ts`; SDK files. Checks: `lint-front`; `build-front` if run. Next: `mia-git` commit, pause, then `mia-front-ui`.
+Conclude: 5 lines per [reference.md](../reference.md). Deliverables: `public/src/Descriptor.ts`; SDK files. Checks: `lint-front`; `build-front` if run. Heading: `n/a`. Next: `mia-git` commit, pause, then `mia-front-ui`.

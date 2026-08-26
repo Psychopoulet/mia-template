@@ -33,32 +33,36 @@ Always use `npm run`:
 | `npm run unit-tests-local` | Mocha + nyc coverage |
 | `npm run tests` | Full suite (lint, checks, build, unit tests) |
 
-## Lint success conditions
+## Lint vs build
 
-Not a separate agent. Green lint is required for **`pass`**:
+Not a separate agent. Map results to **Status**:
 
-- `mia-back` → `npm run lint-back`
-- `mia-front-sdk` → `npm run lint-front`
-- `mia-front-ui` → `npm run lint-front`
+- lint green **and** build green → required for **`pass`**
+- lint fails **but** build succeeds → **`warning`**
+- build fails → **`fail`**
 
-Failure → **`fail`**, mark the PLAN heading with trailing **❌**.
+Applies to: `mia-back` (`lint-back` / `build-back`) · `mia-front-sdk` / `mia-front-ui` (`lint-front` / `build-front`) · `mia-tests` (`lint-tests` vs `unit-tests`).
 
 OpenAPI conventions live in [openapi.md](openapi.md) — read from `mia-openapi` / `mia-back` / `mia-review` only.
 
 ## Plugin PLAN.md
 
-- **Local-only** working document at the plugin root (written/updated by `mia-plan`)
+- **Local-only** working document at the plugin root
+- **Who writes**:
+  - **`mia-plan` only** — create the file and update plan **content** (steps, items, estimates). New headings start with `[ ]`
+  - **`mia-orchestrator` only** — after the user **validates** a specialist, replace that step's `[ ]` with **✅** / **❌** / **⚠️**. Never create the file; never edit items/goals
+  - **All other skills** — **read-only**. Never create, edit, or mark `PLAN.md`. Report **Status** only; do not suggest heading marks. Exception: `mia-git` **`push`** may **delete** the local file after the final push
 - **Never published**: must appear in the plugin **`.gitignore`** (`PLAN.md`); `mia-git` **`commit`** must **never** stage it
 - **Deleted after the final `push`** of a create/maintain batch (`mia-git` **`push`** removes the file from disk once the remote is updated)
 - Steps: **a)** OpenAPI → **b)** Back → **c)** Unit tests → **d)** Front SDK → **e)** Front components → **f)** README → **g)** Review
 - **Numbered items**: each a→g section body is an ordered list (`1.` `2.` `3.` …) of discrete actions. Specialists execute those items **in order**. Do not treat a prose paragraph as the step contract.
 - Create execution: `mia-tests` (step **c**) runs immediately after `mia-back` and is a **hard gate** before any front work; `mia-readme` (step **f**) runs after UI, before `mia-review`
-- Progress tracking: mark the **step heading only**, with a trailing status (never a `[x]` / `[ ]` prefix, never a `## Step status` table):
-  - **`pass`**: append **✅** — `### a) OpenAPI — ~Xh ✅`
-  - **`fail`**: append **❌** — `### a) OpenAPI — ~Xh ❌`
-  - pending / **`blocked`**: no mark — `### a) OpenAPI — ~Xh`
-  - Replace an existing trailing **✅** / **❌**; do not duplicate it
-- **Do not** edit plan goals, estimates, descriptions, or numbered items when marking progress.
+- Progress tracking (**orchestrator only**, after validation, from the specialist **Status** — never a trailing mark, never a `## Step status` table):
+  - pending: keep **`[ ]`** — `### [ ] a) OpenAPI — ~Xh`
+  - **`pass`**: **✅** — `### ✅ a) OpenAPI — ~Xh`
+  - **`fail`**: **❌** — `### ❌ a) OpenAPI — ~Xh`
+  - **`warning`** / **`blocked`**: **⚠️** — `### ⚠️ a) OpenAPI — ~Xh`
+  - Replace an existing `[ ]` / **✅** / **❌** / **⚠️**; do not duplicate it
 
 ## Mandatory inputs gate
 
@@ -71,21 +75,22 @@ Example: `Missing: **plugin root**, **scope**.`
 
 ## Conclusion (exactly 5 lines)
 
-After the title `# Conclusion — mia-<name>`, the body is **exactly these 5 lines** — no extra headings or sections. Fold skill-specific fields into **Deliverables** / **Checks**. Bold important values. Missing-inputs **fail** (gate) may be shorter.
+After the title `# Conclusion — mia-<name>`, the body is **exactly these 5 lines** — no extra headings or sections. Fold skill-specific fields into **Deliverables** / **Checks**. Bold important values. Missing-inputs **`fail`** (gate) may be shorter. Specialists set **Heading:** to **`n/a`**. Only `mia-orchestrator` writes `PLAN.md` marks after user validation (from **Status**).
 
 ```markdown
 # Conclusion — mia-<name>
-**Status:** pass | fail | blocked
+**Status:** pass | warning | fail | blocked
 **Deliverables:** files / actions
 **Checks:** commands ok/ko (or n/a)
-**Heading:** ✅ | ❌ | unmarked | n/a
+**Heading:** [ ] | ✅ | ❌ | ⚠️ | n/a
 **Next:** next specialist or pause
 ```
 
 ## Agent exit status
 
-- **`pass`**: safe to continue
-- **`fail`**: errors to fix; mark the step heading with trailing **❌**
+- **`pass`**: work complete; safe to continue
+- **`warning`**: intermediate — orchestrator marks **⚠️**. Use when work is incomplete, done with an attention point, or lint fails while build succeeds. Put the reason in **Deliverables**
+- **`fail`**: errors to fix (e.g. build / tests)
 - **`blocked`**: needs human action (e.g. outdated deps)
 
-Orchestrator continues only on `pass`. In particular, **`mia-tests` must `pass`** before `mia-front-sdk` / `mia-front-ui`.
+Orchestrator continues only on **`pass`** (after validation). On **`warning`**: pause, mark **⚠️**, user decides whether to continue. On **`fail` / `blocked`**: do not continue. **`mia-tests` must `pass`** before front unless the user confirms a **`warning`**.

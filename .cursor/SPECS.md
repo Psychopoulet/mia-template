@@ -16,7 +16,7 @@ I) description du projet
     - `create` : routine complète (git provision → init → commits après étapes clefs → … → readme → review → push final)
     - `maintain` : skip `mia-init` et `mia-git` **provision** uniquement ; garder `mia-git` **commit** / **push**
 - Après `mia-init` (ou dès le début en `maintain`), le cwd de travail est **toujours la racine du plugin**, jamais le template (sauf pour les étapes propres à `mia-init` / `mia-deps` sur le template).
-- Chaque sous-agent doit terminer avec un statut explicite : `pass` | `fail` | `blocked`. L'orchestrateur ne propose la suite que sur `pass` ; sur `fail`/`blocked`, pause obligatoire.
+- Chaque sous-agent doit terminer avec un statut explicite : `pass` | `warning` | `fail` | `blocked`. L'orchestrateur ne propose la suite que sur `pass` ; sur `warning`, pause + **⚠️** (l'utilisateur décide de continuer) ; sur `fail`/`blocked`, pause obligatoire sans enchaîner.
 - Les sous-agents sont invocables explicitement (`@mia-…`). Préférer `disable-model-invocation: true` sur les sous-agents ; l'orchestrateur peut rester découvrable.
 - Conventions partagées (HTTP, chemins, scripts npm) : fichier `reference.md` commun sous `.cursor/skills/`, plutôt que de tout dupliquer dans chaque agent.
 - Ce fichier est `.cursor/SPECS.md` (pas `PLAN.md`) pour éviter le conflit avec le `PLAN.md` généré par `mia-plan` dans chaque plugin.
@@ -42,12 +42,14 @@ III) conventions communes (à documenter aussi dans reference.md)
     - back : `npm run transpile-openapi-back` → `lib/src/Descriptor.ts`
     - front : `npm run transpile-openapi-front` → `public/src/Descriptor.ts`
 - Marquage d'avancement dans le `PLAN.md` du plugin (fichier **local**, **jamais commité**, **supprimé après le push final**) :
-    - **uniquement le titre** de l'étape, **en fin de ligne** (jamais de préfixe `[x]` / `[ ]`, jamais de tableau `## Step status`) :
-        - **`pass`** → **✅** (`### a) OpenAPI — ~2h ✅`)
-        - **`fail`** → **❌** (`### a) OpenAPI — ~2h ❌`)
-        - pending / **`blocked`** → aucun marqueur
-    - **interdire** toute autre modification du contenu du plan (objectifs, estimations, descriptions, items numérotés)
-- Statuts agent : `pass` (ok pour enchaîner), `fail` (erreurs à corriger), `blocked` (attente humaine, ex. deps obsolètes)
+    - **écriture** : `mia-plan` **seul** crée / met à jour le **contenu** ; `mia-orchestrator` **seul** marque l'avancement **après validation utilisateur** ; tous les autres skills = **lecture seule**
+    - **uniquement le titre** de l'étape, en **remplaçant** le préfixe `[ ]` (jamais de marqueur en fin de ligne, jamais de tableau `## Step status`) :
+        - pending → **`[ ]`** (`### [ ] a) OpenAPI — ~2h`)
+        - **`pass`** → **✅** (`### ✅ a) OpenAPI — ~2h`)
+        - **`fail`** → **❌** (`### ❌ a) OpenAPI — ~2h`)
+        - **`warning`** / **`blocked`** → **⚠️** (`### ⚠️ a) OpenAPI — ~2h`)
+    - **interdire** toute autre modification du contenu du plan lors du marquage (objectifs, estimations, descriptions, items numérotés)
+- Statuts agent : `pass` (ok pour enchaîner), `warning` (incomplet / attention / lint KO + build OK → **⚠️**), `fail` (erreurs à corriger), `blocked` (attente humaine, ex. deps obsolètes)
 - Entrées obligatoires : gate avant tout travail ; manquant → `fail` + message hyper concis avec champ(s) en **gras** (ex. `Missing: **plugin root**.`)
 - Git (`mia-git`) :
     - opérations : **`provision`** | **`commit`** | **`push`**
@@ -115,11 +117,12 @@ IV) sous-agents
         g) faire une review
     - **sous-étapes numérotées (obligatoire)** : le corps de **chaque** étape a→g est une **liste ordonnée** `1.` `2.` `3.` … d'actions **discrètes et implémentables** (une action = un livrable clair : route, schéma, fonction, fichier, cas de test, composant, paragraphe README, point de review). Interdire un paragraphe de prose à la place de la liste. Les identifiants a→g restent stables ; en `maintain`, ne pas renuméroter les items existants (ajouter à la suite). Les agents suivants exécutent ces items **dans l'ordre**.
     - le document final doit être sous format markdown et être sauvegardé à la racine du plugin sous le nom "PLAN.md" (**local uniquement** : entrée dans `.gitignore`, jamais commité, supprimé après le push final)
-    - **pas** de section / tableau `## Step status` : l'avancement se marque **en fin de titre** (**✅** si `pass`, **❌** si `fail`). En `maintain`, supprimer un éventuel `## Step status` existant et reporter les anciens `[x]` en **✅** en fin de titre.
+    - **seul** cet agent **crée** / met à jour le **contenu** de `PLAN.md` (les autres skills sont en lecture seule ; l'orchestrateur marque l'avancement après validation)
+    - **pas** de section / tableau `## Step status` : chaque titre a→g **commence par `[ ]`** (`### [ ] a) OpenAPI — ~Xh`) ; `mia-orchestrator` **remplace** ce `[ ]` après validation par **✅** (terminé), **❌** (échec) ou **⚠️** (partiel / attention). En `maintain`, supprimer un éventuel `## Step status` et convertir un marqueur trailing / `[x]` en préfixe ; **conserver** les marques d'avancement existantes sauf réouverture d'étape.
 
 4) un agent pour mettre à jour le document OpenAPI
     - raison d'être : documentaliste technique
-    - il doit lire sa partie dans le document "PLAN.md" et exécuter les items numérotés **dans l'ordre**
+    - il doit lire sa partie dans le document "PLAN.md" (**lecture seule**, ne pas écrire `PLAN.md`) et exécuter les items numérotés **dans l'ordre**
     - il doit mettre à jour le document OpenAPI "lib/data/Descriptor.json", autant les routes que les types de données
     - il doit respecter les conventions du chapitre III
     - checklist minimale à respecter :
@@ -131,12 +134,12 @@ IV) sous-agents
         - **pas de component à usage unique** : laisser les objets déclarés **inline** dans leur contexte (requestBody / response / `items`) ; n'extraire dans `components.schemas` que si le schéma est **réutilisé** (ou déjà fourni par le template : `Error`, `PluginName`, events, …)
         - méthodes et codes HTTP de succès conformes (put/201, get/post → 200 ou 204, delete → 200 ou 204)
         - jamais de texte long (token, secret, etc.) en paramètres URL (path/query) — passer par le body
-    - sur `pass` : marquer **uniquement** le titre de l'étape a en **✅** (`### a) … ✅`) ; sur `fail` : **❌** ; ne rien changer d'autre dans le plan
+    - sur `pass` / `warning` / `fail` / `blocked` : **statut seulement** — **ne pas écrire** `PLAN.md` (l'orchestrateur marque après validation)
     - conclusion avec statut `pass` | `fail` | `blocked`
 
 5) un agent pour mettre à jour le back
     - raison d'être : dev sénior Typescript back NodeJS
-    - il doit lire sa partie dans le document "PLAN.md" et exécuter les items numérotés **dans l'ordre**
+    - il doit lire sa partie dans le document "PLAN.md" (**lecture seule**, ne pas écrire `PLAN.md`) et exécuter les items numérotés **dans l'ordre**
     - cwd = racine du plugin
     - il doit exécuter la commande "npm run transpile-openapi-back" pour créer les types issus du document OpenAPI (`lib/src/Descriptor.ts`)
     - il doit créer les fonctions dans "lib/src/Mediator.ts" correspondant aux nouvelles opérations de "lib/data/Descriptor.json" en s'assurant d'utiliser des types présents dans "lib/src/Descriptor.ts"
@@ -151,48 +154,49 @@ IV) sous-agents
     - **commentaires d'explication dans le Mediator** (et helpers `utils/` appelés par lui) dès qu'une méthode a un corps ≥ **25 lignes** :
         - commentaire anglais `//` au-dessus de la méthode (but + flux principal), indenté comme le fichier existant
         - expliquer le *pourquoi*, pas narrer chaque ligne ; les méthodes plus courtes **peuvent** aussi être commentées si ça aide
-    - **condition de succès** : `npm run lint-back` doit passer, puis `npm run build-back`
-    - en cas d'échec lint/build : statut `fail`, marquer le titre **❌**
-    - sur `pass` : marquer **uniquement** le titre de l'étape b en **✅** (`### b) … ✅`) ; ne rien changer d'autre dans le plan
+    - **condition de succès `pass`** : `npm run lint-back` puis `npm run build-back`
+    - build KO → `fail` ; lint KO + build OK, travail incomplet, ou point d'attention → `warning`
+    - **ne pas écrire** `PLAN.md` (l'orchestrateur marque après validation)
     - l'étape suivante attendue est l'agent QA (tests unitaires back, gate bloquante)
 
 6) un agent pour créer les tests unitaires back (immédiatement après le back)
     - raison d'être : Quality Analyst sénior
-    - il doit lire sa partie dans le document "PLAN.md" (étape c) et exécuter les items numérotés **dans l'ordre**
+    - il doit lire sa partie dans le document "PLAN.md" (étape c, **lecture seule**) et exécuter les items numérotés **dans l'ordre**
     - cwd = racine du plugin
     - il s'exécute **après** l'agent back et **avant** tout travail front
     - **gate bloquante** : en `fail` / `blocked`, l'orchestrateur n'enchaîne pas (pas de SDK / UI) tant que les tests ne passent pas
     - il doit utiliser mocha
     - il doit créer les tests unitaires dans le dossier "test" correspondant au nouveau code back en s'assurant un code coverage de 95% au minimum pour le Mediator
-    - mesure du coverage : "npm run unit-tests-local" (nyc). Si coverage Mediator < 95% : statut `fail`, marquer le titre **❌**, lister les trous
+    - mesure du coverage : "npm run unit-tests-local" (nyc). Si coverage Mediator < 95% : statut `fail`, lister les trous
     - il doit s'assurer de la qualité du code livré, de sa découpe (fichiers dans "test", préfixe numérique croissant : 0_, 1_, 2_, …)
     - il doit s'assurer que le code se teste bien avec "npm run build-back" puis "npm run unit-tests" (échec → `fail`, bloquant)
-    - lint tests recommandé : "npm run lint-tests" avant de conclure `pass`
-    - sur `pass` : marquer **uniquement** le titre de l'étape c en **✅** (`### c) … ✅`) ; sur `fail` : **❌**
+    - lint tests recommandé : "npm run lint-tests" avant de conclure `pass` ; lint-tests KO + tests OK → `warning`
+    - statut seulement (`pass` / `warning` / `fail` / `blocked`) — **ne pas écrire** `PLAN.md`
 
 7) un agent pour mettre à jour le SDK front
     - raison d'être : dev sénior Typescript
-    - il doit lire sa partie dans le document "PLAN.md" (étape d) et exécuter les items numérotés **dans l'ordre**
+    - il doit lire sa partie dans le document "PLAN.md" (étape d, **lecture seule**) et exécuter les items numérotés **dans l'ordre**
     - cwd = racine du plugin
     - il ne démarre qu'après `pass` de l'agent QA (tests back)
     - il doit exécuter "npm run transpile-openapi-front" → types dans "public/src/Descriptor.ts"
     - il doit mettre à jour le SDK ("public/src/SDK.ts" et helpers si besoin) pour exposer les nouvelles opérations du Descriptor, en utilisant les types de "public/src/Descriptor.ts"
     - il doit s'assurer de la qualité / découpe du code
-    - **condition de succès** : `npm run lint-front` doit passer (périmètre SDK) ; vérifier que le front buildera (ou `npm run build-front` si nécessaire à ce stade)
+    - **condition de succès `pass`** : `npm run lint-front` (périmètre SDK) puis build si besoin
+    - build KO → `fail` ; lint KO + build OK, incomplet, ou attention → `warning`
     - pause orchestrateur après cet agent avant les composants
-    - sur `pass` : marquer **uniquement** le titre de l'étape d en **✅** (`### d) … ✅`) ; sur `fail` : **❌**
+    - statut seulement (`pass` / `warning` / `fail` / `blocked`) — **ne pas écrire** `PLAN.md`
 
 8) un agent pour créer les composants front
     - raison d'être : dev sénior Typescript front React/Bootstrap/Fontawesome — spécialité UI
-    - il doit lire sa partie dans le document "PLAN.md" (étape e) et exécuter les items numérotés **dans l'ordre**
+    - il doit lire sa partie dans le document "PLAN.md" (étape e, **lecture seule**) et exécuter les items numérotés **dans l'ordre**
     - cwd = racine du plugin
     - il s'appuie sur le SDK et sur "public/src/Descriptor.ts" (relancer "npm run transpile-openapi-front" si besoin)
     - il doit créer / mettre à jour les composants dans "public/src" (idéalement "public/src/components/") avec un workflow cohérent entre les composants
     - un fichier de composant (`.tsx`) doit **toujours** porter le même nom que le composant qu'il exporte (ex. `StatusCard.tsx` exporte `StatusCard`)
     - il doit s'assurer de la qualité / découpe du code
-    - **condition de succès** : `npm run lint-front` puis `npm run build-front` doivent passer
-    - en cas d'échec : statut `fail`, marquer le titre **❌**
-    - sur `pass` : marquer **uniquement** le titre de l'étape e en **✅** (`### e) … ✅`)
+    - **condition de succès `pass`** : `npm run lint-front` puis `npm run build-front`
+    - build KO → `fail` ; lint KO + build OK, incomplet, ou attention → `warning`
+    - **ne pas écrire** `PLAN.md` (l'orchestrateur marque après validation)
 
 9) un agent pour faire une doc succinte en améliorant le README.md (`mia-readme`)
     - raison d'être : documentaliste (README utilisateur)
@@ -205,47 +209,47 @@ IV) sous-agents
     - il doit faire mention du document OpenAPI et garantir un lien vers `./lib/data/Descriptor.json`
     - sources : `PLAN.md` (items numérotés de l'étape f, **dans l'ordre**), Descriptor, UI si besoin ; en `maintain` → **update** du README, pas de réécriture complète
     - il s'exécute après `mia-front-ui`, avant `mia-review`
-    - sur `pass` : marquer **uniquement** le titre de l'étape f en **✅** (`### f) … ✅`) ; sur `fail` : **❌**
+    - statut seulement (`pass` / `warning` / `fail` / `blocked`) — **ne pas écrire** `PLAN.md`
     - conclusion avec statut `pass` | `fail` | `blocked` ; next sur `pass` : `mia-review`
 
 10) un agent pour faire une review
     - raison d'être : developpeur sénior fullstack
     - il doit soit analyser l'ensemble du projet, ou limiter à un périmètre si le projet a déjà été analysé (si des documents sont en stage par exemple) (demander confirmation dans ce cas)
-    - s'il y a des items numérotés à l'étape g, les suivre **dans l'ordre** comme checklist de review
+    - s'il y a des items numérotés à l'étape g, les suivre **dans l'ordre** comme checklist de review (`PLAN.md` en **lecture seule**)
     - il doit s'assurer de la qualité du code livré, de la sécurité et des points d'amélioration (dont commentaires d'explication sur les méthodes Mediator ≥ 25 lignes)
     - si disponibles (MCP / outils locaux) : s'appuyer aussi sur Snyk et/ou SonarQube pour sécurité / qualité, et résumer les findings critiques
     - il doit s'assurer que la suite passe avec "npm run tests"
-    - sur verdict prêt (`pass`) : marquer **uniquement** le titre de l'étape g en **✅** (`### g) … ✅`) ; en `fail` : **❌** ; en `blocked` : aucun marqueur
+    - verdict en **statut seulement** (`pass` / `warning` / `fail` / `blocked`) — **ne pas écrire** `PLAN.md`
 
 V) ordre orchestrateur
 
 Mode `create` :
 
     Agents métier dans cet ordre. Après chaque spécialiste qui produit des livrables : `mia-git` (`commit`) (confirmation utilisateur ; jamais `PLAN.md`). `mia-plan` : pas de commit. `mia-git` (`push`) uniquement après review, puis suppression locale de `PLAN.md`.
-    Le lint n'est **pas** un agent : condition de succès de `mia-back` (`npm run lint-back`), `mia-front-sdk` et `mia-front-ui` (`npm run lint-front`).
+    Le lint n'est **pas** un agent : lint KO + build OK → `warning` ; build KO → `fail`.
 
     1. mia-git (provision : remote + tmp.txt + master / develop ; fail-fast ; confirmations)
     2. mia-init (supprime tmp.txt, scaffold)
     3. (si blocked deps) mia-deps → reprise
     4. mia-plan (pas de commit)
     5. mia-openapi
-    6. mia-back — **pass** exige `npm run lint-back`
-    7. mia-tests (bloquant avant le front)
-    8. mia-front-sdk — **pass** exige `npm run lint-front`
-    9. pause → mia-front-ui — **pass** exige `npm run lint-front`
+    6. mia-back — lint KO + build OK → `warning`
+    7. mia-tests (bloquant avant le front — `pass` obligatoire)
+    8. mia-front-sdk — lint KO + build OK → `warning`
+    9. pause → mia-front-ui — lint KO + build OK → `warning`
     10. mia-readme
     11. mia-review
     12. mia-git (push) — push final avec confirmation
     — pause utilisateur entre chaque étape
-    — `fail` / `blocked` d'un sous-agent (surtout mia-tests) → stop pipeline
+    — `fail` / `blocked` d'un sous-agent → stop pipeline ; `warning` → pause **⚠️**, l'utilisateur décide (sauf mia-tests : `warning` bloque aussi le front)
 
 Mode `maintain` :
 
     1. confirmer racine plugin + périmètre
     2. mia-plan (update) si besoin → mia-git (commit)
     3. enchaîner uniquement les sous-agents concernés par le delta / les consignes
-       — si le back change : mia-tests juste après, gate bloquante avant tout front ; **pass** de mia-back exige `npm run lint-back`
-       — si SDK / UI : **pass** exige `npm run lint-front`
+       — si le back change : mia-tests juste après, gate bloquante avant tout front ; lint KO + build OK → `warning`
+       — si SDK / UI : lint KO + build OK → `warning`
        — si le comportement utilisateur change : mia-readme avant mia-review
        — après chaque étape clef exécutée : mia-git (commit) avec confirmation
     4. mia-review en fin de lot → mia-git (commit) si besoin

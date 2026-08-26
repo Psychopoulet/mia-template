@@ -28,10 +28,9 @@ Gate: see [reference.md](../reference.md).
 
 ## Expected output
 
-1. Read step **a)** in `PLAN.md` and execute its **numbered items in order**.
+1. Read step **a)** in `PLAN.md` (**read-only** — never write `PLAN.md`) and execute its **numbered items in order**.
 2. Update `lib/data/Descriptor.json` (routes + data types).
 3. Follow [openapi.md](../openapi.md).
-4. Check **only** the step **a)** heading when done — trailing **✅** (`### a) … ✅`) — do not edit other plan content.
-5. On incomplete/invalid Descriptor (stripped template errors, dedicated error codes on new routes, or single-use components): **`fail`**, mark the heading **❌**.
+4. On invalid Descriptor (stripped template errors, dedicated error codes on new routes, or single-use components): **`fail`**. Incomplete items or an attention point → **`warning`**.
 
-Conclude: 5 lines per [reference.md](../reference.md). Deliverables: `Descriptor.json`; routes; schemas; new ops success+`default` only; template errors preserved; no single-use components. Next: `mia-git` commit then `mia-back`.
+Conclude: 5 lines per [reference.md](../reference.md). Deliverables: `Descriptor.json`; routes; schemas; new ops success+`default` only; template errors preserved; no single-use components. Heading: `n/a`. Next: `mia-git` commit then `mia-back`.

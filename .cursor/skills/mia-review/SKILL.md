@@ -31,10 +31,10 @@ Gate: see [reference.md](../reference.md).
 
 ## Expected output
 
-1. Confirm scope (global vs limited) when ambiguous. If step **g)** lists numbered items, execute them **in order** as the review checklist.
+1. Confirm scope (global vs limited) when ambiguous. If step **g)** lists numbered items, execute them **in order** as the review checklist. **Read-only** on `PLAN.md`.
 2. Assess quality, security, maintainability, OpenAPI ↔ back ↔ front ↔ tests ↔ README consistency (OpenAPI: [openapi.md](../openapi.md)). On the Mediator: may **suggest** comments on methods ≥ 25 lines that lack them; this is not a blocker.
 3. If Snyk and/or SonarQube MCP/tools are available: run them and summarize **critical** findings.
 4. Ensure `npm run tests` passes.
-5. Mark **only** the step **g)** heading with trailing **✅** (`### g) … ✅`) if verdict is ready; on **`fail`** mark **❌**; on **`blocked`** leave the heading unmarked.
+5. **Never write `PLAN.md`**. Verdict is **Status** only (`pass` / `warning` / `fail` / `blocked`). Tests fail → **`fail`**. Attention / suggestions with green tests → **`warning`**.
 
-Conclude: 5 lines per [reference.md](../reference.md). Deliverables: scope confirmed; verdict; critical / suggestion / nice-to-have; Snyk/Sonar. Checks: `npm run tests`. Next: `mia-git` commit if needed then `push`, or fix criticals and re-run.
+Conclude: 5 lines per [reference.md](../reference.md). Deliverables: scope confirmed; verdict; critical / suggestion / nice-to-have; Snyk/Sonar. Checks: `npm run tests`. Heading: `n/a`. Next: `mia-git` commit if needed then `push`, or fix criticals and re-run.

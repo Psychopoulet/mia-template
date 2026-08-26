@@ -28,14 +28,13 @@ Gate: see [reference.md](../reference.md).
 
 ## Expected output
 
-1. Read step **e)** in `PLAN.md` and execute its **numbered items in order**.
+1. Read step **e)** in `PLAN.md` (**read-only** — never write `PLAN.md`) and execute its **numbered items in order**.
 2. Rely on SDK + `public/src/Descriptor.ts`; re-run `npm run transpile-openapi-front` if needed.
 3. Create / update components under `public/src` (preferably `public/src/components/`) with a coherent workflow.
 4. **File naming**: a `.tsx` component file **must** have the same name as the component it exports (e.g. `StatusCard.tsx` exports `StatusCard`). Rename file and component together; never mismatch.
 5. Ensure code quality / structure.
-6. **Success condition:** `npm run lint-front` then `npm run build-front` must pass.
-7. If either fails: **`fail`**, mark the heading **❌**.
-8. On success: mark **only** the step **e)** heading with trailing **✅** (`### e) … ✅`).
+6. **`pass`** requires green `npm run lint-front` then `npm run build-front`.
+7. Build fails → **`fail`**. Lint fails but build passes, work incomplete, or an attention point remains → **`warning`**.
 
-Conclude: 5 lines per [reference.md](../reference.md). Deliverables: components; UI workflow. Checks: `lint-front`, `build-front`. Next: `mia-git` commit then `mia-readme`.
+Conclude: 5 lines per [reference.md](../reference.md). Deliverables: components; UI workflow. Checks: `lint-front`, `build-front`. Heading: `n/a`. Next: `mia-git` commit then `mia-readme`.
 

@@ -1,11 +1,11 @@
 ---
 name: mia-plan
 description: >-
-  MIA product owner: creates or updates a timed plugin PLAN.md (OpenAPI, back,
-  unit tests, front SDK, UI, README, review) with numbered implementation items
-  in each step. Progress is marked at the end of the step heading (`### a) … ✅`
-  or `❌`), never in a separate status table. Use when planning or revising an
-  existing plan. Read template.md when writing PLAN.md.
+  MIA product owner: sole author of plugin PLAN.md (create / maintain content).
+  Timed steps (OpenAPI, back, unit tests, front SDK, UI, README, review) with
+  numbered items. Headings start with `[ ]`. Other skills are read-only; only
+  mia-orchestrator marks progress after user validation. Use when planning or
+  revising an existing plan. Read template.md when writing PLAN.md.
 disable-model-invocation: true
 ---
 
@@ -24,7 +24,7 @@ Required:
 - Plugin project root (where `PLAN.md` is written)
 - Mode context: `create` or `maintain`
 
-In **maintain**: existing `PLAN.md` + instructions / scope → **update**, no full rewrite unless asked.
+In **maintain**: existing `PLAN.md` + instructions / scope → **update** content, no full rewrite unless asked. Preserve existing heading marks (**✅** / **❌** / **⚠️** / `[ ]`) unless the user reopens a step.
 
 Gate: see [reference.md](../reference.md).
 
@@ -45,7 +45,7 @@ Gate: see [reference.md](../reference.md).
    - Vague items (`implement the API`, `update the back`) are **`fail`** — rewrite until a later agent can execute without guessing.
 4. Save as **`PLAN.md`** at the plugin root (**local only** — never committed).
 5. Ensure the plugin **`.gitignore`** contains **`PLAN.md`** (append if missing).
-6. **No `## Step status` section.** Later agents mark progress **at the end of the step heading only** (see [reference.md](../reference.md)). If an older plan still has `## Step status` or a `[x]` / `[ ]` heading prefix, delete that section and convert prefixes to a trailing **✅** / no mark.
+6. **This skill is the only one that creates or rewrites `PLAN.md` content.** Every a→g heading **starts with `[ ]`** (`### [ ] a) OpenAPI — ~Xh`). Do **not** mark progress. After user validation, **`mia-orchestrator`** replaces `[ ]` (see [reference.md](../reference.md)). **No `## Step status` section.** If an older plan has that section or trailing **✅** / **❌**, convert to a prefix when writing.
 7. When writing the file, read [template.md](template.md) (shape + granularity examples). Do not inline that template here.
 
 If any a→g step lacks an ordered list, or items are too vague to implement: status **`fail`**, fix the plan before concluding **`pass`**.
