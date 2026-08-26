@@ -7,7 +7,6 @@ How to run the AI workflow that **creates** and **maintains** home-automation pl
 | [skills/mia-orchestrator/SKILL.md](./skills/mia-orchestrator/SKILL.md) | **Runtime pipeline** (create / maintain) |
 | [skills/reference.md](./skills/reference.md) | Shared conventions (cwd, gate, PLAN, lint, conclusions) |
 | [skills/openapi.md](./skills/openapi.md) | OpenAPI conventions — `mia-openapi` / `mia-back` / `mia-review` only |
-| [SPECS.md](./SPECS.md) | Design archive — do **not** load during create/maintain |
 
 Skill bodies and conclusions are in **English**.
 

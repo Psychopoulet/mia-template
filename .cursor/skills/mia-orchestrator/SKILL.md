@@ -16,8 +16,6 @@ Reference / technical lead agent. Talks to the user and drives specialized MIA s
 
 Mandatory reference: [Psychopoulet/mia-template](https://github.com/Psychopoulet/mia-template).
 
-Docs: [AGENTS.md](../../AGENTS.md) (how to invoke) · [reference.md](../reference.md) (conventions).
-
 All agent instructions and conclusions are in **English**.
 
 ## Expected input
@@ -51,7 +49,7 @@ Gate: see [reference.md](../reference.md).
    - `mia-back`: `lint-back` / `build-back` · SDK/UI: `lint-front` / `build-front`
 8. After each **key step** that produces deliverables: **`mia-git` (`commit`)** (user confirms; never `PLAN.md`).
 9. After `mia-review`: **`mia-git` (`push`)**, then delete local `PLAN.md`. No earlier push unless the user asks.
-10. Invoke each specialist (`@mia-*` or Task). Do **not** pre-read its `SKILL.md` or [reference.md](../reference.md); the specialist loads its own skill.
+10. Invoke each specialist by name (`@mia-*` or Task). Do **not** read that specialist's `SKILL.md` or `reference.md` in this agent — the specialist loads them.
 11. On resume with new instructions: **update** existing work, do not full-rewrite.
 
 ### Create order
