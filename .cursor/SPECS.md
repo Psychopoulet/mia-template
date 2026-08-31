@@ -110,7 +110,7 @@ IV) sous-agents
     - il doit discuter avec l'agent principal (et l'agent principal avec l'utilisateur) pour élaborer un premier jet de document de plannification
     - le document doit contenir un plan en plusieurs étapes chiffrées en temps :
         a) mettre à jour le document OpenAPI sur lequel se basera tout le plugin
-        b) mettre à jour tout le back-office (essentiellement le Mediator, eventuellement le Serveur s'il y a des events)
+        b) mettre à jour tout le back-office (Mediator = logique + events documentés ; Server = passe-plat de ces events uniquement)
         c) créer les tests unitaires back (bloquant avant le front)
         d) mettre à jour le SDK du front-office
         e) créer les composants du front-office
@@ -144,14 +144,17 @@ IV) sous-agents
     - cwd = racine du plugin
     - il doit exécuter la commande "npm run transpile-openapi-back" pour créer les types issus du document OpenAPI (`lib/src/Descriptor.ts`)
     - il doit créer les fonctions dans "lib/src/Mediator.ts" correspondant aux nouvelles opérations de "lib/data/Descriptor.json" en s'assurant d'utiliser des types présents dans "lib/src/Descriptor.ts"
-    - **ne pas** contrôler / valider les paramètres d'entrée dans le Mediator (géré ailleurs : host / Server / `checkParameters`)
+    - **toute la logique métier** (émission d'events incluse) est dans le Mediator
+    - documenter les events plugin dans `lib/data/DescriptorEvents.json` (ajouter les `$ref` dans `Descriptor.json` `components.schemas`, puis re-transpiler)
+    - `lib/src/Server.ts` **n'a pas de logique propre** : passe-plat uniquement des events **générés et documentés** par le Mediator (`on` → `this.push`, même `command` / payload que le schéma). Pas de méthodes API, pas de mapping métier, pas de validation
+    - **ne pas** contrôler / valider les paramètres d'entrée dans le Mediator (géré par le host / `checkParameters`)
     - **ne pas** ré-implémenter l'**authentification** host (login, vérification JWT comme gate) ; en revanche, si le PLAN du plugin impose des règles d'**autorisation** métier (ex. soi-même ou admin), les implémenter dans le Mediator
     - se concentrer sur la logique métier et les services Container (ex. `auth-db`)
     - il doit s'assurer de la qualité du code livré, de sa découpe :
         - fichiers avec du **code exécutable** (fonctions, classes, exports runtime) → `lib/src/utils/`
         - fichiers **uniquement** de typing (`type` / `interface` / aliases, sans runtime) → `lib/src/@types/`
         - un fichier mixte (code + types locaux) reste dans `utils` ; ne pas mettre de runtime dans `@types`
-        - fonctions **autonomes** (pas de `this` / état d'instance) : **fichier à part** dans `utils/` quand c'est possible (un fichier par fonction, nommé comme l'export) ; **pas** de méthodes `private` pour ça (Mediator / Server). Garder les méthodes de classe pour les opérations OpenAPI, le cycle de vie, et la logique qui a besoin de l'instance
+        - fonctions **autonomes** (pas de `this` / état d'instance) : **fichier à part** dans `utils/` quand c'est possible (un fichier par fonction, nommé comme l'export) ; **pas** de méthodes `private` pour ça (Mediator / Server). Garder les méthodes de classe **du Mediator** pour les opérations OpenAPI, le cycle de vie, et la logique qui a besoin de l'instance. **Server** : bind/unbind d'events uniquement
     - **commentaires d'explication dans le Mediator** (et helpers `utils/` appelés par lui) dès qu'une méthode a un corps ≥ **25 lignes** :
         - commentaire anglais `//` au-dessus de la méthode (but + flux principal), indenté comme le fichier existant
         - expliquer le *pourquoi*, pas narrer chaque ligne ; les méthodes plus courtes **peuvent** aussi être commentées si ça aide

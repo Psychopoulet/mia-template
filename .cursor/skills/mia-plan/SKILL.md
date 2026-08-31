@@ -33,7 +33,7 @@ Gate: see [reference.md](../reference.md).
 1. Clarify needs with the user (via orchestrator) until a coherent draft exists.
 2. Produce a markdown plan with time-boxed steps **a→g**:
    - **a)** OpenAPI (`lib/data/Descriptor.json`)
-   - **b)** Back-office (Mediator; Server if events)
+   - **b)** Back-office (Mediator; Server = event pass-through only)
    - **c)** Unit tests (back; blocking before front)
    - **d)** Front-office SDK
    - **e)** Front-office components
