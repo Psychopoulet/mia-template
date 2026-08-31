@@ -43,7 +43,7 @@ Gate: see [reference.md](../reference.md).
    - **Do not** replace the list with a prose paragraph or bullet soup.
    - Keep a→g headings stable. In **maintain**, **do not renumber** existing items; append new ones.
    - Vague items (`implement the API`, `update the back`) are **`fail`** — rewrite until a later agent can execute without guessing.
-4. Save as **`PLAN.md`** at the plugin root (**local only** — never committed).
+4. **MUST write `<plugin-root>/PLAN.md` to disk.** Never leave the plan only in chat or conversation memory — this file is the cross-session tracking document (local only — never committed). Deliverables **must** include that absolute path.
 5. Ensure the plugin **`.gitignore`** contains **`PLAN.md`** (append if missing).
 6. **This skill is the only one that creates or rewrites `PLAN.md` content.** Every a→g heading **starts with `[ ]`** (`### [ ] a) OpenAPI — ~Xh`). Do **not** mark progress. After user validation, **`mia-orchestrator`** replaces `[ ]` (see [reference.md](../reference.md)). **No `## Step status` section.** If an older plan has that section or trailing **✅** / **❌**, convert to a prefix when writing.
 7. When writing the file, read [template.md](template.md) (shape + granularity examples). Do not inline that template here.
