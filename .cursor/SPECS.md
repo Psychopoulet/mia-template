@@ -184,6 +184,7 @@ IV) sous-agents
     - il ne démarre qu'après `pass` de l'agent QA (tests back)
     - il doit exécuter "npm run transpile-openapi-front" → types dans "public/src/Descriptor.ts"
     - il doit mettre à jour le SDK ("public/src/SDK.ts" et helpers si besoin) pour exposer les nouvelles opérations du Descriptor, en utilisant les types de "public/src/Descriptor.ts"
+    - chaque nouvelle méthode publique du SDK qui wrappe une opération OpenAPI **doit** porter exactement le `operationId` correspondant (ex. `createDevice` → `SDK.createDevice`, typée `operations["createDevice"]`) ; pas d'alias ni de nom basé sur le verbe HTTP ; ne pas renommer les méthodes non-API (`connect`, `disconnect`, `isLoggedIn`)
     - il doit s'assurer de la qualité / découpe du code
     - **condition de succès `pass`** : `npm run lint-front` (périmètre SDK) puis build si besoin
     - build KO → `fail` ; lint KO + build OK, incomplet, ou attention → `warning`
