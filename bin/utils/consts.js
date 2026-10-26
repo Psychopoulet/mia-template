@@ -15,13 +15,14 @@
     const MEDIATOR_FILENAME = join("lib", "src", "Mediator.ts");
     const ORCHESTRATOR_FILENAME = join("lib", "src", "Orchestrator.ts");
     const SERVER_FILENAME = join("lib", "src", "Server.ts");
+    const SDK_FILENAME = join("public", "src", "SDK.ts");
 
     const POSTFIX_EVENTS_NAME = " - events";
     const POSTFIX_EVENTS_DESCRIPTION = " Events description.";
     const PLUGIN_INITIAL_VERSION = "1.0.0";
 
     // always excluded even if absent from .gitignore
-    const ALWAYS_EXCLUDED = [ ".git", "bin" ];
+    const ALWAYS_EXCLUDED = [ ".git", "bin", ".cursor" ];
 
 // module
 
@@ -35,6 +36,7 @@ module.exports = {
     MEDIATOR_FILENAME,
     ORCHESTRATOR_FILENAME,
     SERVER_FILENAME,
+    SDK_FILENAME,
     POSTFIX_EVENTS_NAME,
     POSTFIX_EVENTS_DESCRIPTION,
     PLUGIN_INITIAL_VERSION,

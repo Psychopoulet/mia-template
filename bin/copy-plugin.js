@@ -87,7 +87,7 @@
         });
 
         process.stdout.write(
-            "Updating package.json, README.md, Descriptor files and class names...\n"
+            "Updating package.json, README.md, Descriptor files, class names and front SDK...\n"
         );
 
         await updateDestinationFiles(

@@ -37,7 +37,7 @@ export default class ServerTemplate extends Server {
 
     }
 
-    // <events>
+    // <events> — pass-through of Mediator events documented in DescriptorEvents.json; no business logic
 
     private readonly _onPluginInitialized = (): void => {
 
