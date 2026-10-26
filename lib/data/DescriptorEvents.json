@@ -2,7 +2,7 @@
 	"openapi": "3.1.2",
 	"info": {
 		"title": "mia-template - events",
-		"version": "2.1.0",
+		"version": "2.1.1",
 		"description": "This is a template for MIA plugin creation. Events description.",
 		"license": {
 			"name": "ISC",
